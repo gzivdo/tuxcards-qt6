@@ -176,6 +176,17 @@ target_link_libraries(tuxcards PRIVATE
    OpenSSL::Crypto
 )
 
+# MSVC enforces strict char-literal types ("..." is const char[] and
+# cannot initialise a char *). The legacy XPM icon files declare
+# `static char * foo_xpm[] = { ... }`, which compiles fine under
+# GCC/Clang but breaks the MSVC C++17 default. /permissive relaxes the
+# rule so we don't have to rewrite every .xpm file. Also raise the
+# string-literal limit indirectly (Greetings.h carries a 16 KB HTML
+# blob; we split it in source, but keep /utf-8 to be safe).
+if(MSVC)
+   target_compile_options(tuxcards PRIVATE /permissive /utf-8 /wd4996)
+endif()
+
 install(TARGETS tuxcards RUNTIME DESTINATION bin)
 install(FILES packaging/desktop/tuxcards.desktop
         DESTINATION share/applications)
