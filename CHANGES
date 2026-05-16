@@ -1,5 +1,16 @@
 Changelog
 
+3.3.1  2026-05-16  Build fix: AUTORCC ordering for generated translations .qrc (gzivdo + Claude Opus 4.7)
+
+	The 3.3.0 release tag triggered a release.yml run that succeeded on
+	pre-6.7 Qt (Ubuntu 24.04, Debian 12, Windows install-qt-action) but
+	failed everywhere the new build-dir translations qrc actually got
+	exercised (Ubuntu 26.04, Debian 13, macOS, Fedora .rpm). Root cause:
+	AUTORCC scanned build/translations_generated.qrc before the
+	tuxcards_translations target produced the .qm files it references.
+	Fix: add an explicit add_dependencies(tuxcards tuxcards_translations).
+	Behavior unchanged on the read side; only the CMake target graph.
+
 3.3.0  2026-05-16  In-editor find/replace, lazy-decrypt, print preview, refactors (gzivdo + Claude Opus 4.7)
 
 	Editor — in-entry find & replace

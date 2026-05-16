@@ -1,3 +1,13 @@
+tuxcards-qt6 (3.3.1-1) unstable; urgency=medium
+
+  * Build: order AUTORCC after lrelease for the generated translations
+    .qrc. The 3.3.0 release picked up the new build-dir .qrc only on
+    Qt 6.7+ runners and failed there because nothing made the main
+    target wait for tuxcards_translations. Adds an explicit
+    add_dependencies() so .qm files exist before AUTORCC scans them.
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 17:15:00 +0000
+
 tuxcards-qt6 (3.3.0-1) unstable; urgency=medium
 
   * Editor: in-entry find / replace bar (Ctrl+F / Ctrl+H), embedded
