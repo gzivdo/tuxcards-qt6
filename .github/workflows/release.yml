@@ -21,7 +21,7 @@ jobs:
           sudo apt-get install -y qt6-base-dev qt6-base-dev-tools \
                                   libqt6core5compat6-dev qt6-tools-dev \
                                   build-essential libssl-dev libcups2-dev \
-                                  cmake devscripts debhelper
+                                  cmake devscripts debhelper wget file
 
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -29,16 +29,50 @@ jobs:
       - name: Build
         run: cmake --build build --parallel
 
-      - name: Package — tarball (portable)
+      - name: Package — portable bundle (tarball)
         if: matrix.kind == 'tarball'
         run: |
           VER=${GITHUB_REF#refs/tags/v}
-          mkdir -p out/tuxcards-qt6-${VER}-linux-x86_64
-          cp build/tuxcards   out/tuxcards-qt6-${VER}-linux-x86_64/
-          cp README.md INSTALL.md COPYING CHANGES \
-             out/tuxcards-qt6-${VER}-linux-x86_64/
-          tar -C out -cJf tuxcards-qt6-${VER}-linux-x86_64.tar.xz \
-              tuxcards-qt6-${VER}-linux-x86_64
+          ROOT=tuxcards-qt6-${VER}-linux-x86_64
+
+          # Build an XDG-style layout under usr/, then have linuxdeployqt
+          # pull in every Qt6 .so + platform plugin that the binary
+          # actually loads. The result is a directory that runs on any
+          # glibc-compatible Linux without an external Qt install —
+          # what users typically mean by "static / portable bundle".
+          mkdir -p $ROOT/usr/bin $ROOT/usr/share/applications \
+                   $ROOT/usr/share/icons/hicolor/32x32/apps
+          cp build/tuxcards $ROOT/usr/bin/
+          cp packaging/desktop/tuxcards.desktop $ROOT/usr/share/applications/
+          cp src/icons/lo32-app-tuxcards.png \
+             $ROOT/usr/share/icons/hicolor/32x32/apps/tuxcards.png
+
+          wget -q -O linuxdeployqt.AppImage \
+               https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+          chmod +x linuxdeployqt.AppImage
+          # AppImage on GHA needs --appimage-extract-and-run because
+          # FUSE isn't available in the runner.
+          ./linuxdeployqt.AppImage --appimage-extract-and-run \
+             $ROOT/usr/share/applications/tuxcards.desktop \
+             -bundle-non-qt-libs \
+             -extra-plugins=iconengines,platforms/libqxcb.so \
+             -no-translations \
+             -unsupported-allow-new-glibc
+
+          cp README.md INSTALL.md COPYING CHANGES $ROOT/
+
+          # Convenience launcher so users can just run ./tuxcards.sh
+          # without messing with LD_LIBRARY_PATH.
+          cat > $ROOT/tuxcards.sh <<'LAUNCHER'
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+          export QT_PLUGIN_PATH="$HERE/usr/plugins"
+          exec "$HERE/usr/bin/tuxcards" "$@"
+          LAUNCHER
+          chmod +x $ROOT/tuxcards.sh
+
+          tar -cJf ${ROOT}.tar.xz $ROOT
 
       - name: Package — .deb
         if: matrix.kind == 'deb'

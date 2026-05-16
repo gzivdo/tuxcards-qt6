@@ -12,74 +12,12 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    name: ${{ matrix.os }} (Qt ${{ matrix.qt }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        # Native runners. ubuntu-26.04 is the 2026 LTS — GitHub may not
-        # have the image yet, in that case the matrix entry just fails
-        # in isolation and the rest of the build still goes through
-        # thanks to fail-fast: false.
-        os: [ubuntu-24.04, ubuntu-26.04, windows-latest, macos-latest]
-        qt: ['6.7.3']
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ matrix.qt }}
-          modules: 'qt5compat'
-          cache: true
-
-      - name: Install Linux system deps
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev libcups2-dev \
-                                  libxkbcommon-x11-0 libegl1 libgl1 \
-                                  libxcb-cursor0
-
-      - name: Install OpenSSL (macOS)
-        if: runner.os == 'macOS'
-        run: brew install openssl@3
-
-      - name: Install OpenSSL (Windows)
-        if: runner.os == 'Windows'
-        run: choco install -y openssl
-
-      - name: Configure (CMake)
-        shell: bash
-        run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build
-        shell: bash
-        run: cmake --build build --config Release --parallel
-
-      - name: Unit tests
-        shell: bash
-        run: |
-          cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
-          cmake --build tests/build --parallel
-          ctest --test-dir tests/build --output-on-failure
-
-      - name: Smoke test (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install -y xvfb
-          xvfb-run -a timeout 5 ./build/tuxcards || true
-
-
-  # Debian images don't exist as native GitHub runners, so we drive
-  # them via a container. Same CMake build as on the native Ubuntu
-  # runners, but using each distro's own Qt6 packages — this catches
-  # regressions where we accidentally rely on a newer Qt feature than
-  # what's shipped in stable Debian.
-  debian:
+  # Linux: every distribution is built with its own system Qt6, so a
+  # green CI here means the code really works against the Qt version
+  # actual users have on disk. ubuntu-26.04 is the 2026 LTS — if the
+  # GitHub image isn't published yet the matrix entry simply fails in
+  # isolation (fail-fast: false).
+  linux:
     name: ${{ matrix.image }}
     runs-on: ubuntu-24.04
     container:
@@ -87,7 +25,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ['debian:12', 'debian:13']
+        image:
+          - 'ubuntu:24.04'
+          - 'ubuntu:26.04'
+          - 'debian:12'
+          - 'debian:13'
 
     steps:
       - name: Install distro deps
@@ -107,6 +49,52 @@ jobs:
         run: cmake --build build --parallel
 
       - name: Unit tests
+        run: |
+          cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build tests/build --parallel
+          ctest --test-dir tests/build --output-on-failure
+
+
+  # Windows / macOS don't ship a system Qt6, so for these two we keep
+  # using jurplel/install-qt-action with a pinned Qt version. This is
+  # what a developer would install from qt.io anyway.
+  desktop:
+    name: ${{ matrix.os }} (Qt ${{ matrix.qt }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+        qt: ['6.7.3']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ matrix.qt }}
+          modules: 'qt5compat'
+          cache: true
+
+      - name: Install OpenSSL (macOS)
+        if: runner.os == 'macOS'
+        run: brew install openssl@3
+
+      - name: Install OpenSSL (Windows)
+        if: runner.os == 'Windows'
+        run: choco install -y openssl
+
+      - name: Configure (CMake)
+        shell: bash
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        shell: bash
+        run: cmake --build build --config Release --parallel
+
+      - name: Unit tests
+        shell: bash
         run: |
           cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
           cmake --build tests/build --parallel
