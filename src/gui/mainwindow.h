@@ -198,6 +198,7 @@ private slots:
   void editorFind();
   void editorReplace();
   void print();
+  void printPreview();
 
   void moveElementUp();
   void moveElementDown();

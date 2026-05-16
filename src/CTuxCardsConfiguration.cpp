@@ -138,6 +138,9 @@ void CTuxCardsConfiguration::readConfigurationFile()
    parser.setGroup("WindowGeometry");
    mIntMap   [I_WINDOW_WIDTH]       = parser.readNumEntry("WindowWidth",       750);
    mIntMap   [I_WINDOW_HEIGHT]      = parser.readNumEntry("WindowHeight",      550);
+   // -1 = "not set, let the WM pick"
+   mIntMap   [I_WINDOW_X]           = parser.readNumEntry("WindowX",           -1);
+   mIntMap   [I_WINDOW_Y]           = parser.readNumEntry("WindowY",           -1);
    mIntMap   [I_TREE_WIDTH]         = parser.readNumEntry("TreeWidth",         240);
    mIntMap   [I_EDITOR_WIDTH]       = parser.readNumEntry("EditorWidth",       500);
    mIntMap   [I_TREE_VSCROLLBAR_VALUE] = parser.readNumEntry("Tree_VScrollBar",  0);
@@ -212,6 +215,8 @@ void CTuxCardsConfiguration::saveToFile()
   p.setGroup("WindowGeometry");
   p.changeEntry("WindowWidth",              mIntMap[I_WINDOW_WIDTH]         );
   p.changeEntry("WindowHeight",             mIntMap[I_WINDOW_HEIGHT]        );
+  p.changeEntry("WindowX",                  mIntMap[I_WINDOW_X]             );
+  p.changeEntry("WindowY",                  mIntMap[I_WINDOW_Y]             );
   p.changeEntry("TreeWidth",                mIntMap[I_TREE_WIDTH]           );
   p.changeEntry("EditorWidth",              mIntMap[I_EDITOR_WIDTH]         );
   p.changeEntry("Tree_VScrollBar",          mIntMap[I_TREE_VSCROLLBAR_VALUE]);

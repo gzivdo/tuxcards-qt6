@@ -20,7 +20,7 @@
 //#define DEBUGGING
 
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <QFontDialog>
 #include <QTimerEvent>
 #include <QLabel>
@@ -39,6 +39,7 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QPrintDialog>
+#include <QPrintPreviewDialog>
 #include <QTextBlock>
 #include <QTextCursor>
 
@@ -405,6 +406,7 @@ void MainWindow::settingUpMenu( void )
    file->addAction( getIcon("filesave"), tr("&Save"),           this, SLOT(save()),     QKeySequence(Qt::CTRL | Qt::Key_S));
    file->addAction(                      tr("Save &As..."),     this, SLOT(saveAs()) );
    file->addAction( getIcon("fileprint"),tr("&Print current entry..."),  this, SLOT(print()), QKeySequence(Qt::CTRL | Qt::Key_P) );
+   file->addAction( getIcon("fileprint"),tr("Print pre&view..."),         this, SLOT(printPreview()), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P) );
 
    file->addSeparator();
    file->addAction(mfileEncryptFile);
@@ -520,7 +522,8 @@ void MainWindow::settingUpToolBar( void )
   mpMainTools->addSeparator();
   QAction* openTool  = mpMainTools->addAction( getIcon("fileopen"), tr("Open a new file"), this, SLOT(open()));
   QAction* saveTool  = mpMainTools->addAction( getIcon("filesave"), tr("Save current file (Ctrl+S)"), this, SLOT(save()));
-  QAction* printTool = mpMainTools->addAction( getIcon("fileprint"), tr("Print current entry"), this, SLOT(print()));
+  QAction* printTool        = mpMainTools->addAction( getIcon("fileprint"), tr("Print current entry"), this, SLOT(print()));
+  QAction* printPreviewTool = mpMainTools->addAction( getIcon("fileprint"), tr("Print preview (Ctrl+Shift+P)"), this, SLOT(printPreview()));
 
   mpMainTools->addAction(mfileEncryptFile);
 
@@ -544,6 +547,7 @@ void MainWindow::settingUpToolBar( void )
   openTool->setWhatsThis(tr("<b>Open a new File</b>"));
   saveTool->setWhatsThis(tr("<b>Save Data to File</b> (Ctrl+S)"));
   printTool->setWhatsThis(tr("<b>Print current Entry</b>"));
+  printPreviewTool->setWhatsThis(tr("<b>Print preview</b> (Ctrl+Shift+P)"));
   editUndoAction->setWhatsThis(tr("<b>Undo</b> (Ctrl+Z)"));
   editRedoAction->setWhatsThis(tr("<b>Redo</b> (Ctrl+Y)"));
   editCutTool->setWhatsThis(tr("<b>Cut</b> (Ctrl+X)"));
@@ -1512,8 +1516,14 @@ void MainWindow::selectLastActiveElement()
       mpCollection->setActiveElement( mpCollection->getRootElement() );
    }
 
-   mpTree->verticalScrollBar()->setValue(
-      mConfiguration.getIntValue( CTuxCardsConfiguration::I_TREE_VSCROLLBAR_VALUE ) );
+   // Defer until the tree has laid out its items — calling setValue before the
+   // scrollbar range is known clamps to 0 and the saved position is lost.
+   const int scrollPos =
+      mConfiguration.getIntValue( CTuxCardsConfiguration::I_TREE_VSCROLLBAR_VALUE );
+   QTimer::singleShot(0, mpTree, [this, scrollPos]() {
+      if ( mpTree )
+         mpTree->verticalScrollBar()->setValue(scrollPos);
+   });
 }
 
 
@@ -1625,7 +1635,10 @@ void MainWindow::callingExecutionStatement()
 {
 	QString execStatement = mConfiguration.getStringValue( CTuxCardsConfiguration::S_EXECUTE_STATEMENT );
 	if (execStatement.size() > 0)
-		system( execStatement.toLatin1().constData() );
+	{
+		const int rc = std::system( execStatement.toLatin1().constData() );
+		(void) rc;
+	}
 }
 
 
@@ -1779,18 +1792,11 @@ void MainWindow::keyPressEvent(QKeyEvent* k)
    switch( k->modifiers() )
    {
    case Qt::ControlModifier:
-      //cout<<"CTL + "<<k->key()<<"\ttext="<<k->text()<<"\tkey="<<k->key()<<endl;
+      // Ctrl+F / Ctrl+H / Ctrl+Shift+F are wired as QAction shortcuts in the
+      // Edit menu (settingUpMenu) and reach their slots via Qt's shortcut
+      // system, so this dispatch only needs the keys that don't have actions.
       if (k->key() == Qt::Key_S)
          save();
-      else if ( Qt::Key_F == k->key() )
-         editorFind();
-      else if ( Qt::Key_H == k->key() )
-         editorReplace();
-      break;
-
-   case (Qt::ControlModifier | Qt::ShiftModifier):
-      if ( Qt::Key_F == k->key() )
-         search();
       break;
 
    case Qt::AltModifier:
@@ -1938,6 +1944,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
    mConfiguration.setIntValue( CTuxCardsConfiguration::I_WINDOW_WIDTH, width() );
    mConfiguration.setIntValue( CTuxCardsConfiguration::I_WINDOW_HEIGHT, height() );
+   mConfiguration.setIntValue( CTuxCardsConfiguration::I_WINDOW_X, x() );
+   mConfiguration.setIntValue( CTuxCardsConfiguration::I_WINDOW_Y, y() );
    mConfiguration.setIntValue( CTuxCardsConfiguration::I_TREE_WIDTH,  mpSplit->sizes().first() );
    mConfiguration.setIntValue( CTuxCardsConfiguration::I_EDITOR_WIDTH, mpSplit->sizes().last() );
 
@@ -2065,6 +2073,13 @@ void MainWindow::applyConfiguration()
                       mConfiguration.getIntValue( CTuxCardsConfiguration::I_TREE_WIDTH ),
                       mConfiguration.getIntValue( CTuxCardsConfiguration::I_EDITOR_WIDTH )
                     );
+
+   // restore window position (only if we saved one previously: -1 sentinel
+   // means "leave it to the window manager")
+   const int wx = mConfiguration.getIntValue( CTuxCardsConfiguration::I_WINDOW_X );
+   const int wy = mConfiguration.getIntValue( CTuxCardsConfiguration::I_WINDOW_Y );
+   if ( wx >= 0 && wy >= 0 )
+      move( wx, wy );
 }
 
 // -------------------------------------------------------------------------------
@@ -2152,6 +2167,43 @@ void MainWindow::print()
      doc.setHtml( mpCollection->getActiveElement()->getInformation() );
      doc.print( &printer );
   }
+#endif
+}
+
+// -------------------------------------------------------------------------------
+void MainWindow::printPreview()
+// -------------------------------------------------------------------------------
+{
+   if ( nullptr == mpCollection || nullptr == mpCollection->getActiveElement() )
+      return;
+
+   if ( mpCollection->getActiveElement()->getInformationFormat() == &InformationFormat::ASCII )
+   {
+      QMessageBox::information( this, tr("Print preview"),
+                                tr("Please consider converting this note to "
+                                   "rtf before printing.") );
+   }
+
+   if ( nullptr == mpEditor )
+      return;
+
+   mpEditor->writeCurrentTextToActiveInformationElement();
+#ifndef QT_NO_PRINTER
+   QPrinter printer;
+   printer.setFullPage(true);
+   QPrintPreviewDialog dlg(&printer, this);
+   dlg.setWindowTitle(tr("Print preview"));
+   QFont font( mConfiguration.getASCIIEditorFont().toFont() );
+   font.setPointSize(10);
+   const QString html = mpCollection->getActiveElement()->getInformation();
+   connect(&dlg, &QPrintPreviewDialog::paintRequested,
+           this, [font, html](QPrinter* p) {
+              QTextDocument doc;
+              doc.setDefaultFont(font);
+              doc.setHtml(html);
+              doc.print(p);
+           });
+   dlg.exec();
 #endif
 }
 
