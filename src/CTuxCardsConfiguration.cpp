@@ -85,6 +85,24 @@ void CTuxCardsConfiguration::readConfigurationFile()
 
    mStringMap[S_BOOKMARKS]          = parser.readEntry("Bookmarks", "");
 
+   // Default write backend. TUXCARDS_WRITE_BACKEND_XCHACHA picks
+   // monocypher (used by the -DTUXCARDS_WRITE_BACKEND=monocypher CMake
+   // builds). Otherwise prefer OpenSSL if linked, else monocypher, else
+   // a literal "openssl" sentinel for the legacy BF10 fallback path.
+   QString defaultEncFormat =
+#if defined(TUXCARDS_WRITE_BACKEND_XCHACHA) && defined(TUXCARDS_BACKEND_MONOCYPHER)
+        "monocypher";
+#elif defined(TUXCARDS_BACKEND_OPENSSL)
+        "openssl";
+#elif defined(TUXCARDS_BACKEND_MONOCYPHER)
+        "monocypher";
+#else
+        "openssl";  // legacy BF10 fallback path lives in StringCrypter
+#endif
+   mStringMap[S_ENCRYPTION_FORMAT]  = parser.readEntry("Encryption_Format", defaultEncFormat);
+   mBoolMap  [B_REENCRYPT_ON_FORMAT_CHANGE]
+                                    = parser.readNumEntry("Reencrypt_On_Format_Change", 0);
+
    mStringMap[S_ICON_DIR]           = parser.readEntry("Icon_Dir", "/usr/local/tuxcards/icons");
 
    QString FONT_family              = parser.readEntry("Font_Family",  "Helvetica");
@@ -161,6 +179,9 @@ void CTuxCardsConfiguration::saveToFile()
   p.changeEntry("Align_Vertical_Text", (int)mBoolMap  [B_ALIGN_VTEXT]);
 
   p.changeEntry("Bookmarks",                mStringMap [S_BOOKMARKS]);
+
+  p.changeEntry("Encryption_Format",            mStringMap[S_ENCRYPTION_FORMAT]);
+  p.changeEntry("Reencrypt_On_Format_Change",   (int)mBoolMap[B_REENCRYPT_ON_FORMAT_CHANGE]);
 
   p.changeEntry("Icon_Dir",                 mStringMap[S_ICON_DIR]          );
 
@@ -281,8 +302,8 @@ bool CTuxCardsConfiguration::askForUsingEncryption()
       return true;
    }
 
-   int iUseEncryption = QMessageBox::warning( 0, "TuxCards",
-                           "You are about to use encryption "
+   int iUseEncryption = QMessageBox::warning( 0, QObject::tr("TuxCards"),
+                           QObject::tr("You are about to use encryption "
                            "for the first time.<p>"
                            "It is recommended that you use encryption on a "
                            "uncritical file for a few days.<p>"
@@ -294,7 +315,7 @@ bool CTuxCardsConfiguration::askForUsingEncryption()
                            "errors within the algorithm, loss "
                            "of data, hacked data or forgotten passwords, etc.<p>"
                            "Are you sure that you want to use the "
-                           "encryption feature?",
+                           "encryption feature?"),
                            QMessageBox::Yes, QMessageBox::No );
 
    if ( QMessageBox::Yes == iUseEncryption )

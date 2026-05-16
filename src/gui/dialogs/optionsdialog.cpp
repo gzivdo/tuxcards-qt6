@@ -17,12 +17,14 @@
 
 #include "optionsdialog.h"
 #include "../colorbar/CColorBar.h"
+#include "../../utilities/crypt/StringCrypter.h"
 #include <QRadioButton>
 #include <QFontDialog>
 #include <QFileDialog>
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QTabWidget>
+#include <QComboBox>
 #include <iostream>
 
 OptionsDialog::OptionsDialog( QWidget* parent, CTuxCardsConfiguration& config )
@@ -37,6 +39,78 @@ OptionsDialog::OptionsDialog( QWidget* parent, CTuxCardsConfiguration& config )
    connect( editorFontButton, SIGNAL(clicked()), this, SLOT(changeEditFont()) );
 
    buildSidebarTab();
+   buildEncryptionTab();
+}
+
+
+void OptionsDialog::buildEncryptionTab()
+{
+   QWidget* tab = new QWidget(TabWidget2);
+   QVBoxLayout* lay = new QVBoxLayout(tab);
+
+   QGroupBox* fmtBox = new QGroupBox(tr("Encryption format for new entries"), tab);
+   QVBoxLayout* fmtLay = new QVBoxLayout(fmtBox);
+
+   mpEncFormat = new QComboBox(fmtBox);
+   // Populate with only the backends actually linked into this build.
+#ifdef TUXCARDS_BACKEND_OPENSSL
+   mpEncFormat->addItem(tr("AES-256-GCM + PBKDF2 (OpenSSL)"), "openssl");
+#endif
+#ifdef TUXCARDS_BACKEND_MONOCYPHER
+   mpEncFormat->addItem(tr("XChaCha20-Poly1305 + Argon2i (monocypher)"), "monocypher");
+#endif
+   fmtLay->addWidget(mpEncFormat);
+
+   QLabel* hint = new QLabel(
+      tr("This format applies to entries written from now on. Existing "
+         "entries keep their format unless you tick the option below."),
+      fmtBox);
+   hint->setWordWrap(true);
+   fmtLay->addWidget(hint);
+
+   lay->addWidget(fmtBox);
+
+   mpReencryptAll = new QCheckBox(
+      tr("Re-encrypt all entries when the algorithm changes"), tab);
+   lay->addWidget(mpReencryptAll);
+
+   QLabel* hint2 = new QLabel(
+      tr("If unchecked (default), only entries you have edited get "
+         "re-encrypted, so the file may contain mixed formats."),
+      tab);
+   hint2->setWordWrap(true);
+   lay->addWidget(hint2);
+
+   lay->addStretch(1);
+
+   TabWidget2->addTab(tab, tr("Encryption"));
+}
+
+
+void OptionsDialog::loadEncryptionFromConfig()
+{
+   const QString fmt = mrefConfig.getStringValue(
+                          CTuxCardsConfiguration::S_ENCRYPTION_FORMAT );
+   int idx = mpEncFormat->findData(fmt);
+   if ( idx < 0 ) idx = 0;
+   mpEncFormat->setCurrentIndex(idx);
+
+   mpReencryptAll->setChecked(
+      mrefConfig.getBoolValue( CTuxCardsConfiguration::B_REENCRYPT_ON_FORMAT_CHANGE ) );
+}
+
+
+void OptionsDialog::saveEncryptionToConfig()
+{
+   if ( mpEncFormat->currentIndex() >= 0 ) {
+      const QString fmt = mpEncFormat->currentData().toString();
+      mrefConfig.setStringValue( CTuxCardsConfiguration::S_ENCRYPTION_FORMAT, fmt );
+      StringCrypter::setWriteBackend(
+         fmt == "monocypher" ? StringCrypter::BLOB_XCHACHA
+                             : StringCrypter::BLOB_AESGCM );
+   }
+   mrefConfig.setBoolValue( CTuxCardsConfiguration::B_REENCRYPT_ON_FORMAT_CHANGE,
+                            mpReencryptAll->isChecked() );
 }
 
 
@@ -64,16 +138,16 @@ void OptionsDialog::buildSidebarTab()
    outer->addLayout(form, 1);
 
    // colors
-   QGroupBox* colorBox = new QGroupBox("Choose Colors", tab);
+   QGroupBox* colorBox = new QGroupBox(tr("Choose Colors"), tab);
    QGridLayout* colorGrid = new QGridLayout(colorBox);
-   colorGrid->addWidget(new QLabel("Top Color"), 0, 0);
-   mpTopColorBtn = new QPushButton("Top Color");
+   colorGrid->addWidget(new QLabel(tr("Top Color")), 0, 0);
+   mpTopColorBtn = new QPushButton(tr("Top Color"));
    colorGrid->addWidget(mpTopColorBtn, 0, 1);
-   colorGrid->addWidget(new QLabel("Bottom Color"), 1, 0);
-   mpBottomColorBtn = new QPushButton("Bottom Color");
+   colorGrid->addWidget(new QLabel(tr("Bottom Color")), 1, 0);
+   mpBottomColorBtn = new QPushButton(tr("Bottom Color"));
    colorGrid->addWidget(mpBottomColorBtn, 1, 1);
-   colorGrid->addWidget(new QLabel("Text Color"), 2, 0);
-   mpTextColorBtn = new QPushButton("Text Color");
+   colorGrid->addWidget(new QLabel(tr("Text Color")), 2, 0);
+   mpTextColorBtn = new QPushButton(tr("Text Color"));
    colorGrid->addWidget(mpTextColorBtn, 2, 1);
    form->addWidget(colorBox);
    connect(mpTopColorBtn,    SIGNAL(clicked()), this, SLOT(chooseTopColor()));
@@ -81,29 +155,29 @@ void OptionsDialog::buildSidebarTab()
    connect(mpTextColorBtn,   SIGNAL(clicked()), this, SLOT(chooseTextColor()));
 
    // horizontal text
-   mpShowHText = new QCheckBox("Show Horizontal Text", tab);
+   mpShowHText = new QCheckBox(tr("Show Horizontal Text"), tab);
    form->addWidget(mpShowHText);
    QGroupBox* hBox = new QGroupBox(tab);
    QGridLayout* hGrid = new QGridLayout(hBox);
-   hGrid->addWidget(new QLabel("First Text Line"), 0, 0);
+   hGrid->addWidget(new QLabel(tr("First Text Line")), 0, 0);
    mpTextOne = new QLineEdit;
    hGrid->addWidget(mpTextOne, 0, 1);
-   hGrid->addWidget(new QLabel("Second Text Line"), 1, 0);
+   hGrid->addWidget(new QLabel(tr("Second Text Line")), 1, 0);
    mpTextTwo = new QLineEdit;
    hGrid->addWidget(mpTextTwo, 1, 1);
    form->addWidget(hBox);
 
    // vertical text
-   mpShowVText = new QCheckBox("Show Vertical Text", tab);
+   mpShowVText = new QCheckBox(tr("Show Vertical Text"), tab);
    form->addWidget(mpShowVText);
    QGroupBox* vBox = new QGroupBox(tab);
    QVBoxLayout* vBoxLay = new QVBoxLayout(vBox);
    mpVText = new QLineEdit;
    vBoxLay->addWidget(mpVText);
    QHBoxLayout* posLay = new QHBoxLayout();
-   posLay->addWidget(new QLabel("Text Position"));
-   mpVTextTop    = new QRadioButton("Top");
-   mpVTextBottom = new QRadioButton("Bottom");
+   posLay->addWidget(new QLabel(tr("Text Position")));
+   mpVTextTop    = new QRadioButton(tr("Top"));
+   mpVTextBottom = new QRadioButton(tr("Bottom"));
    QButtonGroup* g = new QButtonGroup(vBox);
    g->addButton(mpVTextTop, 0);
    g->addButton(mpVTextBottom, 1);
@@ -114,7 +188,7 @@ void OptionsDialog::buildSidebarTab()
 
    form->addStretch(1);
 
-   TabWidget2->addTab(tab, "SideBar");
+   TabWidget2->addTab(tab, tr("SideBar"));
 
    // live preview when fields change
    connect(mpShowHText, SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
@@ -178,7 +252,7 @@ void OptionsDialog::saveSidebarToConfig()
 
 void OptionsDialog::chooseTopColor()
 {
-   QColor c = QColorDialog::getColor(mTopColor, this, "Top Color");
+   QColor c = QColorDialog::getColor(mTopColor, this, tr("Top Color"));
    if (!c.isValid()) return;
    mTopColor = c;
    setButtonSwatch(mpTopColorBtn, c);
@@ -188,7 +262,7 @@ void OptionsDialog::chooseTopColor()
 
 void OptionsDialog::chooseBottomColor()
 {
-   QColor c = QColorDialog::getColor(mBottomColor, this, "Bottom Color");
+   QColor c = QColorDialog::getColor(mBottomColor, this, tr("Bottom Color"));
    if (!c.isValid()) return;
    mBottomColor = c;
    setButtonSwatch(mpBottomColorBtn, c);
@@ -198,7 +272,7 @@ void OptionsDialog::chooseBottomColor()
 
 void OptionsDialog::chooseTextColor()
 {
-   QColor c = QColorDialog::getColor(mTextColor, this, "Text Color");
+   QColor c = QColorDialog::getColor(mTextColor, this, tr("Text Color"));
    if (!c.isValid()) return;
    mTextColor = c;
    setButtonSwatch(mpTextColorBtn, c);
@@ -242,6 +316,7 @@ int OptionsDialog::setUp( void )
    };
 
    loadSidebarFromConfig();
+   loadEncryptionFromConfig();
 
    show();
    return exec();
@@ -287,6 +362,7 @@ void OptionsDialog::changeProperties(){
    mrefConfig.setIntValue(  CTuxCardsConfiguration::I_WORD_WRAP, getWordWrap() );
 
    saveSidebarToConfig();
+   saveEncryptionToConfig();
 
    // done
    mrefConfig.saveToFile();

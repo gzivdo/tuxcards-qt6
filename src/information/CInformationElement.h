@@ -97,10 +97,39 @@ public:
   const QByteArray& getEncryptedData() const;
   void  setEncryptedData( const QByteArray& data );
 
+  // Dirty flag — true when the user has edited this element since it
+  // was loaded or last saved. The XML serializer uses this to decide
+  // whether to re-run the cipher or emit mOriginalBlob unchanged.
+  bool  isDirty() const   { return mbDirty; }
+  void  markDirty()       { mbDirty = true; }
+  void  markClean()       { mbDirty = false; }
+  const QByteArray& getOriginalBlob() const { return mOriginalBlob; }
+  void  setOriginalBlob( const QByteArray& blob ) { mOriginalBlob = blob; }
+
+  // Save-time hints set by MainWindow around XML serialization. They
+  // tell toXML() whether it can reuse an element's mOriginalBlob or
+  // must re-encrypt with the current configured backend.
+  //   sReencryptOnFormatChange == true  → re-encrypt every encrypted
+  //                                       element so the file becomes
+  //                                       homogeneously in the new
+  //                                       format.
+  //   false (default)                    → only re-encrypt dirty
+  //                                       elements; others keep their
+  //                                       on-disk format. File may
+  //                                       contain mixed AES-GCM /
+  //                                       XChaCha blobs.
+  static bool sReencryptOnFormatChange;
+
 	void enableEncryptionForElementTree(QString& password);
 	void disableEncryptionForElementTree();
 	bool checkEncryptionForElementTree();
 	bool decryptTree(QString password);
+
+	// Walk the subtree and return the first non-empty encrypted blob
+	// found. Used to identify the format (AES-GCM / XChaCha / BF10)
+	// before prompting for a password — so we can refuse to ask if the
+	// backend that would decrypt it isn't linked in this build.
+	bool firstEncryptedBlob(QByteArray& out) const;
 
 	void setTextColor(QColor& c);
 	QColor getTextColor() const;
@@ -137,6 +166,15 @@ protected:
   bool                mbIsEncryptionEnabled;
   QString             msTmpPasswd;
   QByteArray          mEncryptedData;
+
+  // Last-known on-disk ciphertext for this element. Set when the element
+  // is loaded from disk OR right after encrypt(). Lets toXML emit the
+  // existing blob byte-for-byte instead of running the cipher again when
+  // the user hasn't touched this element since load (mbDirty == false)
+  // — this is what makes the "only re-encrypt modified" Options
+  // checkbox work.
+  QByteArray          mOriginalBlob;
+  bool                mbDirty;
 
   QColor 			  mtextColor;
   QColor 			  msubtreeTextColor;

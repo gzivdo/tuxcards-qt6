@@ -337,8 +337,8 @@ void CTree::dropEvent( QDropEvent* pE )
 
   if (pE->source()==this && mpOldCurrent->isChildOrSelfSelected())
   {
-    QMessageBox::information( this, "Dragging", "An Entry cannot be moved onto itself or a child." );
-    emit showMessage("Move not possible.", 5);
+    QMessageBox::information( this, tr("Dragging"), tr("An Entry cannot be moved onto itself or a child.") );
+    emit showMessage(tr("Move not possible."), 5);
     pE->ignore();
     return;
   }
@@ -519,14 +519,13 @@ void CTree::askForDeletion( void )
 
   if (currentItem() == topLevelItem(0))
   {
-    QMessageBox::information( this, "Delete the active Entry",
-                              "The root entry cannot be deleted." );
+    QMessageBox::information( this, tr("Delete the active Entry"),
+                              tr("The root entry cannot be deleted.") );
     return;
   }
 
-  if (QMessageBox::warning( this, "Delete the active Entry",
-                            "Do you really want to delete '"
-                            +getCurrentActive()->getDescription()+"'?",
+  if (QMessageBox::warning( this, tr("Delete the active Entry"),
+                            tr("Do you really want to delete '%1'?").arg(getCurrentActive()->getDescription()),
                             QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
   {
     return;

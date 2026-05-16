@@ -344,6 +344,13 @@ bool CInformationCollection::checkEncryptionForElementTree()
 
 // Decrypt the complete tree
 // -------------------------------------------------------------------------------
+bool CInformationCollection::firstEncryptedBlob(QByteArray& out) const
+{
+   if ( !mpRootElement ) return false;
+   return mpRootElement->firstEncryptedBlob(out);
+}
+
+// -------------------------------------------------------------------------------
 bool  CInformationCollection::decryptTree(QString password)
 {
 	bool retval = mpRootElement->decryptTree(password);

@@ -70,13 +70,13 @@ void CPropertyDialog::setUp( CInformationElement* pElement, int iMode )
 
    if ( iMode == MODE_CHANGE_PROPERTIES )
    {
-      setWindowTitle("Change Properties of existing Entry");
+      setWindowTitle(tr("Change Properties of existing Entry"));
       setAttributes( pElement->getDescription(), pElement->getIconFileName());
       mpTextFormatChoser->setEnabled( false );
    }
    else if ( iMode == MODE_CREATE_NEW_ELEMENT )
    {
-      setWindowTitle( "Add new Entry" );
+      setWindowTitle( tr("Add new Entry") );
       setAttributes( "", "none" );
       mpTextFormatChoser->setEnabled( true );
    }
@@ -171,8 +171,8 @@ void CPropertyDialog::changeProperties( void )
 
    if ( getName().trimmed().isEmpty() )
    {
-      int iAnswer = QMessageBox::warning( this, "TuxCards", "The name of your note is empty.\n"
-                                          "Do you want to change this?",
+      int iAnswer = QMessageBox::warning( this, tr("TuxCards"), tr("The name of your note is empty.\n"
+                                          "Do you want to change this?"),
                                           QMessageBox::Yes, QMessageBox::No );
       if ( QMessageBox::Yes == iAnswer )
       {

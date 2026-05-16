@@ -27,6 +27,9 @@
 
 
 // -------------------------------------------------------------------------------
+bool CInformationElement::sReencryptOnFormatChange = false;
+
+// -------------------------------------------------------------------------------
 CInformationElement::CInformationElement( IParent* pParent,
                                         QString sDescription,
                                         QString sInformation,
@@ -44,6 +47,8 @@ CInformationElement::CInformationElement( IParent* pParent,
  , mbIsEncryptionEnabled( false )
  , msTmpPasswd( "" )
  , mEncryptedData()
+ , mOriginalBlob()
+ , mbDirty( false )
  , mtextColor (Qt::black)
  , msubtreeTextColor (Qt::black)
 // -------------------------------------------------------------------------------
@@ -201,6 +206,8 @@ QString CInformationElement::getInformation( void ) const
 void CInformationElement::setInformation( const QString& information )
 // -------------------------------------------------------------------------------
 {
+  if ( mInformation != information )
+     mbDirty = true;
   mInformation = information;
   if (!mbBatched) emit propertyChanged();
 }
@@ -461,6 +468,10 @@ void CInformationElement::enableEncryption( bool bIsEncryptionEnabled,
 {
    mbIsEncryptionEnabled = bIsEncryptionEnabled;
    msTmpPasswd = mbIsEncryptionEnabled ? sTmpPasswd : QString("");
+   // Toggling encryption state always invalidates whatever ciphertext we
+   // had cached — the next save must re-encrypt (or stop encrypting).
+   mOriginalBlob.clear();
+   mbDirty = true;
 }
 
 // -------------------------------------------------------------------------------
@@ -514,6 +525,12 @@ bool CInformationElement::decrypt( const QString& sPasswd )
    if ( StringCrypter::NO_ERROR == iError )
    {
       msTmpPasswd = sPasswd;
+      // Stash the on-disk ciphertext so that on save we can emit it
+      // byte-for-byte if the user has not touched this element. Before
+      // 3.2.0 we just dropped the blob here, which forced a full
+      // re-encrypt of every element on every save.
+      mOriginalBlob = mEncryptedData;
+      mbDirty       = false;
       mEncryptedData.resize(0);
    }
    else if (  StringCrypter::ERROR_INVALID_FILEHEADER == iError )
@@ -538,6 +555,10 @@ void CInformationElement::setEncryptedData( const QByteArray& data )
 // -------------------------------------------------------------------------------
 {
    mEncryptedData = data;
+   // Newly-loaded blob from disk doubles as the "original" we'd re-emit
+   // unchanged if the user never touches this element.
+   mOriginalBlob = data;
+   mbDirty       = false;
    mbIsEncryptionEnabled = true;
 }
 
@@ -581,6 +602,20 @@ bool CInformationElement::checkEncryptionForElementTree()
     		return true;
 	}
 	return false;
+}
+
+// -------------------------------------------------------------------------------
+bool CInformationElement::firstEncryptedBlob(QByteArray& out) const
+{
+   if ( isCurrentlyEncrypted() && mEncryptedData.size() > 0 ) {
+      out = mEncryptedData;
+      return true;
+   }
+   for ( const CInformationElement* x : *mpChildObjects ) {
+      if ( x->firstEncryptedBlob(out) )
+         return true;
+   }
+   return false;
 }
 
 // Decrypt's this element and it's children in the tree.

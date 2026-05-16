@@ -17,6 +17,7 @@
 
 #include "CTreeInformationElement.h"
 #include "../global.h"
+#include "../utilities/crypt/StringCrypter.h"
 
 // -------------------------------------------------------------------------------
 CTreeInformationElement::CTreeInformationElement( CInformationElement* pParent,
@@ -147,24 +148,37 @@ void CTreeInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
    QDomElement information = xmlDocument.createElement("Information");
    if ( isEncryptionEnabled() )
    {
-	   bool btmpEncryption = false;
-
- 		// If not currently encrypted, encrypt it to save the encrypted data.
-      if ( !isCurrentlyEncrypted() )
-      {
-         encrypt();
-         btmpEncryption = true;
+      // Decide whether we can reuse the on-disk ciphertext (mOriginalBlob)
+      // or must run the cipher again:
+      //  - dirty element → must re-encrypt
+      //  - empty mOriginalBlob → nothing to reuse, must encrypt
+      //  - sReencryptOnFormatChange && original blob's format !=
+      //    currently configured backend → must re-encrypt to migrate
+      //  - otherwise → emit mOriginalBlob unchanged (no cipher call).
+      QByteArray blob;
+      const QByteArray& orig = getOriginalBlob();
+      bool canReuse = !isDirty() && orig.size() > 0;
+      if ( canReuse && sReencryptOnFormatChange ) {
+         const int origFmt   = StringCrypter::identifyBlobFormat(orig);
+         const int wantFmt   = StringCrypter::getWriteBackend();
+         if ( origFmt != wantFmt )
+            canReuse = false;
       }
 
-      // Do base64 encoding
-      QString sB64Representation (getEncryptedData().toBase64().constData());
+      if ( canReuse ) {
+         blob = orig;
+      } else if ( isCurrentlyEncrypted() ) {
+         blob = getEncryptedData();
+         setOriginalBlob(blob);
+         markClean();
+      } else {
+         StringCrypter::encryptString( getInformation(), msTmpPasswd, blob );
+         setOriginalBlob(blob);
+         markClean();
+      }
 
-//      std::cout<<"CTreeInformationElement::toXML: base64 encode  text length " << sB64Representation.length() << " from " << getEncryptedData().size() << std::endl;
+      QString sB64Representation (blob.toBase64().constData());
       text = xmlDocument.createCDATASection( sB64Representation );
-
-      // Decrypt if done to get the encrypted data for saving.
-      if (btmpEncryption)
-      	decrypt(msTmpPasswd);
    }
    else
    {

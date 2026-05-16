@@ -21,6 +21,8 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScreen>
+#include <QGuiApplication>
 
 #include <iostream>
 
@@ -49,6 +51,18 @@ void CPasswdDialog::setUp( const QString& sIEDescription )
    msPasswd = "";
 
    mpPasswdLineOne->setFocus();
+
+   // Center the dialog on the screen (not on the parent geometry —
+   // see CFileEncryptionPasswordDialog::setUp for the rationale).
+   adjustSize();
+   QScreen* screen = nullptr;
+   if ( QWidget* p = parentWidget() )
+      screen = p->screen();
+   if ( !screen )
+      screen = QGuiApplication::primaryScreen();
+   if ( screen )
+      move( screen->availableGeometry().center() - rect().center() );
+
    show();
    exec();
 }
@@ -64,16 +78,16 @@ void CPasswdDialog::verifyAndAccept()
 
    if ( mpPasswdLineOne->text().trimmed().isEmpty() )
    {
-      (void) QMessageBox::warning( this, "TuxCards",
-                                   "Password field is empty. Please specify a valid password" );
+      (void) QMessageBox::warning( this, tr("TuxCards"),
+                                   tr("Password field is empty. Please specify a valid password") );
       return;
    }
 
    if ( 0 != mpPasswdLineOne->text().trimmed().compare(
                         mpPasswdLineTwo->text().trimmed()) )
    {
-      (void) QMessageBox::warning( this, "TuxCards",
-                                   "Passwords did not match. Please try again" );
+      (void) QMessageBox::warning( this, tr("TuxCards"),
+                                   tr("Passwords did not match. Please try again") );
       mpPasswdLineOne->setText("");
       mpPasswdLineTwo->setText("");
       mpPasswdLineOne->setFocus();

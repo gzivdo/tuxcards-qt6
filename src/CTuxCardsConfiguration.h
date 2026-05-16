@@ -44,7 +44,9 @@ public:
 
     B_IS_HTEXT_ENABLED,
     B_IS_VTEXT_ENABLED,
-    B_ALIGN_VTEXT
+    B_ALIGN_VTEXT,
+
+    B_REENCRYPT_ON_FORMAT_CHANGE
   };
   bool    getBoolValue( eBoolValue eKey ) const;
   void    setBoolValue( eBoolValue eKey, bool bValue );
@@ -63,7 +65,9 @@ public:
     S_TEXT_TWO,
     S_VERTICAL_TEXT,
 
-    S_BOOKMARKS
+    S_BOOKMARKS,
+
+    S_ENCRYPTION_FORMAT
   };
   QString getStringValue( eStringValue eKey ) const;
   void    setStringValue( eStringValue eKey, const QString& sValue );

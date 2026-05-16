@@ -258,9 +258,9 @@ void Editor::insertImage()
 {
    if ( !acceptRichText() )
       return;
-   QString fn = QFileDialog::getOpenFileName( this, "Insert Image",
+   QString fn = QFileDialog::getOpenFileName( this, tr("Insert Image"),
                   QString(),
-                  "Images (*.png *.jpg *.jpeg *.gif *.bmp *.xpm);;All files (*)" );
+                  tr("Images (*.png *.jpg *.jpeg *.gif *.bmp *.xpm);;All files (*)") );
    if ( fn.isEmpty() )
       return;
    QImage img( fn );

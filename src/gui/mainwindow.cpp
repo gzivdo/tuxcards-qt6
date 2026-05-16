@@ -111,7 +111,7 @@ MainWindow::MainWindow(QString arg)
    checkFirstTime();
 
    // build up mainwindow
-   setWindowTitle("TuxCards");
+   setWindowTitle(tr("TuxCards"));
    setWindowIcon(QIcon(QPixmap(lo32_app_tuxcards_xpm)));
    CIconManager::getInstance().setIconDirectory( mConfiguration.getStringValue( CTuxCardsConfiguration::S_ICON_DIR ) );
 
@@ -154,7 +154,7 @@ MainWindow::MainWindow(QString arg)
    showDialog   = new QDialog(this);
    QGroupBox* gb = new QGroupBox(showDialog);
    QVBoxLayout* gbLayout = new QVBoxLayout(gb);
-   showLabel    = new QLabel("Saving ...", gb);
+   showLabel    = new QLabel(tr("Saving ..."), gb);
    gbLayout->addWidget(showLabel);
    QVBoxLayout* showDlgLayout = new QVBoxLayout(showDialog);
    showDlgLayout->addWidget(gb);
@@ -205,8 +205,8 @@ void MainWindow::lowMemoryExit( void )
 {
    std::cout<<"TuxCards ERROR\nNot enough memory to run application.\nTuxCards"
               " will be stopped!!!"<<std::endl;
-   QMessageBox::critical( nullptr, "TuxCards", "Not enough memory to run "
-                          "application.\nThe program will be quit.",
+   QMessageBox::critical( nullptr, tr("TuxCards"), tr("Not enough memory to run "
+                          "application.\nThe program will be quit."),
                           QMessageBox::Abort, QMessageBox::NoButton );
    QApplication::exit( -1 );
 }
@@ -364,31 +364,31 @@ void MainWindow::refreshSaveIndicator( void )
 
 void MainWindow::settingUpActions( void )
 {
-   mfileEncryptFile = new QAction( getIcon("fileunlock"), "Toggle file &encryption", this);
+   mfileEncryptFile = new QAction( getIcon("fileunlock"), tr("Toggle file &encryption"), this);
    mfileEncryptFile->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
    mfileEncryptFile->setCheckable(true);
    connect( mfileEncryptFile, SIGNAL(triggered()), this, SLOT(toggleFileEncryption()) );
 
-   editUndoAction = new QAction( getIcon("undo"), "&Undo", this);
+   editUndoAction = new QAction( getIcon("undo"), tr("&Undo"), this);
    editUndoAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Z));
    connect( mpEditor, SIGNAL(undoAvailable(bool)), editUndoAction, SLOT(setEnabled(bool)) );
    connect( editUndoAction, SIGNAL(triggered()), mpEditor, SLOT(undo()) );
 
-   editRedoAction = new QAction( getIcon("redo"), "&Redo", this);
+   editRedoAction = new QAction( getIcon("redo"), tr("&Redo"), this);
    editRedoAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Y));
    connect( mpEditor, SIGNAL(redoAvailable(bool)), editRedoAction, SLOT(setEnabled(bool)) );
    connect( editRedoAction, SIGNAL(triggered()), mpEditor, SLOT(redo()) );
 
-   editCopyAction = new QAction( getIcon("editcopy"), "&Copy", this);
+   editCopyAction = new QAction( getIcon("editcopy"), tr("&Copy"), this);
    editCopyAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_C));
    connect( mpEditor, SIGNAL(copyAvailable(bool)), editCopyAction, SLOT(setEnabled(bool)) );
    connect( editCopyAction, SIGNAL(triggered()), mpEditor, SLOT(copy()) );
 
-   editSetEntryColor = new QAction( getIcon("editentrycolor"), "Set &Entry Color...", this);
+   editSetEntryColor = new QAction( getIcon("editentrycolor"), tr("Set &Entry Color..."), this);
    editSetEntryColor->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
    connect( editSetEntryColor, SIGNAL(triggered()), mpTree, SLOT(setEntryColor()) );
 
-   editSetEntrySubTreeColor = new QAction( getIcon("editentrysubtreecolor"), "Set Entry &Sub-Tree Color...", this);
+   editSetEntrySubTreeColor = new QAction( getIcon("editentrysubtreecolor"), tr("Set Entry &Sub-Tree Color..."), this);
    editSetEntrySubTreeColor->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
    connect( editSetEntrySubTreeColor, SIGNAL(triggered()), mpTree, SLOT(setEntrySubTreeColor()) );
 }
@@ -397,12 +397,12 @@ void MainWindow::settingUpActions( void )
 // -------------------------------------------------------------------------------
 void MainWindow::settingUpMenu( void )
 {
-   QMenu* file = new QMenu( "&File", this );
-   file->addAction( getIcon("filenew" ), "&New File",       this, SLOT(newFile()),  QKeySequence(Qt::CTRL | Qt::Key_N));
-   file->addAction( getIcon("fileopen"), "&Open File...",   this, SLOT(open()),     QKeySequence(Qt::CTRL | Qt::Key_O));
-   file->addAction( getIcon("filesave"), "&Save",           this, SLOT(save()),     QKeySequence(Qt::CTRL | Qt::Key_S));
-   file->addAction(                      "Save &As...",     this, SLOT(saveAs()) );
-   file->addAction( getIcon("fileprint"),"&Print current entry...",  this, SLOT(print()), QKeySequence(Qt::CTRL | Qt::Key_P) );
+   QMenu* file = new QMenu( tr("&File"), this );
+   file->addAction( getIcon("filenew" ), tr("&New File"),       this, SLOT(newFile()),  QKeySequence(Qt::CTRL | Qt::Key_N));
+   file->addAction( getIcon("fileopen"), tr("&Open File..."),   this, SLOT(open()),     QKeySequence(Qt::CTRL | Qt::Key_O));
+   file->addAction( getIcon("filesave"), tr("&Save"),           this, SLOT(save()),     QKeySequence(Qt::CTRL | Qt::Key_S));
+   file->addAction(                      tr("Save &As..."),     this, SLOT(saveAs()) );
+   file->addAction( getIcon("fileprint"),tr("&Print current entry..."),  this, SLOT(print()), QKeySequence(Qt::CTRL | Qt::Key_P) );
 
    file->addSeparator();
    file->addAction(mfileEncryptFile);
@@ -414,48 +414,48 @@ void MainWindow::settingUpMenu( void )
    connect( mpRecentFiles, SIGNAL(openFile(QString)), this, SLOT(slotSaveAndLoadNewFile(QString)) );
 
    file->addSeparator();
-   file->addAction(                      "Export to &HTML...",     this, SLOT(exportHTML()) );
-   file->addAction(                      "Export current entry to &Markdown...", this, SLOT(exportEntryMarkdown()) );
-   file->addAction(                      "Import &Markdown into current entry...", this, SLOT(importEntryMarkdown()) );
+   file->addAction(                      tr("Export to &HTML..."),     this, SLOT(exportHTML()) );
+   file->addAction(                      tr("Export current entry to &Markdown..."), this, SLOT(exportEntryMarkdown()) );
+   file->addAction(                      tr("Import &Markdown into current entry..."), this, SLOT(importEntryMarkdown()) );
    file->addSeparator();
-   file->addAction( getIcon("exit"),     "&Exit", this, SLOT(exit()), QKeySequence(Qt::CTRL | Qt::Key_Q) );
+   file->addAction( getIcon("exit"),     tr("&Exit"), this, SLOT(exit()), QKeySequence(Qt::CTRL | Qt::Key_Q) );
 
 
-   QMenu* edit = new QMenu( "&Edit", this );
+   QMenu* edit = new QMenu( tr("&Edit"), this );
    edit->addAction(editUndoAction);
    edit->addAction(editRedoAction);
    edit->addSeparator();
 
    if ( nullptr != mpEditor )
    {
-      edit->addAction( getIcon("editcut"),   "Cu&t",   mpEditor, SLOT(cut()),   QKeySequence(Qt::CTRL | Qt::Key_X) );
+      edit->addAction( getIcon("editcut"),   tr("Cu&t"),   mpEditor, SLOT(cut()),   QKeySequence(Qt::CTRL | Qt::Key_X) );
       edit->addAction(editCopyAction);
-      edit->addAction( getIcon("editpaste"), "&Paste", mpEditor, SLOT(paste()), QKeySequence(Qt::CTRL | Qt::Key_V) );
+      edit->addAction( getIcon("editpaste"), tr("&Paste"), mpEditor, SLOT(paste()), QKeySequence(Qt::CTRL | Qt::Key_V) );
       edit->addSeparator();
-      edit->addAction(                       "Select &All", mpEditor, SLOT(selectAll()), QKeySequence(Qt::CTRL | Qt::Key_A) );
+      edit->addAction(                       tr("Select &All"), mpEditor, SLOT(selectAll()), QKeySequence(Qt::CTRL | Qt::Key_A) );
 
       edit->addSeparator();
-      edit->addAction( "&Bold",      this, SLOT(textBold()),   QKeySequence(Qt::CTRL | Qt::Key_B) );
-      edit->addAction( "&Italic",    this, SLOT(textItalic()), QKeySequence(Qt::CTRL | Qt::Key_I) );
-      edit->addAction( "&Underline", this, SLOT(textUnder()),  QKeySequence(Qt::CTRL | Qt::Key_U) );
-      edit->addAction( "&Color...",  this, SLOT(textColor()),  QKeySequence(Qt::CTRL | Qt::Key_M) );
+      edit->addAction( tr("&Bold"),      this, SLOT(textBold()),   QKeySequence(Qt::CTRL | Qt::Key_B) );
+      edit->addAction( tr("&Italic"),    this, SLOT(textItalic()), QKeySequence(Qt::CTRL | Qt::Key_I) );
+      edit->addAction( tr("&Underline"), this, SLOT(textUnder()),  QKeySequence(Qt::CTRL | Qt::Key_U) );
+      edit->addAction( tr("&Color..."),  this, SLOT(textColor()),  QKeySequence(Qt::CTRL | Qt::Key_M) );
 
       edit->addSeparator();
       edit->addAction(editSetEntryColor);
       edit->addAction(editSetEntrySubTreeColor);
 
       edit->addSeparator();
-      edit->addAction( "Insert &Image...",      mpEditor, SLOT(insertImage()),       QKeySequence(Qt::CTRL | Qt::Key_P) );
-      edit->addAction( "Insert Current &Date",  this,     SLOT(insertCurrentDate()), QKeySequence(Qt::CTRL | Qt::Key_D) );
-      edit->addAction( "Insert Current T&ime",  this,     SLOT(insertCurrentTime()), QKeySequence(Qt::CTRL | Qt::Key_T) );
+      edit->addAction( tr("Insert &Image..."),      mpEditor, SLOT(insertImage()),       QKeySequence(Qt::CTRL | Qt::Key_P) );
+      edit->addAction( tr("Insert Current &Date"),  this,     SLOT(insertCurrentDate()), QKeySequence(Qt::CTRL | Qt::Key_D) );
+      edit->addAction( tr("Insert Current T&ime"),  this,     SLOT(insertCurrentTime()), QKeySequence(Qt::CTRL | Qt::Key_T) );
       edit->addSeparator();
-      edit->addAction( "&Options...", this, SLOT(editConfiguration()) );
+      edit->addAction( tr("&Options..."), this, SLOT(editConfiguration()) );
    }
 
-   QMenu* toolbars = new QMenu( "Toolbars", this );
-   miMainToolBarID   = toolbars->addAction( "Show Main Toolbar" );
-   miEntryToolBarID  = toolbars->addAction( "Show Entry Manipulation Toolbar" );
-   miEditorToolBarID = toolbars->addAction( "Show Editor Toolbar" );
+   QMenu* toolbars = new QMenu( tr("Toolbars"), this );
+   miMainToolBarID   = toolbars->addAction( tr("Show Main Toolbar") );
+   miEntryToolBarID  = toolbars->addAction( tr("Show Entry Manipulation Toolbar") );
+   miEditorToolBarID = toolbars->addAction( tr("Show Editor Toolbar") );
    miMainToolBarID->setCheckable(true);
    miEntryToolBarID->setCheckable(true);
    miEditorToolBarID->setCheckable(true);
@@ -466,14 +466,14 @@ void MainWindow::settingUpMenu( void )
    connect( miEntryToolBarID,  &QAction::toggled, this, &MainWindow::setEntryToolbarVisible );
    connect( miEditorToolBarID, &QAction::toggled, this, &MainWindow::setEditorToolbarVisible );
 
-   QMenu* view = new QMenu( "&View", this );
+   QMenu* view = new QMenu( tr("&View"), this );
    view->addMenu( toolbars );
-   view->addAction( "&Word Count", this, SLOT(wordCount()) );
+   view->addAction( tr("&Word Count"), this, SLOT(wordCount()) );
 
-   QMenu* about = new QMenu( "&About", this );
-   about->addAction( "&Keyboard Shortcuts", this, SLOT(showKBShortcuts()) );
+   QMenu* about = new QMenu( tr("&About"), this );
+   about->addAction( tr("&Keyboard Shortcuts"), this, SLOT(showKBShortcuts()) );
    about->addSeparator();
-   about->addAction( QIcon(QPixmap(lo16_app_tuxcards_xpm)), "About TuxCards", this, SLOT(showAbout()) );
+   about->addAction( QIcon(QPixmap(lo16_app_tuxcards_xpm)), tr("About TuxCards"), this, SLOT(showAbout()) );
 
    mpMenu = menuBar();
    if ( nullptr != mpMenu )
@@ -489,15 +489,15 @@ void MainWindow::settingUpMenu( void )
 // -------------------------------------------------------------------------------
 void MainWindow::settingUpToolBar( void )
 {
-  mpMainTools = addToolBar("Main");
+  mpMainTools = addToolBar(tr("Main"));
   mpMainTools->setIconSize(QSize(18,18));
   mpMainTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-  QAction* clearTool = mpMainTools->addAction( getIcon("filenew"), "Create a new file", this, SLOT(newFile()));
+  QAction* clearTool = mpMainTools->addAction( getIcon("filenew"), tr("Create a new file"), this, SLOT(newFile()));
   mpMainTools->addSeparator();
-  QAction* openTool  = mpMainTools->addAction( getIcon("fileopen"), "Open a new file", this, SLOT(open()));
-  QAction* saveTool  = mpMainTools->addAction( getIcon("filesave"), "Save current file (Ctrl+S)", this, SLOT(save()));
-  QAction* printTool = mpMainTools->addAction( getIcon("fileprint"), "Print current entry", this, SLOT(print()));
+  QAction* openTool  = mpMainTools->addAction( getIcon("fileopen"), tr("Open a new file"), this, SLOT(open()));
+  QAction* saveTool  = mpMainTools->addAction( getIcon("filesave"), tr("Save current file (Ctrl+S)"), this, SLOT(save()));
+  QAction* printTool = mpMainTools->addAction( getIcon("fileprint"), tr("Print current entry"), this, SLOT(print()));
 
   mpMainTools->addAction(mfileEncryptFile);
 
@@ -505,63 +505,63 @@ void MainWindow::settingUpToolBar( void )
   mpMainTools->addAction(editUndoAction);
   mpMainTools->addAction(editRedoAction);
 
-  QAction* editCutTool   = mpMainTools->addAction( getIcon("editcut"), "Cut (Ctrl+X)", mpEditor, SLOT(cut()));
+  QAction* editCutTool   = mpMainTools->addAction( getIcon("editcut"), tr("Cut (Ctrl+X)"), mpEditor, SLOT(cut()));
   mpMainTools->addAction(editCopyAction);
-  QAction* editPasteTool = mpMainTools->addAction( getIcon("editpaste"), "Paste (Ctrl+V)", mpEditor, SLOT(paste()));
+  QAction* editPasteTool = mpMainTools->addAction( getIcon("editpaste"), tr("Paste (Ctrl+V)"), mpEditor, SLOT(paste()));
 
   mpMainTools->addSeparator();
   mpMainTools->addAction(editSetEntryColor);
   mpMainTools->addAction(editSetEntrySubTreeColor);
 
   mpMainTools->addSeparator();
-  QAction* findTool = mpMainTools->addAction( getIcon("find"), "Search (Ctrl+F)", this, SLOT(search()));
+  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search (Ctrl+F)"), this, SLOT(search()));
   mpMainTools->addSeparator();
 
-  clearTool->setWhatsThis("<b>Clear whole Tree</b>");
-  openTool->setWhatsThis("<b>Open a new File</b>");
-  saveTool->setWhatsThis("<b>Save Data to File</b> (Ctrl+S)");
-  printTool->setWhatsThis("<b>Print current Entry</b>");
-  editUndoAction->setWhatsThis("<b>Undo</b> (Ctrl+Z)");
-  editRedoAction->setWhatsThis("<b>Redo</b> (Ctrl+Y)");
-  editCutTool->setWhatsThis("<b>Cut</b> (Ctrl+X)");
-  editCopyAction->setWhatsThis("<b>Copy</b> (Ctrl+C)");
-  editPasteTool->setWhatsThis("<b>Paste</b> (Ctrl+V)");
-  findTool->setWhatsThis("<b>Search</b> (Ctrl+F)");
+  clearTool->setWhatsThis(tr("<b>Clear whole Tree</b>"));
+  openTool->setWhatsThis(tr("<b>Open a new File</b>"));
+  saveTool->setWhatsThis(tr("<b>Save Data to File</b> (Ctrl+S)"));
+  printTool->setWhatsThis(tr("<b>Print current Entry</b>"));
+  editUndoAction->setWhatsThis(tr("<b>Undo</b> (Ctrl+Z)"));
+  editRedoAction->setWhatsThis(tr("<b>Redo</b> (Ctrl+Y)"));
+  editCutTool->setWhatsThis(tr("<b>Cut</b> (Ctrl+X)"));
+  editCopyAction->setWhatsThis(tr("<b>Copy</b> (Ctrl+C)"));
+  editPasteTool->setWhatsThis(tr("<b>Paste</b> (Ctrl+V)"));
+  findTool->setWhatsThis(tr("<b>Search</b> (Ctrl+F)"));
 
 
-  mpEntryTools = addToolBar("Entry");
+  mpEntryTools = addToolBar(tr("Entry"));
   mpEntryTools->setIconSize(QSize(18,18));
   mpEntryTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-  textFormatTool = mpEntryTools->addAction( getIcon("filenew"), "Converts the Text Format", this, SLOT(changeInformationFormat()) );
+  textFormatTool = mpEntryTools->addAction( getIcon("filenew"), tr("Converts the Text Format"), this, SLOT(changeInformationFormat()) );
 
   mpEntryTools->addSeparator();
-  QAction* addTreeElementTool = mpEntryTools->addAction( getIcon("addTreeElement"), "Add Entry (INSERT)", mpTree, SLOT(addElement()) );
-  QAction* changePropertyTool = mpEntryTools->addAction( getIcon("changeProperty"), "Change Properties", mpTree, SLOT(changeActiveElementProperties()) );
-  QAction* removeEntryTool   = mpEntryTools->addAction( getIcon("delete"), "Remove active Entry (DELETE)", mpTree, SLOT(askForDeletion()) );
+  QAction* addTreeElementTool = mpEntryTools->addAction( getIcon("addTreeElement"), tr("Add Entry (INSERT)"), mpTree, SLOT(addElement()) );
+  QAction* changePropertyTool = mpEntryTools->addAction( getIcon("changeProperty"), tr("Change Properties"), mpTree, SLOT(changeActiveElementProperties()) );
+  QAction* removeEntryTool   = mpEntryTools->addAction( getIcon("delete"), tr("Remove active Entry (DELETE)"), mpTree, SLOT(askForDeletion()) );
 
   mpEntryTools->addSeparator();
-  QAction* ieUpTool   = mpEntryTools->addAction( getIcon("upArrow"), "Move Current Entry Upwards", this, SLOT(moveElementUp()) );
-  QAction* ieDownTool = mpEntryTools->addAction( getIcon("downArrow"), "Move Current Entry Downwards", this, SLOT(moveElementDown()) );
+  QAction* ieUpTool   = mpEntryTools->addAction( getIcon("upArrow"), tr("Move Current Entry Upwards"), this, SLOT(moveElementUp()) );
+  QAction* ieDownTool = mpEntryTools->addAction( getIcon("downArrow"), tr("Move Current Entry Downwards"), this, SLOT(moveElementDown()) );
 
   mpEntryTools->addSeparator();
-  mpLeftButton  = mpEntryTools->addAction( getIcon("back"), "Last Entry accessed in History (Alt+Left)", this, SLOT(activatePreviousHistoryElement()) );
+  mpLeftButton  = mpEntryTools->addAction( getIcon("back"), tr("Last Entry accessed in History (Alt+Left)"), this, SLOT(activatePreviousHistoryElement()) );
   mpLeftButton->setEnabled(false);
-  mpRightButton = mpEntryTools->addAction( getIcon("forward"), "Next Entry in History (Alt+Right)", this, SLOT(activateNextHistoryElement()) );
+  mpRightButton = mpEntryTools->addAction( getIcon("forward"), tr("Next Entry in History (Alt+Right)"), this, SLOT(activateNextHistoryElement()) );
   mpRightButton->setEnabled(false);
 
-  textFormatTool->setWhatsThis("Text format toggle");
-  addTreeElementTool->setWhatsThis("<b>Add Entry</b> (INSERT)");
-  changePropertyTool->setWhatsThis("<b>Change Property</b>");
-  removeEntryTool->setWhatsThis("<b>Remove active Entry</b> (DELETE)");
-  ieUpTool->setWhatsThis("<b>Move Up</b>");
-  ieDownTool->setWhatsThis("<b>Move Down</b>");
-  mpLeftButton->setWhatsThis("<b>History, Back</b> (Alt+Left)");
-  mpRightButton->setWhatsThis("<b>History, Forward</b> (Alt+Right)");
+  textFormatTool->setWhatsThis(tr("Text format toggle"));
+  addTreeElementTool->setWhatsThis(tr("<b>Add Entry</b> (INSERT)"));
+  changePropertyTool->setWhatsThis(tr("<b>Change Property</b>"));
+  removeEntryTool->setWhatsThis(tr("<b>Remove active Entry</b> (DELETE)"));
+  ieUpTool->setWhatsThis(tr("<b>Move Up</b>"));
+  ieDownTool->setWhatsThis(tr("<b>Move Down</b>"));
+  mpLeftButton->setWhatsThis(tr("<b>History, Back</b> (Alt+Left)"));
+  mpRightButton->setWhatsThis(tr("<b>History, Forward</b> (Alt+Right)"));
 
 
   addToolBarBreak();
-  mpEditorTools = addToolBar("Editor");
+  mpEditorTools = addToolBar(tr("Editor"));
   mpEditorTools->setIconSize(QSize(18,18));
   mpEditorTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
@@ -595,40 +595,40 @@ void MainWindow::settingUpToolBar( void )
   pComboSize->lineEdit()->setText( QString::number( QApplication::font().pointSize() ) );
 
 
-  textBoldTool = mpEditorTools->addAction( getIcon("text_bold"), "Bold (Ctrl+B)", this, SLOT(textBold()) );
+  textBoldTool = mpEditorTools->addAction( getIcon("text_bold"), tr("Bold (Ctrl+B)"), this, SLOT(textBold()) );
   textBoldTool->setCheckable(true);
 
-  textItalicTool = mpEditorTools->addAction( getIcon("text_italic"), "Italic (Ctrl+I)", this, SLOT(textItalic()) );
+  textItalicTool = mpEditorTools->addAction( getIcon("text_italic"), tr("Italic (Ctrl+I)"), this, SLOT(textItalic()) );
   textItalicTool->setCheckable(true);
 
-  textUnderTool = mpEditorTools->addAction( getIcon("text_under"), "Underline (Ctrl+U)", this, SLOT(textUnder()) );
+  textUnderTool = mpEditorTools->addAction( getIcon("text_under"), tr("Underline (Ctrl+U)"), this, SLOT(textUnder()) );
   textUnderTool->setCheckable(true);
 
   QPixmap dummy(1,1); dummy.fill(Qt::black);
-  textColorTool = mpEditorTools->addAction( QIcon(dummy), "Color", this, SLOT(textColor()) );
+  textColorTool = mpEditorTools->addAction( QIcon(dummy), tr("Color"), this, SLOT(textColor()) );
   textColorChanged(Qt::black);
 
   mpEditorTools->addSeparator();
-  textLeftTool = mpEditorTools->addAction( getIcon("text_left"), "Align Left", this, SLOT(textLeft()) );
+  textLeftTool = mpEditorTools->addAction( getIcon("text_left"), tr("Align Left"), this, SLOT(textLeft()) );
   textLeftTool->setCheckable(true);
 
-  textCenterTool = mpEditorTools->addAction( getIcon("text_center"), "Center", this, SLOT(textHCenter()) );
+  textCenterTool = mpEditorTools->addAction( getIcon("text_center"), tr("Center"), this, SLOT(textHCenter()) );
   textCenterTool->setCheckable(true);
 
-  textRightTool = mpEditorTools->addAction( getIcon("text_right"), "Align Right", this, SLOT(textRight()) );
+  textRightTool = mpEditorTools->addAction( getIcon("text_right"), tr("Align Right"), this, SLOT(textRight()) );
   textRightTool->setCheckable(true);
 
-  textBlockTool = mpEditorTools->addAction( getIcon("text_block"), "Text Block", this, SLOT(textBlock()) );
+  textBlockTool = mpEditorTools->addAction( getIcon("text_block"), tr("Text Block"), this, SLOT(textBlock()) );
   textBlockTool->setCheckable(true);
 
-  textBoldTool->setWhatsThis("<b>Bold</b>");
-  textItalicTool->setWhatsThis("<b>Italic</b>");
-  textUnderTool->setWhatsThis("<b>Underline</b>");
-  textColorTool->setWhatsThis("<b>Text Color</b>");
-  textLeftTool->setWhatsThis("<b>Align Left</b>");
-  textCenterTool->setWhatsThis("<b>Center</b>");
-  textRightTool->setWhatsThis("<b>Align Right</b>");
-  textBlockTool->setWhatsThis("<b>Text Block</b>");
+  textBoldTool->setWhatsThis(tr("<b>Bold</b>"));
+  textItalicTool->setWhatsThis(tr("<b>Italic</b>"));
+  textUnderTool->setWhatsThis(tr("<b>Underline</b>"));
+  textColorTool->setWhatsThis(tr("<b>Text Color</b>"));
+  textLeftTool->setWhatsThis(tr("<b>Align Left</b>"));
+  textCenterTool->setWhatsThis(tr("<b>Center</b>"));
+  textRightTool->setWhatsThis(tr("<b>Align Right</b>"));
+  textBlockTool->setWhatsThis(tr("<b>Text Block</b>"));
 
 
   connect( mpEditor, &QTextEdit::currentCharFormatChanged, this, [this](const QTextCharFormat& fmt){
@@ -737,22 +737,22 @@ void MainWindow::changeInformationFormat()
    CInformationElement* pActiveElement = mpCollection->getActiveElement();
    if ( nullptr == pActiveElement )
    {
-      QMessageBox::information( 0, "Converter", "There is no active entry.",
+      QMessageBox::information( 0, tr("Converter"), tr("There is no active entry."),
                                 QMessageBox::Abort );
       return;
    }
 
    if ( pActiveElement->getInformationFormat() == &InformationFormat::RTF)
    {
-      QMessageBox::information( 0, "Converter", "Sorry, but converting RTF to ASCII "
-                                "is not implemented yet.",
+      QMessageBox::information( 0, tr("Converter"), tr("Sorry, but converting RTF to ASCII "
+                                "is not implemented yet."),
                                 QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
       return;
    }
 
-   if (QMessageBox::Cancel == QMessageBox::warning(this, "Converting Information Format",
-                                                   "Are you sure to change the information "
-                                                   "format.\nSome of the text layout will be lost.",
+   if (QMessageBox::Cancel == QMessageBox::warning(this, tr("Converting Information Format"),
+                                                   tr("Are you sure to change the information "
+                                                   "format.\nSome of the text layout will be lost."),
                                                    QMessageBox::Yes,
                                                    QMessageBox::Cancel,
                                                    QMessageBox::NoButton))
@@ -1080,6 +1080,8 @@ void MainWindow::newFile()
 // -------------------------------------------------------------------------------
 void MainWindow::clearAll()
 {
+	StringCrypter::clearKeyCache();
+
 	if (mpCollection)
 		deleteCollection( mpCollection );
 	mpCollection = CInformationCollection::createDefaultCollection();
@@ -1094,9 +1096,9 @@ int MainWindow::PromptBeforeNewFile()
   int result = QMessageBox::No;
 
   if ( CHANGES ) {
- 		result = askForSaving("Would you like to save the current file?");
+ 		result = askForSaving(tr("Would you like to save the current file?"));
   } else {
-    result = QMessageBox::warning( this, "New File", "Create New File, closing current one?",
+    result = QMessageBox::warning( this, tr("New File"), tr("Create New File, closing current one?"),
                                    QMessageBox::Yes | QMessageBox::Default,
                                    QMessageBox::No | QMessageBox::Escape);
   }
@@ -1110,7 +1112,7 @@ int MainWindow::askForSaving(QString question)
 {
   int result = QMessageBox::Yes;
   if ( CHANGES ){
-    result = QMessageBox::warning( this, "Save", question,
+    result = QMessageBox::warning( this, tr("Save"), question,
                                    QMessageBox::Yes | QMessageBox::Default, QMessageBox::No,
                                    QMessageBox::Cancel | QMessageBox::Escape);
     if (result==QMessageBox::Yes)
@@ -1141,6 +1143,38 @@ bool MainWindow::initializingCollection( QString collectionName )
    checkPointer( mpTree );
 
 	if (mpCollection->isEncrypted()) {
+		// Before prompting for the password, make sure this build has
+		// the backend that the file was encrypted with. Otherwise we
+		// would loop on "wrong password" forever — the password is
+		// fine, we just can't run the cipher.
+		QByteArray firstBlob;
+		if (mpCollection->firstEncryptedBlob(firstBlob)) {
+			const int fmt = StringCrypter::identifyBlobFormat(firstBlob);
+			if (!StringCrypter::isBackendAvailableFor(fmt)) {
+				QString algo;
+				switch (fmt) {
+				case StringCrypter::BLOB_AESGCM:
+					algo = tr("AES-256-GCM (OpenSSL backend)");
+					break;
+				case StringCrypter::BLOB_XCHACHA:
+					algo = tr("XChaCha20-Poly1305 (monocypher backend)");
+					break;
+				default:
+					algo = tr("an unknown crypto backend");
+					break;
+				}
+				QMessageBox::critical(this,
+					tr("Unsupported encryption format"),
+					tr("This file is encrypted with %1, but this build "
+					   "of TuxCards was compiled without that backend.\n\n"
+					   "Please download the full build (with both crypto "
+					   "backends) from the project releases page, or "
+					   "rebuild TuxCards with the matching backend "
+					   "enabled.").arg(algo));
+				return false;
+			}
+		}
+
 		bool bCorrectPasswd = false;
         int wrongPassCount=0;
         const int WRONG_PASS_MAX_COUNT=3;
@@ -1162,7 +1196,7 @@ bool MainWindow::initializingCollection( QString collectionName )
            if (!bCorrectPasswd) {
                wrongPassCount++;
                if (wrongPassCount >= WRONG_PASS_MAX_COUNT) {
-                   QMessageBox::warning(this, "TuxCards", "Too many password attempts",
+                   QMessageBox::warning(this, tr("TuxCards"), tr("Too many password attempts"),
                          QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
                    return false;
                }
@@ -1206,7 +1240,7 @@ bool MainWindow::initializingCollection( QString collectionName )
    mpCollection->addView( mpTree );
    mpCollection->addView( mpSingleEntryView );
 
-   setWindowTitle("TuxCards (" + collectionName + ")");
+   setWindowTitle(tr("TuxCards (%1)").arg(collectionName));
 
    mConfiguration.setStringValue( CTuxCardsConfiguration::S_DATA_FILE_NAME, collectionName );
    mConfiguration.saveToFile();                    // because the dataFileName has changed
@@ -1248,13 +1282,13 @@ void MainWindow::open()
 // -------------------------------------------------------------------------------
 {
   // give a chance to save the file before opening another one
-  if (askForSaving("Do you want to save the current file before opening another?") == QMessageBox::Cancel)
+  if (askForSaving(tr("Do you want to save the current file before opening another?")) == QMessageBox::Cancel)
     return;
 
   // getting dataFileName
   QString fileName( QFileDialog::getOpenFileName() );
   if ( fileName.isNull() || fileName=="" )
-    showMessage("No Filename specified.", 5);
+    showMessage(tr("No Filename specified."), 5);
   else
     open(fileName);
 }
@@ -1268,6 +1302,11 @@ void MainWindow::open()
 bool MainWindow::open( QString fileName )
 // -------------------------------------------------------------------------------
 {
+   // Drop any cached AES-GCM derived key from a previously open file —
+   // the new file may use a different password, and we should not keep
+   // the previous file's key material in memory across files.
+   StringCrypter::clearKeyCache();
+
    bool retVal = false;
 
    int format = getDataFileFormat(fileName);
@@ -1278,10 +1317,10 @@ bool MainWindow::open( QString fileName )
       retVal = openOldDataFile(fileName);
    else
    {
-      QMessageBox::critical(	this, "Opening a data file",
-            "Could not open file '"+fileName+"'<br> or did not "
-            "recognize the dataformat.",
-            "Ok");
+      QMessageBox::critical(	this, tr("Opening a data file"),
+            tr("Could not open file '%1'<br> or did not "
+            "recognize the dataformat.").arg(fileName),
+            tr("Ok"));
    }
 
    if (retVal)
@@ -1346,7 +1385,7 @@ bool MainWindow::openOldDataFile(QString fileName)
   bool retval;
 
   if (! file.open(QIODevice::ReadOnly) ) {
-    showMessage("ERROR could not open '"+fileName+"' for reading.", 5);
+    showMessage(tr("ERROR could not open '%1' for reading.").arg(fileName), 5);
     return false;
   }
 
@@ -1395,8 +1434,8 @@ bool MainWindow::openXMLDataFile(QString fileName)
 
   if ( !mpCollection )
   {
-    QMessageBox::warning(this, "TuxCards - XML I/O",
-                         "ERROR could not open '"+fileName+"' for reading or parse error.",
+    QMessageBox::warning(this, tr("TuxCards - XML I/O"),
+                         tr("ERROR could not open '%1' for reading or parse error.").arg(fileName),
                          QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
     return false;
   }
@@ -1411,7 +1450,7 @@ bool MainWindow::openXMLDataFile(QString fileName)
 // -------------------------------------------------------------------------------
 void MainWindow::slotSaveAndLoadNewFile(QString newFile)
 {
-	if (askForSaving("Would you like to save the current file?") == QMessageBox::Cancel)
+	if (askForSaving(tr("Would you like to save the current file?")) == QMessageBox::Cancel)
     	return;
 
 	open(newFile);
@@ -1471,7 +1510,7 @@ void MainWindow::saveAs()
    QString newFileName( QFileDialog::getSaveFileName() );
    if ( newFileName.isNull() || newFileName=="" )
    {
-      showMessage("No Filename specified.", 5);
+      showMessage(tr("No Filename specified."), 5);
       return;
    }
 
@@ -1496,9 +1535,9 @@ void MainWindow::save(QString fileName)
 
    if ( (QDir::homePath() + TUX_CONFIG_FILE) == fileName )
    {
-      QMessageBox::warning( this, "Saving", "File not saved.\n"
-                            "Please do not use \"" + fileName +"\""
-                            " as file name.",
+      QMessageBox::warning( this, tr("Saving"), tr("File not saved.\n"
+                            "Please do not use \"%1\""
+                            " as file name.").arg(fileName),
                             QMessageBox::Abort, NULL );
       return;
    }
@@ -1513,6 +1552,20 @@ void MainWindow::save(QString fileName)
 
    // saving eventual changes
    mpEditor->writeCurrentTextToActiveInformationElement();
+
+   // Push the user's "Encryption format" / "re-encrypt on change" choice
+   // into the serializer before it walks the tree. Tree elements decide
+   // per-element whether to reuse their on-disk blob or re-encrypt with
+   // the current backend.
+   const QString fmtStr = mConfiguration.getStringValue(
+                             CTuxCardsConfiguration::S_ENCRYPTION_FORMAT );
+   if ( fmtStr == "monocypher" )
+      StringCrypter::setWriteBackend( StringCrypter::BLOB_XCHACHA );
+   else
+      StringCrypter::setWriteBackend( StringCrypter::BLOB_AESGCM );
+   CInformationElement::sReencryptOnFormatChange = mConfiguration.getBoolValue(
+                             CTuxCardsConfiguration::B_REENCRYPT_ON_FORMAT_CHANGE );
+
    XMLPersister::save( *mpCollection, fileName );
 
 
@@ -1522,7 +1575,7 @@ void MainWindow::save(QString fileName)
    else
       mpTree->setColumnText(fileName);
 
-   setWindowTitle("TuxCards (" + fileName + ")");
+   setWindowTitle(tr("TuxCards (%1)").arg(fileName));
 
    mConfiguration.setStringValue( CTuxCardsConfiguration::S_DATA_FILE_NAME, fileName );
    mConfiguration.saveToFile();
@@ -1531,7 +1584,7 @@ void MainWindow::save(QString fileName)
    CHANGES=false;
    mLastSaveEpochMs = QDateTime::currentMSecsSinceEpoch();
    refreshSaveIndicator();
-   showMessage("Saved to '" + fileName + "'.", 5);
+   showMessage(tr("Saved to '%1'.").arg(fileName), 5);
 
    callingExecutionStatement();
 }
@@ -1560,9 +1613,9 @@ void MainWindow::toggleFileEncryption()
 	if (mpCollection->isEncrypted()) {
 
 		// Confirm decryption
-		if (QMessageBox::Cancel == QMessageBox::warning(this, "Tuxcards File Encryption",
-													"About to remove encryption for current"
-                                                   " file.\n Would you like to continue?",
+		if (QMessageBox::Cancel == QMessageBox::warning(this, tr("Tuxcards File Encryption"),
+													tr("About to remove encryption for current"
+                                                   " file.\n Would you like to continue?"),
                                                    QMessageBox::Ok,
                                                    QMessageBox::Cancel,
                                                    QMessageBox::NoButton))
@@ -1585,7 +1638,7 @@ void MainWindow::toggleFileEncryption()
 		}
 
 		// Request user for password to use for encryption
-		mPasswdDialog.setUp( "Current file");
+		mPasswdDialog.setUp( tr("Current file"));
 		strPassword = mPasswdDialog.getPasswd();
 	    if (strPassword.isEmpty() ) {
 	    	mfileEncryptFile->setChecked(false);
@@ -1660,7 +1713,7 @@ void MainWindow::exportHTML()
 
    QString dirPath = QFileDialog::getExistingDirectory(
                                this,
-                               "Choose a directory",
+                               tr("Choose a directory"),
                                QDir::homePath() );
 
    if ( dirPath.isEmpty() )
@@ -1671,18 +1724,18 @@ void MainWindow::exportHTML()
    // done
    if ( false != bSuccess )
    {
-      QMessageBox::information( this, "HTML-Export", "HTML<em>Export</em> "
-                                "<font size=-1>(" + QString(TUX_VERSION) + ")</font>"
+      QMessageBox::information( this, tr("HTML-Export"), tr("HTML<em>Export</em> "
+                                "<font size=-1>(%1)</font>"
                                 " finished, successfully.\n\n"
-                                "The data are stored in\n"+dirPath, 1);
+                                "The data are stored in\n%2").arg(QString(TUX_VERSION), dirPath), 1);
    }
    else
    {
-      QMessageBox::warning( this, "HTML-Export", "HTML<em>Export</em> "
-                            "<font size=-1>(" + QString(TUX_VERSION) + ")</font>"
+      QMessageBox::warning( this, tr("HTML-Export"), tr("HTML<em>Export</em> "
+                            "<font size=-1>(%1)</font>"
                             " not successfully.\n\n"
                             "Please check write permission and disk space\n"
-                            "(" + dirPath + ")", "Abort");
+                            "(%2)").arg(QString(TUX_VERSION), dirPath), tr("Abort"));
    }
 }
 
@@ -1745,26 +1798,21 @@ void MainWindow::wordCount( void )
    CInformationElement* pActiveElement = mpCollection->getActiveElement();
    if ( nullptr == pActiveElement )
    {
-      QMessageBox::information( 0, "WordCount", "There is no active entry.",
+      QMessageBox::information( 0, tr("WordCount"), tr("There is no active entry."),
                                 QMessageBox::Abort );
       return;
    }
 
    QString text = pActiveElement->getInformationText();
-   //std::cout<<text<<std::endl;
    int numchar  = text.length();
    int words  = Strings::wordCount( text );
    int lines  = mpEditor->document()->blockCount();
    int parags = mpEditor->document()->blockCount();
 
-   QMessageBox::information( this, "TuxCards",
-                    "<center>Current Entry contains<br><br>"
-                    +QString::number(numchar) + (numchar > 1 ? " characters<br>" : " character<br>")
-                    +QString::number(words)
-                    +(words > 1 ? " words<br>" : " word<br>")
-                    +QString::number(lines)  + (lines  > 1 ? " lines<br>" : " line<br>" )
-                    +QString::number(parags) + (parags > 1 ? " paragraphs" : " paragraph" )
-                    +".</center>");
+   QMessageBox::information( this, tr("TuxCards"),
+                    tr("<center>Current Entry contains<br><br>"
+                       "%1 characters<br>%2 words<br>%3 lines<br>%4 paragraphs.</center>")
+                       .arg(numchar).arg(words).arg(lines).arg(parags));
 }
 
 // -------------------------------------------------------------------------------
@@ -1787,19 +1835,19 @@ void MainWindow::insertCurrentTime()
 void MainWindow::showKBShortcuts()
 // -------------------------------------------------------------------------------
 {
-   QMessageBox::about(  this, "TuxCards",
-                    "TuxCards Keyboard shortcuts\n\n"
+   QMessageBox::about(  this, tr("TuxCards"),
+                    tr("TuxCards Keyboard shortcuts\n\n"
 
 					"Common shortcuts:\n"
-					"Qt::CTRL N: New File\n"
-					"Qt::CTRL O: Open File\n"
-					"Qt::CTRL S: Save current file\n"
-					"Qt::CTRL E: Encrypt current file\n"
-					"Qt::CTRL F: Search\n"
+					"Ctrl+N: New File\n"
+					"Ctrl+O: Open File\n"
+					"Ctrl+S: Save current file\n"
+					"Ctrl+E: Encrypt current file\n"
+					"Ctrl+F: Search\n"
 					"F5: Switch between tree(left pane) and editor window(right pane)\n"
 					"Alt+Left or Right arrow: Navigate items accessed earlier(history)\n"
-					"MENU (Left of right Qt::CTRL key): Show current context menu\n"
-					"Qt::CTRL W:Word count, Qt::CTRL D: Date insertion, Qt::CTRL T: Time insertion\n\n"
+					"MENU (Left of right Ctrl key): Show current context menu\n"
+					"Ctrl+W: Word count, Ctrl+D: Date insertion, Ctrl+T: Time insertion\n\n"
 
 					"Tree (Left pane) shortcuts:\n"
 					"F2: Edit current entry title\n"
@@ -1807,10 +1855,10 @@ void MainWindow::showKBShortcuts()
 					"DEL: Delete current entry\n\n"
 
 					"Editor (Right pane) shortcuts:\n"
-					"Qt::CTRL X: Cut, Qt::CTRL C: Copy, Qt::CTRL V: Paste\n"
-					"Qt::CTRL Z: Undo, Qt::CTRL Y: Redo\n"
-					"Qt::CTRL K: Delete till end of current line\n"
-					"Qt::CTRL B: Bold, Qt::CTRL I: Italic, Qt::CTRL U: Underline, Qt::CTRL A: Select all\n"
+					"Ctrl+X: Cut, Ctrl+C: Copy, Ctrl+V: Paste\n"
+					"Ctrl+Z: Undo, Ctrl+Y: Redo\n"
+					"Ctrl+K: Delete till end of current line\n"
+					"Ctrl+B: Bold, Ctrl+I: Italic, Ctrl+U: Underline, Ctrl+A: Select all\n")
                     );
 }
 
@@ -1818,9 +1866,9 @@ void MainWindow::showKBShortcuts()
 void MainWindow::showAbout()
 // -------------------------------------------------------------------------------
 {
-   QMessageBox::about(  this, "TuxCards",
-                    "TuxCards - The Notebook for Linux\n"
-                    +QString(TUX_VERSION)+"\n\n"
+   QMessageBox::about(  this, tr("TuxCards"),
+                    tr("TuxCards - The Notebook for Linux\n"
+                    "%1\n\n"
                     "Copyright (c) 2006-2009 Amit Chaudhary\n"
                     "amitch@rajgad.com\n"
                     "Copyright (c) 2007 Yahoo! Inc.\n"
@@ -1828,7 +1876,7 @@ void MainWindow::showAbout()
                     "alex.theel@gmx.net\n\n"
                     "Qt6 port (2026-05-16) by Claude Opus 4.7\n"
                     "at the initiative of gzivdo (https://github.com/gzivdo)\n"
-                    "SideBar and PNG icons backported from TuxCards 2.2.1.\n");
+                    "SideBar and PNG icons backported from TuxCards 2.2.1.\n").arg(QString(TUX_VERSION)));
 }
 
 /**
@@ -1866,14 +1914,16 @@ void MainWindow::closeEvent(QCloseEvent *e)
       return;
 
    if ( mConfiguration.getBoolValue( CTuxCardsConfiguration::B_SAVE_WHEN_LEAVING )
-       || (QMessageBox::warning(  this, "Save before exiting.",
-                                  "Do you want to save before leaving TuxCards?",
-                                  "Yes", "No") == 0) )
+       || (QMessageBox::warning(  this, tr("Save before exiting."),
+                                  tr("Do you want to save before leaving TuxCards?"),
+                                  tr("Yes"), tr("No")) == 0) )
    {
       showDialog->show();
       save();
       showDialog->hide();
    }
+
+   StringCrypter::clearKeyCache();
 }
 
 

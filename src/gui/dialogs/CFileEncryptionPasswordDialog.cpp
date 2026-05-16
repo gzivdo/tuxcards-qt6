@@ -21,6 +21,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QLabel>
+#include <QScreen>
+#include <QGuiApplication>
 
 #include <iostream>
 
@@ -32,7 +34,9 @@ CFileEncryptionPasswordDialog::CFileEncryptionPasswordDialog( QWidget* pParent )
 	setObjectName("CFileEncryptionPasswordDialog");
 	setModal(true);
 	setupUi(this);
-	connect( buttonOk, SIGNAL(clicked()), this, SLOT(accept()) );
+	// buttonOk → accept() is already wired by setupUi() via the .ui's
+	// <connections> block; adding a second SIGNAL/SLOT connect here would
+	// fire accept() twice on each click.
 }
 
 // -------------------------------------------------------------------------------
@@ -46,6 +50,20 @@ void CFileEncryptionPasswordDialog::setUp(QString strFileName)
 	msPasswd = "";
 
 	leFilePassword->setFocus();
+
+	// Center the dialog on the screen. We deliberately avoid using
+	// parentWidget()->geometry() — at app startup MainWindow may not be
+	// shown yet and its geometry would be bogus (often (0,0)+default
+	// size), which threw the dialog into the top-left corner.
+	adjustSize();
+	QScreen* screen = nullptr;
+	if ( QWidget* p = parentWidget() )
+		screen = p->screen();
+	if ( !screen )
+		screen = QGuiApplication::primaryScreen();
+	if ( screen )
+		move( screen->availableGeometry().center() - rect().center() );
+
 	show();
 	exec();
 }
@@ -60,13 +78,14 @@ void CFileEncryptionPasswordDialog::accept()
 
    if ( leFilePassword->text().trimmed().isEmpty() )
    {
-      (void) QMessageBox::warning( this, "TuxCards", "Password field is empty. Please specify a valid password");
+      (void) QMessageBox::warning( this, tr("TuxCards"),
+                                   tr("Password field is empty. Please specify a valid password"));
       show();
       return;
    }
 
    msPasswd = leFilePassword->text().trimmed();
-   close();
+   QDialog::accept();
 }
 
 

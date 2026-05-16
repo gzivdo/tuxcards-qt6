@@ -64,7 +64,8 @@ public:
   void toggleEncryption(QString& password);
   bool checkEncryptionForElementTree();
   bool decryptTree(QString password);
-  
+  bool firstEncryptedBlob(QByteArray& out) const;
+
   void addView( IView* pView );
   void removeView( IView* pView );
 

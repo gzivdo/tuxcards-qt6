@@ -30,7 +30,7 @@ SearchDialog::SearchDialog( QWidget* pParent )
 {
    setObjectName("SearchDialog");
    setModal(false);
-   setWindowTitle("SearchDialog");
+   setWindowTitle(tr("Search"));
    setMinimumSize(650, 380);
 
    QVBoxLayout* root = new QVBoxLayout(this);
@@ -38,33 +38,33 @@ SearchDialog::SearchDialog( QWidget* pParent )
    root->setSpacing(6);
 
    // -- top: "Search for ..." + line + Go --
-   root->addWidget(new QLabel("Search for ...", this));
+   root->addWidget(new QLabel(tr("Search for ..."), this));
    QHBoxLayout* topRow = new QHBoxLayout();
    edit = new QLineEdit(this);
    topRow->addWidget(edit, 1);
-   QPushButton* go = new QPushButton("Go", this);
+   QPushButton* go = new QPushButton(tr("Go"), this);
    go->setDefault(true);
    topRow->addWidget(go);
    root->addLayout(topRow);
 
    // -- middle: case sensitive + More button --
    QHBoxLayout* midRow = new QHBoxLayout();
-   caseSensitive = new QCheckBox("Case &Sensitive", this);
-   searchTitles  = new QCheckBox("Search Only &Titles", this);
+   caseSensitive = new QCheckBox(tr("Case &Sensitive"), this);
+   searchTitles  = new QCheckBox(tr("Search Only &Titles"), this);
    midRow->addWidget(caseSensitive);
    midRow->addWidget(searchTitles);
    midRow->addStretch(1);
-   moreBtn = new QPushButton("More >>>", this);
+   moreBtn = new QPushButton(tr("More >>>"), this);
    moreBtn->setCheckable(true);
    midRow->addWidget(moreBtn);
    root->addLayout(midRow);
 
    // -- collapsible: "Search in ..." radio group --
-   moreBox = new QGroupBox("Search in ...", this);
+   moreBox = new QGroupBox(tr("Search in ..."), this);
    QHBoxLayout* moreLay = new QHBoxLayout(moreBox);
-   rbWholeTree         = new QRadioButton(".. &Whole tree", moreBox);
-   rbActiveAndChildren = new QRadioButton(".. active Entry and &Children", moreBox);
-   rbActiveOnly        = new QRadioButton(".. active &Entry only", moreBox);
+   rbWholeTree         = new QRadioButton(tr(".. &Whole tree"), moreBox);
+   rbActiveAndChildren = new QRadioButton(tr(".. active Entry and &Children"), moreBox);
+   rbActiveOnly        = new QRadioButton(tr(".. active &Entry only"), moreBox);
    rbWholeTree->setChecked(true);
    moreLay->addWidget(rbWholeTree);
    moreLay->addWidget(rbActiveAndChildren);
@@ -75,7 +75,7 @@ SearchDialog::SearchDialog( QWidget* pParent )
    // -- results list --
    list = new QTreeWidget(this);
    list->setColumnCount(2);
-   QStringList headers; headers << "Entry Name" << "Entry Content";
+   QStringList headers; headers << tr("Entry Name") << tr("Entry Content");
    list->setHeaderLabels(headers);
    list->setColumnWidth(0, 200);
    list->setColumnWidth(1, 400);

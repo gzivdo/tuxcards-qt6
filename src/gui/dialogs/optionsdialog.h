@@ -28,6 +28,7 @@
 
 #include <QLabel>
 #include <QLineEdit>
+#include <QComboBox>
 #include <qvalidator.h>
 
 #include <QPushButton>
@@ -95,6 +96,13 @@ private:
   void          saveSidebarToConfig();
   void          refreshPreview();
   static void   setButtonSwatch(QPushButton* b, const QColor& c);
+
+  // Encryption tab
+  QComboBox*    mpEncFormat;
+  QCheckBox*    mpReencryptAll;
+  void          buildEncryptionTab();
+  void          loadEncryptionFromConfig();
+  void          saveEncryptionToConfig();
 };
 
 #endif

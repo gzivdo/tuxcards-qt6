@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
-project(tuxcards LANGUAGES CXX VERSION 3.0.0)
+project(tuxcards LANGUAGES CXX C VERSION 3.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -10,10 +12,37 @@ set(CMAKE_AUTORCC ON)
 # Honor INCLUDE_CURRENT_DIR so AUTOUIC-generated ui_*.h are picked up
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-option(TUXCARDS_WITH_OPENSSL
-       "Build with OpenSSL — required for AES-256-GCM file encryption.\
- When OFF, file encryption falls back to the legacy Blowfish format\
- (still safe to read, still works, but weaker)." ON)
+option(TUXCARDS_BACKEND_OPENSSL
+       "Link the OpenSSL AES-256-GCM + PBKDF2 crypto backend (read+write)." ON)
+option(TUXCARDS_BACKEND_MONOCYPHER
+       "Link the vendored monocypher XChaCha20-Poly1305 + Argon2i backend\
+ (read+write). No external dependency — bundled in tree." ON)
+set(TUXCARDS_WRITE_BACKEND "openssl" CACHE STRING
+       "Default crypto backend for writing new encrypted blobs.\
+ Allowed values: openssl, monocypher.")
+set_property(CACHE TUXCARDS_WRITE_BACKEND PROPERTY STRINGS openssl monocypher)
+
+# Backward-compat: the old TUXCARDS_WITH_OPENSSL knob still toggles the
+# OpenSSL backend the same way it used to.
+if(DEFINED TUXCARDS_WITH_OPENSSL AND NOT TUXCARDS_WITH_OPENSSL)
+   set(TUXCARDS_BACKEND_OPENSSL OFF)
+endif()
+
+# Validate: at least one backend must be on, and the chosen write backend
+# must actually be linked.
+if(NOT TUXCARDS_BACKEND_OPENSSL AND NOT TUXCARDS_BACKEND_MONOCYPHER)
+   message(FATAL_ERROR
+      "At least one of TUXCARDS_BACKEND_OPENSSL or TUXCARDS_BACKEND_MONOCYPHER\
+ must be ON.")
+endif()
+if(TUXCARDS_WRITE_BACKEND STREQUAL "openssl" AND NOT TUXCARDS_BACKEND_OPENSSL)
+   message(FATAL_ERROR
+      "TUXCARDS_WRITE_BACKEND=openssl requires TUXCARDS_BACKEND_OPENSSL=ON.")
+endif()
+if(TUXCARDS_WRITE_BACKEND STREQUAL "monocypher" AND NOT TUXCARDS_BACKEND_MONOCYPHER)
+   message(FATAL_ERROR
+      "TUXCARDS_WRITE_BACKEND=monocypher requires TUXCARDS_BACKEND_MONOCYPHER=ON.")
+endif()
 
 find_package(Qt6 REQUIRED COMPONENTS
    Core
@@ -24,7 +53,7 @@ find_package(Qt6 REQUIRED COMPONENTS
    Core5Compat
 )
 
-if(TUXCARDS_WITH_OPENSSL)
+if(TUXCARDS_BACKEND_OPENSSL)
    find_package(OpenSSL REQUIRED)
 endif()
 
@@ -195,14 +224,28 @@ target_link_libraries(tuxcards PRIVATE
    Qt6::Core5Compat
 )
 
-if(TUXCARDS_WITH_OPENSSL)
+if(TUXCARDS_BACKEND_OPENSSL)
    target_link_libraries(tuxcards PRIVATE OpenSSL::Crypto)
-else()
-   target_compile_definitions(tuxcards PRIVATE TUXCARDS_NO_OPENSSL)
-   message(STATUS "TuxCards: OpenSSL disabled — new AES-GCM encryption "
-                  "is unavailable, files will be written in the legacy "
-                  "Blowfish format instead.")
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_BACKEND_OPENSSL)
 endif()
+
+if(TUXCARDS_BACKEND_MONOCYPHER)
+   target_sources(tuxcards PRIVATE
+      src/utilities/crypt/monocypher/monocypher.c
+      src/utilities/crypt/monocypher/monocypher.h)
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_BACKEND_MONOCYPHER)
+endif()
+
+if(TUXCARDS_WRITE_BACKEND STREQUAL "openssl")
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_WRITE_BACKEND_AESGCM)
+elseif(TUXCARDS_WRITE_BACKEND STREQUAL "monocypher")
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_WRITE_BACKEND_XCHACHA)
+endif()
+
+message(STATUS "TuxCards crypto backends: "
+        "OpenSSL=${TUXCARDS_BACKEND_OPENSSL} "
+        "monocypher=${TUXCARDS_BACKEND_MONOCYPHER} "
+        "write=${TUXCARDS_WRITE_BACKEND}")
 
 # MSVC needs /utf-8 because the source files contain UTF-8 byte
 # sequences in strings (German umlauts in comments, fallback strings,

@@ -93,10 +93,10 @@ void IconSelectorDialog::setup()
     // lower-section
     QWidget* lower = new QWidget(this);
     QHBoxLayout* lowerLayout = new QHBoxLayout(lower);
-    QPushButton* ok = new QPushButton("Ok", lower);
+    QPushButton* ok = new QPushButton(tr("Ok"), lower);
     connect(ok, SIGNAL(released()), this, SLOT(slotOkPressed()));
     lowerLayout->addWidget(ok);
-    QPushButton* cancel = new QPushButton("Cancel", lower);
+    QPushButton* cancel = new QPushButton(tr("Cancel"), lower);
     connect(cancel, SIGNAL(released()), this, SLOT(slotCancelPressed()));
     lowerLayout->addWidget(cancel);
     layout->addWidget(lower);

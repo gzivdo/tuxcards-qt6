@@ -178,8 +178,14 @@ jobs:
           fail_on_unmatched_files: false
 
   windows:
-    name: Windows
+    name: Windows (${{ matrix.variant }})
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { variant: 'openssl',   suffix: '',           with_openssl: 'true'  }
+          - { variant: 'noopenssl', suffix: '-noopenssl', with_openssl: 'false' }
     steps:
       - uses: actions/checkout@v4
       - uses: jurplel/install-qt-action@v4
@@ -188,10 +194,16 @@ jobs:
           modules: 'qt5compat'
           cache: true
       - name: Install OpenSSL
+        if: matrix.with_openssl == 'true'
         run: choco install -y openssl
-      - name: Configure
+      - name: Configure (with OpenSSL)
+        if: matrix.with_openssl == 'true'
         shell: cmd
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Configure (no OpenSSL — monocypher only)
+        if: matrix.with_openssl == 'false'
+        shell: cmd
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTUXCARDS_BACKEND_OPENSSL=OFF -DTUXCARDS_WRITE_BACKEND=monocypher
       - name: Build
         shell: cmd
         run: cmake --build build --config Release --parallel
@@ -199,18 +211,25 @@ jobs:
         shell: cmd
         run: |
           set VER=%GITHUB_REF:refs/tags/v=%
-          mkdir dist\tuxcards-qt6-%VER%-windows-x64
-          copy build\Release\tuxcards.exe dist\tuxcards-qt6-%VER%-windows-x64\
-          windeployqt dist\tuxcards-qt6-%VER%-windows-x64\tuxcards.exe
-          powershell -Command "Compress-Archive -Path dist\tuxcards-qt6-%VER%-windows-x64 -DestinationPath tuxcards-qt6-%VER%-windows-x64.zip"
+          set NAME=tuxcards-qt6-%VER%-windows-x64${{ matrix.suffix }}
+          mkdir dist\%NAME%
+          copy build\Release\tuxcards.exe dist\%NAME%\
+          windeployqt dist\%NAME%\tuxcards.exe
+          powershell -Command "Compress-Archive -Path dist\%NAME% -DestinationPath %NAME%.zip"
       - uses: softprops/action-gh-release@v2
         with:
-          files: tuxcards-qt6-*-windows-x64.zip
+          files: tuxcards-qt6-*-windows-x64*.zip
           fail_on_unmatched_files: false
 
   macos:
-    name: macOS
+    name: macOS (${{ matrix.variant }})
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { variant: 'openssl',   suffix: '',           with_openssl: 'true'  }
+          - { variant: 'noopenssl', suffix: '-noopenssl', with_openssl: 'false' }
     steps:
       - uses: actions/checkout@v4
       - uses: jurplel/install-qt-action@v4
@@ -219,22 +238,28 @@ jobs:
           modules: 'qt5compat'
           cache: true
       - name: Install OpenSSL
+        if: matrix.with_openssl == 'true'
         run: brew install openssl@3
-      - name: Configure
+      - name: Configure (with OpenSSL)
+        if: matrix.with_openssl == 'true'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Configure (no OpenSSL — monocypher only)
+        if: matrix.with_openssl == 'false'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTUXCARDS_BACKEND_OPENSSL=OFF -DTUXCARDS_WRITE_BACKEND=monocypher
       - name: Build
         run: cmake --build build --parallel
       - name: macdeployqt + DMG
         run: |
           VER=${GITHUB_REF#refs/tags/v}
+          NAME=tuxcards-qt6-${VER}-macos${{ matrix.suffix }}
           # Multi-config generators (Xcode) put the bundle in
           # build/Release/, single-config (Unix Makefiles, Ninja) puts
           # it in build/. Find whichever is there.
           APP=$(find build -maxdepth 3 -name 'tuxcards.app' -print -quit)
           test -d "$APP" || { echo "No tuxcards.app under build/"; find build -maxdepth 4 -name 'tuxcards*' ; exit 1; }
           macdeployqt "$APP" -dmg
-          mv "${APP%.app}.dmg" tuxcards-qt6-${VER}-macos.dmg
+          mv "${APP%.app}.dmg" "${NAME}.dmg"
       - uses: softprops/action-gh-release@v2
         with:
-          files: tuxcards-qt6-*-macos.dmg
+          files: tuxcards-qt6-*-macos*.dmg
           fail_on_unmatched_files: false
