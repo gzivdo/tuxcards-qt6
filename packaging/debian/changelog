@@ -1,3 +1,21 @@
+tuxcards-qt6 (3.2.0-1) unstable; urgency=medium
+
+  * Crypto:
+    - Save no longer freezes the UI on encrypted files — eliminated
+      a redundant per-element decrypt() during save, and added a
+      session key cache so PBKDF2 / Argon2i runs once per save burst
+      instead of once per element.
+    - New optional XChaCha20-Poly1305 + Argon2i crypto backend via
+      vendored monocypher (no external dependency). Selectable at
+      build time with -DTUXCARDS_WRITE_BACKEND=openssl|monocypher;
+      AES-256-GCM remains the default for new writes. Reader
+      auto-detects format by magic header, so both backends coexist.
+    - StringCrypter::clearKeyCache() is wired in MainWindow on file
+      open/close/clearAll to bound how long the derived key sits in
+      memory.
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 12:00:00 +0000
+
 tuxcards-qt6 (3.1.1-1) unstable; urgency=medium
 
   * Packaging-only follow-up to 3.1.0:

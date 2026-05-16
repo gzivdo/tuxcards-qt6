@@ -1,5 +1,109 @@
 Changelog
 
+3.2.0  2026-05-16  Multi-backend crypto, save-freeze fix, full Russian UI (gzivdo + Claude Opus 4.7)
+
+	Crypto — save/load performance
+	-Save no longer freezes the UI on encrypted files. The serializer
+	 used to call encrypt() and then decrypt() for every encrypted
+	 node — two PBKDF2(200 000) passes per element — and on a 30-note
+	 tree that burned 6–9 seconds on the UI thread. The fix encrypts
+	 to a local buffer without mutating in-memory state.
+	-Process-wide session key cache in StringCrypter: AES-GCM and
+	 XChaCha both derive their key once per save/load burst instead
+	 of once per element. clearKeyCache() is wired in MainWindow on
+	 file open / close / clearAll so the derived key doesn't outlive
+	 the open file.
+	-Dirty-tracking on each entry: the in-memory copy of the original
+	 ciphertext (mOriginalBlob) is kept alongside the plaintext;
+	 on save, untouched entries are emitted byte-for-byte without
+	 a cipher call. Editing an entry flags it dirty and triggers
+	 a fresh re-encrypt on the next save.
+
+	Crypto — new XChaCha20-Poly1305 + Argon2i backend
+	-Second crypto backend via vendored monocypher 4.0.2
+	 (~3000 LoC, public domain / BSD-2 dual licence; single .c/.h
+	 in src/utilities/crypt/monocypher/, no system dependency).
+	 New on-disk blob format "Fh_enc:XChaCha20Poly1305-Argon2i-v1"
+	 with memory-hard Argon2i KDF (64 MB / 3 passes / 1 lane
+	 defaults, capped at 256 MB / 32 passes / 16 lanes on read).
+	-CMake options: TUXCARDS_BACKEND_OPENSSL,
+	 TUXCARDS_BACKEND_MONOCYPHER (both ON by default),
+	 TUXCARDS_WRITE_BACKEND (openssl | monocypher, default openssl).
+	 At least one backend must be ON; the write backend must match
+	 an ON backend — CMake errors out otherwise.
+	-The decryptString() dispatcher routes by magic header so one
+	 binary reads all three formats: AES-256-GCM, XChaCha20-Poly1305,
+	 and the legacy BF10 (Blowfish + MD5) format from TuxCards 2.0.
+	 Backwards compatibility: the legacy TUXCARDS_WITH_OPENSSL=OFF
+	 knob still works and is treated as TUXCARDS_BACKEND_OPENSSL=OFF.
+	-Options → Encryption tab: pick the cipher used for new entries
+	 (AES-256-GCM via OpenSSL, or XChaCha20-Poly1305 + Argon2i via
+	 monocypher). Each entry remembers the format it was written in;
+	 by default only edited entries get re-encrypted on save, so the
+	 file can contain mixed formats. Tick "Re-encrypt all entries
+	 when the algorithm changes" to force a homogeneous re-write.
+	-If a file is encrypted with an algorithm not linked into this
+	 build, the open flow now shows a "Unsupported encryption format"
+	 dialog naming the missing backend and pointing the user to a
+	 full build — instead of looping on "wrong password".
+
+	Release matrix
+	-Windows and macOS release jobs split into matrices of
+	 {openssl, noopenssl} variants:
+	   tuxcards-qt6-<ver>-windows-x64.zip            (AES-GCM + XChaCha)
+	   tuxcards-qt6-<ver>-windows-x64-noopenssl.zip  (XChaCha only)
+	   tuxcards-qt6-<ver>-macos.dmg                  (AES-GCM + XChaCha)
+	   tuxcards-qt6-<ver>-macos-noopenssl.dmg        (XChaCha only)
+	 The -noopenssl macOS DMG ships without a bundled libcrypto and
+	 is ~3 MB smaller; it can still read XChaCha + legacy BF10 blobs.
+
+	Tests
+	-tst_stringcrypter grew XChaCha round-trip / wrong-password /
+	 tampered-ciphertext / cross-backend-dispatch cases. 14/14 green
+	 under both write backends.
+
+	Localization
+	-tr()-wrapping pass over the C++ GUI: ~170 user-visible literals
+	 in mainwindow.cpp, optionsdialog.cpp (SideBar tab), CTree.cpp,
+	 editor.cpp, searchdialog.cpp, CPropertyDialog.cpp,
+	 iconselectordialog.cpp, CTuxCardsConfiguration.cpp,
+	 CFileEncryptionPasswordDialog.cpp and CPasswdDialog.cpp that
+	 lived as bare string literals since TuxCards 2.0 are now
+	 translatable via tr(). Total translatable strings in .ts files
+	 grew from 102 to 277.
+	-tuxcards_ru.ts is fully translated for the new strings.
+	 Translations for de / es / fr / pt_BR / ja / ko / zh_CN / zh_TW
+	 remain as unfinished slots ready for community PRs.
+
+	Dialog polish
+	-IFileEncryptionPasswordDialog (the "enter password" prompt)
+	 reworked: the Qt 3-era absolute-position layout was replaced
+	 with a proper QVBoxLayout. The dialog now sizes to its contents,
+	 centers itself on the parent window before show(), and has its
+	 OK / Cancel buttons centered as a group with consistent
+	 90 px-wide buttons.
+	-IPasswdDialog (the "set password on toggle" prompt) gets the
+	 same treatment: centered OK / Cancel via balanced spacers and
+	 a centered window. The duplicate buttonOk → accept() connection
+	 (set both in the .ui and in C++) was removed — it was firing
+	 accept() twice on each click.
+
+	Internal
+	-StringCrypter exposes identifyBlobFormat(),
+	 isBackendAvailableFor(), setWriteBackend()/getWriteBackend()
+	 and a new ERROR_UNSUPPORTED_BACKEND error code. The dispatcher
+	 in MainWindow::initializingCollection() peeks at the first
+	 encrypted blob in the tree before prompting for a password,
+	 so we don't loop on wrong-password when the failure is really
+	 "no backend".
+	-CInformationElement gained mOriginalBlob, mbDirty and a static
+	 sReencryptOnFormatChange hint set by MainWindow::save() right
+	 before XMLPersister::save() walks the tree.
+	-CTuxCardsConfiguration gained S_ENCRYPTION_FORMAT (string) and
+	 B_REENCRYPT_ON_FORMAT_CHANGE (bool) — persisted under
+	 [General] keys Encryption_Format and Reencrypt_On_Format_Change
+	 in ~/.tuxcards.
+
 3.1.1  2026-05-16  Packaging follow-up (gzivdo + Claude Opus 4.7)
 
 	-Build one native .deb per supported Debian/Ubuntu release

@@ -38,17 +38,50 @@ License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
   lists, font family / size combo, image insertion.
 * Search across the whole tree or the current sub-tree, with the
   matched substring highlighted in bold in the results.
-* AES-256-GCM file encryption with PBKDF2-SHA256 key derivation
-  (the legacy Blowfish format from TuxCards 2.0 is still readable).
 * HTML and Markdown export of entries; Markdown import.
 * Configurable left-side `CColorBar` (gradient + horizontal/vertical
   captions) — back-ported from 2.2.1.
 * Bookmarks bar pinned at the bottom of the window, persisted between
   sessions.
 * Auto-save indicator in the status bar.
-* UI translations: English, Russian, German, Chinese (Simplified and
-  Traditional), Spanish, French, Brazilian Portuguese, Japanese and
-  Korean. Contributions through PRs are welcome.
+* Full UI translation to Russian; English, German, Chinese (Simplified
+  and Traditional), Spanish, French, Brazilian Portuguese, Japanese and
+  Korean are wired up as `.ts` files awaiting community translations.
+* File encryption with a choice of two modern AEADs:
+  * **AES-256-GCM + PBKDF2-SHA256** (OpenSSL backend, default), and
+  * **XChaCha20-Poly1305 + Argon2i** (vendored monocypher, no external
+    dependency — useful for Windows/macOS builds with no system OpenSSL).
+  One binary reads any format: AES-GCM, XChaCha, or the legacy
+  Blowfish + MD5 from TuxCards 2.0. Algorithm choice and "re-encrypt
+  all on format change" toggle live in **Options → Encryption**.
+
+## What's new in the Qt6 port
+
+Relative to the last upstream releases (Theel 2.2.1 / Chaudhary 2.0):
+
+* Builds and runs on modern Linux, Windows and macOS with **Qt 6**.
+  CMake-only build (the old `tuxcards.pro` / Makefile / `qt-env-*.sh`
+  helpers are gone). Qt3 / Qt3Support legacy stamped out.
+* **Multi-backend file crypto** — AES-256-GCM via OpenSSL *and*
+  XChaCha20-Poly1305 + Argon2i via vendored monocypher; either can be
+  the default-write backend at build time, both auto-detected on read.
+  The legacy Blowfish + MD5 format from TuxCards 2.0 is still readable.
+* **Save no longer freezes the UI** on encrypted files. A session-wide
+  key cache means the KDF runs once per save / load burst instead of
+  once per element. Dirty-tracking emits untouched entries
+  byte-for-byte, so saves of encrypted files are effectively free.
+* **Bookmarks bar** pinned at the bottom of the window
+  (back-port from 2.2.1).
+* **Markdown** export and import per entry; **HTML** export of the
+  whole tree.
+* Editor toolbar with font / size combos, bullet & ordered lists, text
+  color, image insertion.
+* Search results highlight the matched substring in bold.
+* CI builds `.deb` per supported Debian/Ubuntu release, `.rpm` for
+  Fedora, portable `tar.xz` for Linux, `.dmg` for macOS and `.zip`
+  for Windows. Windows and macOS each have two flavours: full
+  (OpenSSL + monocypher) and `-noopenssl` (monocypher only, smaller).
+* Russian UI fully translated; nine other languages stubbed.
 
 ## Building
 
