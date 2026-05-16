@@ -1,5 +1,5 @@
 Name:           tuxcards-qt6
-Version:        1.0.0
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Hierarchical note-taking application (Qt6 port)
 
@@ -50,5 +50,5 @@ install -D -m 644 src/icons/lo16-app-tuxcards.png \
 %{_datadir}/icons/hicolor/*/apps/tuxcards.png
 
 %changelog
-* Sat May 16 2026 gzivdo <gzivdo@users.noreply.github.com> - 1.0.0-1
-- Initial RPM packaging of the Qt6 port.
+* Sat May 16 2026 gzivdo <gzivdo@users.noreply.github.com> - 3.0.0-1
+- First release of the Qt6 port (3.0.0, after upstream 2.2.1).

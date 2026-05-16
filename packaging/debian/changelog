@@ -1,6 +1,6 @@
-tuxcards-qt6 (1.0.0-1) unstable; urgency=medium
+tuxcards-qt6 (3.0.0-1) unstable; urgency=medium
 
-  * Initial Debian packaging of the Qt6 port.
+  * First release of the Qt6 port (version 3.0.0, following upstream 2.2.1).
   * Based on TuxCards 2010.06.1 with SideBar and PNG icons back-ported
     from TuxCards 2.2.1.
 

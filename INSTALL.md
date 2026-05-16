@@ -126,8 +126,8 @@ Skeleton is `packaging/rpm/tuxcards-qt6.spec`.
 sudo dnf install rpmdevtools qt6-qtbase-devel qt6-qt5compat-devel \
                  qt6-qttools-devel gcc-c++ make
 rpmdev-setuptree
-tar czf ~/rpmbuild/SOURCES/tuxcards-qt6-1.0.0.tar.gz \
-        --transform 's,^,tuxcards-qt6-1.0.0/,' \
+tar czf ~/rpmbuild/SOURCES/tuxcards-qt6-3.0.0.tar.gz \
+        --transform 's,^,tuxcards-qt6-3.0.0/,' \
         -C $(pwd) .
 cp packaging/rpm/tuxcards-qt6.spec ~/rpmbuild/SPECS/
 rpmbuild -ba ~/rpmbuild/SPECS/tuxcards-qt6.spec

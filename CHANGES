@@ -1,5 +1,22 @@
 Changelog
 
+3.0.0  2026-05-16  Qt6 port (gzivdo + Claude Opus 4.7)
+	-Full migration of the 2010.06.1 codebase from Qt 3 (Qt3Support) to Qt 6.
+	-Back-ported CColorBar (left-side gradient sidebar) and the related
+	 SideBar tab in the Options dialog from upstream TuxCards 2.2.1.
+	-Back-ported PNG icons from 2.2.1 (file/edit/text/find/back/forward),
+	 bundled through a Qt resource (src/icons/icons.qrc).
+	-Search dialog re-laid out (650x380 default, "More >>>" toggle).
+	-Editor: removed the Enter -> Ctrl+Enter remap, default QTextEdit
+	 paragraph behavior; ASCII / RTF switch via setAcceptRichText.
+	-Fixed: View -> Toolbars checkmarks now in sync with toolbar
+	 visibility (toggled signal).
+	-Fixed: Toggle file encryption correctly captures the entered
+	 password (CPasswdDialog::verifyAndAccept).
+	-Packaging: README.md, INSTALL.md, debian/ skeleton, rpm spec,
+	 .desktop file.
+	-About dialog mentions the Qt6 port and its initiator.
+
 06-2010.1 amitch@rajgad.com
 
 v2.1, amitch@rajgad.com
