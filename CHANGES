@@ -1,5 +1,17 @@
 Changelog
 
+3.3.2  2026-05-16  Build fix: switch translations pipeline to qt_add_translations() (gzivdo + Claude Opus 4.7)
+
+	Follow-up to 3.3.1. The earlier add_dependencies(tuxcards
+	tuxcards_translations) was not sufficient because AUTORCC of the
+	generated .qrc runs as its own CMake sub-target
+	(tuxcards_arcc_translations_generated) and doesn't inherit the
+	parent's dependencies — so rcc still raced lrelease on parallel
+	builds. The hand-rolled qt_add_lrelease + file(GENERATE) .qrc is
+	replaced by the high-level qt_add_translations() helper, which
+	goes through qt_add_resources (not AUTORCC) and wires the
+	ordering correctly. Same end result, no read-side behavior change.
+
 3.3.1  2026-05-16  Build fix: AUTORCC ordering for generated translations .qrc (gzivdo + Claude Opus 4.7)
 
 	The 3.3.0 release tag triggered a release.yml run that succeeded on
