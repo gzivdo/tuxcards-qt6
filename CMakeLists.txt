@@ -179,6 +179,13 @@ qt_add_executable(tuxcards
    ${TUXCARDS_RESOURCES}
 )
 
+# qt_add_executable enables MACOSX_BUNDLE/WIN32_EXECUTABLE by default
+# in Qt 6.4+, but older Qt or single-file generators sometimes don't.
+# Force it on so macdeployqt has a real .app bundle to operate on.
+set_target_properties(tuxcards PROPERTIES
+   MACOSX_BUNDLE TRUE
+   WIN32_EXECUTABLE TRUE)
+
 target_link_libraries(tuxcards PRIVATE
    Qt6::Core
    Qt6::Gui

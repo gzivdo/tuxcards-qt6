@@ -39,29 +39,48 @@ jobs:
           VER=${GITHUB_REF#refs/tags/v}
           ROOT=tuxcards-qt6-${VER}-linux-x86_64
 
-          # Build an XDG-style layout under usr/, then have linuxdeployqt
-          # pull in every Qt6 .so + platform plugin that the binary
-          # actually loads. The result is a directory that runs on any
-          # glibc-compatible Linux without an external Qt install —
-          # what users typically mean by "static / portable bundle".
-          mkdir -p $ROOT/usr/bin $ROOT/usr/share/applications \
+          # Bundle every non-system .so the binary needs, plus Qt
+          # platform / image / icon plugins. linuxdeployqt was flaky
+          # against the system Qt 6.4 on Ubuntu 24.04 (silent exit 1),
+          # so we do it ourselves with ldd + cp — simpler, predictable,
+          # one less wget dependency.
+          mkdir -p $ROOT/usr/bin $ROOT/usr/lib \
+                   $ROOT/usr/plugins/platforms \
+                   $ROOT/usr/plugins/imageformats \
+                   $ROOT/usr/plugins/iconengines \
+                   $ROOT/usr/share/applications \
                    $ROOT/usr/share/icons/hicolor/32x32/apps
           cp build/tuxcards $ROOT/usr/bin/
           cp packaging/desktop/tuxcards.desktop $ROOT/usr/share/applications/
           cp src/icons/lo32-app-tuxcards.png \
              $ROOT/usr/share/icons/hicolor/32x32/apps/tuxcards.png
 
-          wget -q -O linuxdeployqt.AppImage \
-               https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-          chmod +x linuxdeployqt.AppImage
-          # AppImage on GHA needs --appimage-extract-and-run because
-          # FUSE isn't available in the runner.
-          ./linuxdeployqt.AppImage --appimage-extract-and-run \
-             $ROOT/usr/share/applications/tuxcards.desktop \
-             -bundle-non-qt-libs \
-             -extra-plugins=iconengines,platforms/libqxcb.so \
-             -no-translations \
-             -unsupported-allow-new-glibc
+          # Filter out very-low-level libs (libc, libpthread, ld-linux,
+          # libGL, libX*) — those must come from the user's distro.
+          SKIP='libc\.|libm\.|libdl\.|libpthread\.|libresolv\.|libnsl\.|librt\.|ld-linux|libGL\.|libGLX\.|libGLdispatch\.|libOpenGL\.|libX[0-9a-z]*\.|libxcb|libxkb|libwayland|libstdc\+\+\.|libgcc_s\.|libutil\.'
+          ldd $ROOT/usr/bin/tuxcards \
+            | awk '/=> \//{print $3}' \
+            | grep -Ev "$SKIP" \
+            | sort -u \
+            | xargs -I{} cp -L {} $ROOT/usr/lib/
+
+          # Qt plugins live under the distro plugin dir.
+          QPLUG=$(dpkg -L qt6-base-dev | grep -E '/qt6/plugins$' | head -1)
+          QPLUG=${QPLUG:-/usr/lib/x86_64-linux-gnu/qt6/plugins}
+          cp -r $QPLUG/platforms/libqxcb.so       $ROOT/usr/plugins/platforms/  || true
+          cp -r $QPLUG/platforms/libqwayland-generic.so $ROOT/usr/plugins/platforms/ || true
+          cp -r $QPLUG/imageformats/*.so          $ROOT/usr/plugins/imageformats/ || true
+          cp -r $QPLUG/iconengines/*.so           $ROOT/usr/plugins/iconengines/  || true
+
+          # Pull in plugin-only .so deps that the main binary doesn't link
+          # directly (xcb-cursor, EGL, ICU bits, etc.).
+          for so in $(find $ROOT/usr/plugins -name '*.so'); do
+            ldd "$so" 2>/dev/null \
+              | awk '/=> \//{print $3}' \
+              | grep -Ev "$SKIP" \
+              | sort -u \
+              | xargs -I{} cp -nL {} $ROOT/usr/lib/ || true
+          done
 
           cp README.md INSTALL.md COPYING CHANGES $ROOT/
 
