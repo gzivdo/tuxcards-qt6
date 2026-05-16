@@ -18,6 +18,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define TUX_VERSION        "3.1.0 (Qt6 port)"
+#define TUX_VERSION        "3.1.1 (Qt6 port)"
 
 #endif

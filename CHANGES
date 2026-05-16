@@ -1,5 +1,26 @@
 Changelog
 
+3.1.1  2026-05-16  Packaging follow-up (gzivdo + Claude Opus 4.7)
+
+	-Build one native .deb per supported Debian/Ubuntu release
+	 (ubuntu24.04, ubuntu26.04, debian12, debian13) via per-distro
+	 GitHub Actions containers — Depends: now resolved against each
+	 distro's Qt6/OpenSSL instead of a single Ubuntu 24.04 build.
+	-Drop Fedora -debuginfo / -debugsource sub-packages from the
+	 Release page (now disabled with all three rpm macros).
+	-CMakeLists: install(TARGETS) declares BUNDLE DESTINATION so
+	 macOS .app actually gets built; MACOSX_BUNDLE/WIN32_EXECUTABLE
+	 forced TRUE on the tuxcards target.
+	-Optional OpenSSL: TUXCARDS_WITH_OPENSSL CMake option. When OFF,
+	 file encryption falls back to writing the legacy Blowfish format
+	 (still readable by builds with OpenSSL).
+	-Windows MSVC fixes: split the 16 600-byte Greetings.h literal
+	 (C2026), const-corrected the static char * xpm arrays (C2440).
+	-CI: Linux jobs run in distro containers with their own system
+	 Qt6 (ubuntu:24.04, ubuntu:26.04, debian:12, debian:13). Portable
+	 Linux tarball is bundled by hand via ldd+cp instead of the
+	 flaky linuxdeployqt.
+
 3.1.0  2026-05-16  Feature drop after 3.0.0 (gzivdo + Claude Opus 4.7)
 
 	Functional
