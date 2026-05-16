@@ -2,6 +2,9 @@
 CONFIG += qt thread release c++17
 QT += widgets xml printsupport core5compat
 
+# Modern AES-256-GCM + PBKDF2 encryption uses OpenSSL.
+LIBS += -lcrypto
+
 TARGET = tuxcards
 TEMPLATE = app
 
