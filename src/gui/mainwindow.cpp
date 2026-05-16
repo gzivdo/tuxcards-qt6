@@ -107,6 +107,7 @@ MainWindow::MainWindow(QString arg)
  , miEntryToolBarID( 0 )
  , miEditorToolBarID( 0 )
  , mbStartupDone( false )
+ , TIMER_ID( 0 )
 // -------------------------------------------------------------------------------
 {
    checkFirstTime();
