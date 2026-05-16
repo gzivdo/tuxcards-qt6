@@ -237,6 +237,17 @@ qt_add_executable(tuxcards
    ${TUXCARDS_RESOURCES}
 )
 
+# AUTORCC of the generated translations_generated.qrc references .qm
+# files that live in the build dir. They are produced by the
+# tuxcards_translations target (qt_add_lrelease above), so we need to
+# wait for that target before AUTORCC scans the .qrc — otherwise rcc
+# fails with "Cannot find file 'build/tuxcards_*.qm'" on parallel
+# builds. The old path (static translations.qrc, .qm in source tree)
+# has no such ordering requirement, hence the guard.
+if(TARGET tuxcards_translations)
+   add_dependencies(tuxcards tuxcards_translations)
+endif()
+
 # qt_add_executable enables MACOSX_BUNDLE/WIN32_EXECUTABLE by default
 # in Qt 6.4+, but older Qt or single-file generators sometimes don't.
 # Force it on so macdeployqt has a real .app bundle to operate on.
