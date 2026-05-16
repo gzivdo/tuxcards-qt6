@@ -4,6 +4,10 @@ on:
   push:
     tags: ['v*']
 
+# Needed for softprops/action-gh-release to publish artefacts.
+permissions:
+  contents: write
+
 jobs:
   linux:
     name: Linux ${{ matrix.kind }}
@@ -165,8 +169,13 @@ jobs:
       - name: macdeployqt + DMG
         run: |
           VER=${GITHUB_REF#refs/tags/v}
-          macdeployqt build/tuxcards.app -dmg
-          mv build/tuxcards.dmg tuxcards-qt6-${VER}-macos.dmg
+          # Multi-config generators (Xcode) put the bundle in
+          # build/Release/, single-config (Unix Makefiles, Ninja) puts
+          # it in build/. Find whichever is there.
+          APP=$(find build -maxdepth 3 -name 'tuxcards.app' -print -quit)
+          test -d "$APP" || { echo "No tuxcards.app under build/"; find build -maxdepth 4 -name 'tuxcards*' ; exit 1; }
+          macdeployqt "$APP" -dmg
+          mv "${APP%.app}.dmg" tuxcards-qt6-${VER}-macos.dmg
       - uses: softprops/action-gh-release@v2
         with:
           files: tuxcards-qt6-*-macos.dmg

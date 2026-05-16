@@ -151,12 +151,15 @@ if(Qt6LinguistTools_FOUND)
    )
    qt_add_lrelease(tuxcards_translations TS_FILES ${TS_FILES}
                    QM_FILES_OUTPUT_VARIABLE qm_files)
-   # `cmake --build build --target tuxcards_lupdate` refreshes .ts files
-   # from the C++/UI sources, no need for the old `lupdate6 tuxcards.pro`.
-   qt_add_lupdate(tuxcards_lupdate
-                  SOURCES ${TUXCARDS_SOURCES} ${TUXCARDS_HEADERS} ${TUXCARDS_FORMS}
-                  TS_FILES ${TS_FILES}
-                  NO_GLOBAL_TARGET)
+   # qt_add_lupdate only exists in Qt 6.7+. On older distro Qt (Ubuntu
+   # 24.04 ships 6.4, Debian 12 ships 6.2) we silently skip the helper
+   # target — translators can still run `lupdate` from the command line.
+   if(COMMAND qt_add_lupdate)
+      qt_add_lupdate(tuxcards_lupdate
+                     SOURCES ${TUXCARDS_SOURCES} ${TUXCARDS_HEADERS} ${TUXCARDS_FORMS}
+                     TS_FILES ${TS_FILES}
+                     NO_GLOBAL_TARGET)
+   endif()
 endif()
 
 qt_add_executable(tuxcards
