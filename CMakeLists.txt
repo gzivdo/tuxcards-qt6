@@ -214,7 +214,9 @@ if(MSVC)
    target_compile_options(tuxcards PRIVATE /utf-8 /wd4996)
 endif()
 
-install(TARGETS tuxcards RUNTIME DESTINATION bin)
+install(TARGETS tuxcards
+        RUNTIME DESTINATION bin
+        BUNDLE  DESTINATION .)
 install(FILES packaging/desktop/tuxcards.desktop
         DESTINATION share/applications)
 install(FILES src/icons/lo16-app-tuxcards.png
