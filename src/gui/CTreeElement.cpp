@@ -28,7 +28,7 @@
 CTreeElement::CTreeElement( QTreeWidget* pParent, CTreeInformationElement& element )
   : QObject()
   , QTreeWidgetItem( pParent )
-  , mpInformationElement( NULLPTR )
+  , mpInformationElement( nullptr )
 {
    init(element);
 }
@@ -36,14 +36,14 @@ CTreeElement::CTreeElement( QTreeWidget* pParent, CTreeInformationElement& eleme
 CTreeElement::CTreeElement( CTreeElement* pParent, CTreeInformationElement& element )
   : QObject()
   , QTreeWidgetItem( pParent )
-  , mpInformationElement( NULLPTR )
+  , mpInformationElement( nullptr )
 {
    init(element);
 }
 
 CTreeElement::~CTreeElement( void )
 {
-   mpInformationElement = NULLPTR;
+   mpInformationElement = nullptr;
 }
 
 void CTreeElement::init( CTreeInformationElement& element )
@@ -60,7 +60,7 @@ CTreeElement* CTreeElement::getLastChild( void )
 {
    int n = childCount();
    if ( n == 0 )
-      return NULLPTR;
+      return nullptr;
    return dynamic_cast<CTreeElement*>( child(n-1) );
 }
 
@@ -76,7 +76,7 @@ void CTreeElement::propertyChangeEvent( void )
 
 void CTreeElement::copyPropertiesFromInformationElement( void )
 {
-   if ( NULLPTR == mpInformationElement )
+   if ( nullptr == mpInformationElement )
       return;
 
    QTreeWidget* tw = treeWidget();
@@ -97,7 +97,7 @@ void CTreeElement::copyPropertiesFromInformationElement( void )
 
 void CTreeElement::childAddEvent( CInformationElement* pChild )
 {
-   if ( NULLPTR == pChild )
+   if ( nullptr == pChild )
       return;
 
    CTreeElement* pNewElement = new CTreeElement(this, *((CTreeInformationElement*)pChild));
@@ -118,7 +118,7 @@ void CTreeElement::childMovedEvent( int oldPos, int newPos )
     return;
 
   CTreeElement* pElementToMove = getChildAtPosition(oldPos);
-  if ( NULLPTR == pElementToMove )
+  if ( nullptr == pElementToMove )
     return;
 
   takeChild( oldPos );
@@ -128,7 +128,7 @@ void CTreeElement::childMovedEvent( int oldPos, int newPos )
 CTreeElement* CTreeElement::getChildAtPosition( int pos )
 {
   if ( pos < 0 || pos > childCount()-1 )
-    return NULLPTR;
+    return nullptr;
 
   return dynamic_cast<CTreeElement*>( child(pos) );
 }
@@ -151,7 +151,7 @@ bool CTreeElement::isChildOrSelfSelected( void )
 void CTreeElement::search( QString pattern, bool recursive, bool caseSensitive,
                           bool SearchOnlyTitles, QTreeWidget& list )
 {
-   if ( NULLPTR == mpInformationElement )
+   if ( nullptr == mpInformationElement )
       return;
 
    mpInformationElement->search(pattern, recursive, caseSensitive,
@@ -167,13 +167,13 @@ CTreeElement* CTreeElement::findChildWithName( QString name )
       return dynamic_cast<CTreeElement*>(pX);
   }
 
-  return NULLPTR;
+  return nullptr;
 }
 
 CTreeElement* CTreeElement::firstChildElem() const
 {
    if ( childCount() == 0 )
-      return NULLPTR;
+      return nullptr;
    return dynamic_cast<CTreeElement*>( child(0) );
 }
 
@@ -184,22 +184,22 @@ CTreeElement* CTreeElement::nextSiblingElem() const
    if ( p ) {
       int idx = p->indexOfChild( const_cast<CTreeElement*>(this) );
       if ( idx < 0 || idx >= p->childCount()-1 )
-         return NULLPTR;
+         return nullptr;
       return dynamic_cast<CTreeElement*>( p->child(idx+1) );
    } else if ( tw ) {
       int idx = tw->indexOfTopLevelItem( const_cast<CTreeElement*>(this) );
       if ( idx < 0 || idx >= tw->topLevelItemCount()-1 )
-         return NULLPTR;
+         return nullptr;
       return dynamic_cast<CTreeElement*>( tw->topLevelItem(idx+1) );
    }
-   return NULLPTR;
+   return nullptr;
 }
 
 CTreeElement* CTreeElement::itemAboveElem() const
 {
    QTreeWidget* tw = treeWidget();
    if ( !tw )
-      return NULLPTR;
+      return nullptr;
    QTreeWidgetItem* prev = tw->itemAbove( const_cast<CTreeElement*>(this) );
    return dynamic_cast<CTreeElement*>( prev );
 }

@@ -25,7 +25,7 @@
 class CFileEncryptionPasswordDialog :  public QDialog, public Ui_IFileEncryptionPasswordDialog {
   Q_OBJECT
 public:
-  CFileEncryptionPasswordDialog( QWidget* pParent = NULLPTR );
+  CFileEncryptionPasswordDialog( QWidget* pParent = nullptr );
 
   void    setUp(QString strFileName);
   QString getPasswd( void );

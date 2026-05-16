@@ -42,7 +42,7 @@ CPropertyDialog::CPropertyDialog( QWidget* pParent,
  , mIconSelector()
  , miMode( MODE_NONE )
  , miChoice( 0 )
- , mpEditingElement( NULLPTR )
+ , mpEditingElement( nullptr )
  , mrefTuxConfiguration( refTuxConfiguration )
 {
    setObjectName("CPropertyDialog");
@@ -58,7 +58,7 @@ CPropertyDialog::CPropertyDialog( QWidget* pParent,
 CPropertyDialog::~CPropertyDialog( void )
 // -------------------------------------------------------------------------------
 {
-   mpEditingElement = NULLPTR;                 // do not kill this pointer
+   mpEditingElement = nullptr;                 // do not kill this pointer
 }
 
 
@@ -66,7 +66,7 @@ CPropertyDialog::~CPropertyDialog( void )
 void CPropertyDialog::setUp( CInformationElement* pElement, int iMode )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
       return;
 
    if ( iMode == MODE_CHANGE_PROPERTIES )
@@ -164,10 +164,10 @@ QString CPropertyDialog::getIconFileName( void )
 void CPropertyDialog::changeProperties( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditingElement )
+   if ( nullptr == mpEditingElement )
       return;
 
-//   if ( (NULLPTR == mpPasswdLineOne) || (NULLPTR == mpPasswdLineTwo) )
+//   if ( (nullptr == mpPasswdLineOne) || (nullptr == mpPasswdLineTwo) )
 //      return;
 
    if ( getName().trimmed().isEmpty() )

@@ -25,7 +25,7 @@
 class CPasswdDialog : public QDialog, public Ui_IPasswdDialog {
   Q_OBJECT
 public:
-  CPasswdDialog( QWidget* pParent = NULLPTR );
+  CPasswdDialog( QWidget* pParent = nullptr );
 
   void    setUp( const QString& sIEDescription );
   QString getPasswd( void );

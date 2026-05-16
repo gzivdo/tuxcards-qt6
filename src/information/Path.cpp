@@ -26,7 +26,7 @@ Path::Path( IParent* pElement )
  : mPathList()
 // -------------------------------------------------------------------------------
 {
-   while ( (NULLPTR != pElement)
+   while ( (nullptr != pElement)
            && ( INFORMATION_COLLECTION_DESC != pElement->getDescription()) )
    {
       mPathList.prepend( pElement->getDescription() );

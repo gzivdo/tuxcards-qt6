@@ -23,7 +23,7 @@
 CInformationElementHistory::CInformationElementHistory( void )
  : mList()
  , miCurrentIndex( INVALID_INDEX )
- , mpListener( NULLPTR )
+ , mpListener( nullptr )
 // -------------------------------------------------------------------------------
 {
 }
@@ -34,7 +34,7 @@ CInformationElementHistory::~CInformationElementHistory( void )
 // -------------------------------------------------------------------------------
 {
    mList.clear();
-   mpListener = NULLPTR;
+   mpListener = nullptr;
 }
 
 
@@ -76,7 +76,7 @@ void CInformationElementHistory::addElement( const CInformationElement& ie )
    if ( INVALID_INDEX != miCurrentIndex )
    {
       CInformationElement* pIE = mList.at(miCurrentIndex);
-      if ( (NULLPTR != pIE) && (pIE == &ie) )
+      if ( (nullptr != pIE) && (pIE == &ie) )
          return;
    }
 
@@ -112,7 +112,7 @@ CInformationElement* CInformationElementHistory::getPrevious( void )
 // -------------------------------------------------------------------------------
 {
    if ( (int)(mList.count()-1) == miCurrentIndex )
-      return NULLPTR;
+      return nullptr;
 
    miCurrentIndex++;
    CInformationElement* pIE = mList.at(miCurrentIndex);
@@ -126,7 +126,7 @@ CInformationElement* CInformationElementHistory::getNext( void )
 // -------------------------------------------------------------------------------
 {
    if ( 0 == miCurrentIndex )
-      return NULLPTR;
+      return nullptr;
 
    miCurrentIndex--;
    CInformationElement* pIE = mList.at(miCurrentIndex);
@@ -151,7 +151,7 @@ void CInformationElementHistory::dump( void )
       std::cout<<i;
       std::cout<<sSeparator.toLatin1().constData();
       std::cout<<pIE<<"\t";
-      sDesc =  (NULLPTR != pIE) ? pIE->getDescription() : "NULLPTR";
+      sDesc =  (nullptr != pIE) ? pIE->getDescription() : "nullptr";
       std::cout<<sDesc.toLatin1().constData()<<std::endl;
    }
 
@@ -163,7 +163,7 @@ void CInformationElementHistory::dump( void )
 void CInformationElementHistory::notifyListener( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpListener )
+   if ( nullptr != mpListener )
       mpListener->historyStatusChanged( (int)(mList.count()-1) > miCurrentIndex,
                                         0 < miCurrentIndex );
 }

@@ -34,7 +34,7 @@ class Editor : public QTextEdit,
 {
    Q_OBJECT
 public:
-   Editor( QWidget *pParent = NULLPTR, const char *pName = NULLPTR );
+   Editor( QWidget *pParent = nullptr, const char *pName = nullptr );
    virtual       ~Editor( void );
 
    QString       getText( void );

@@ -24,8 +24,8 @@
 
 // -------------------------------------------------------------------------------
 CInformationCollection::CInformationCollection( CInformationElement* pRoot )
- : mpRootElement( NULLPTR )
- , mpActiveElement( NULLPTR ), mbEncrypted(false), mstrFilePassword(""),
+ : mpRootElement( nullptr )
+ , mpActiveElement( nullptr ), mbEncrypted(false), mstrFilePassword(""),
 	mNumElements(0)
 // -------------------------------------------------------------------------------
 {
@@ -39,7 +39,7 @@ CInformationCollection::~CInformationCollection( void )
 // -------------------------------------------------------------------------------
 {
    DELETE( mpRootElement );
-   mpActiveElement = NULLPTR;
+   mpActiveElement = nullptr;
 
    mViews.clear();
 }
@@ -68,7 +68,7 @@ QString CInformationCollection::getDescription( void )
 IParent* CInformationCollection::getParent( void )
 // -------------------------------------------------------------------------------
 {
-   return NULLPTR;
+   return nullptr;
 }
 
 // -------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ void CInformationCollection::setRootElement( CInformationElement* pRoot )
 {
    mpRootElement = pRoot;
 
-   if ( NULLPTR != pRoot )
+   if ( nullptr != pRoot )
       pRoot->setParent(this);
 }
 
@@ -126,7 +126,7 @@ void CInformationCollection::setActiveElement( Path path )
 {
    CInformationElement* pElement = getInformationElement(path);
 
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
    {
       setActiveElement( mpRootElement );
       return;
@@ -149,7 +149,7 @@ QString CInformationCollection::toString( void )
 // -------------------------------------------------------------------------------
 {
   //cout<<"printing collection with rootElement("<<mpRootElement<<")"<<endl;
-  if ( NULLPTR == mpRootElement )
+  if ( nullptr == mpRootElement )
    return "";
 
   return mpRootElement->getTreeString(0);
@@ -177,7 +177,7 @@ QString CInformationCollection::toXML( void )
 
   //std::cout<<"LastActiveElement = "<<Path(mpActiveElement).toString()<<std::endl;
 
-  if ( NULLPTR != mpRootElement )
+  if ( nullptr != mpRootElement )
   {
     //std::cout<<"root != 0"<<std::endl;
     mpRootElement->toXML(xmlDocument, thisElement);
@@ -198,7 +198,7 @@ QString CInformationCollection::toXML( CInformationElement* pElem )
 {
    QDomDocument xmlDocument("tuxcards_data_file");
    xmlDocument.insertBefore( xmlDocument.createProcessingInstruction( "xml", "version=\"1.0\" encoding=\"utf-8\"" ), xmlDocument.documentElement() );
-   if ( NULLPTR != pElem )
+   if ( nullptr != pElem )
       pElem->toXML( xmlDocument, xmlDocument );
 
    return xmlDocument.toString();
@@ -238,7 +238,7 @@ void CInformationCollection::slotChildAdded( CInformationElement* pElem )
 void CInformationCollection::registerAsListenerOf( CInformationElement* pElem )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == pElem )
+   if ( nullptr == pElem )
       return;
 
 	mNumElements++;
@@ -254,20 +254,20 @@ void CInformationCollection::registerAsListenerOf( CInformationElement* pElem )
 CInformationElement* CInformationCollection::getInformationElement( Path path )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpRootElement )
-      return NULLPTR;
+   if ( nullptr == mpRootElement )
+      return nullptr;
 
    QStringList list = path.getPathList();
    if ( mpRootElement->getDescription() != list[0] )
-      return NULLPTR;
+      return nullptr;
 
    CInformationElement* pElem = mpRootElement;
    for ( uint i=1; i < list.size(); i++ )
    {
       pElem = pElem->findChildWithDescription( list[i] );
-      if ( NULLPTR == pElem )
+      if ( nullptr == pElem )
       {
-         return NULLPTR;
+         return nullptr;
       }
    }
 

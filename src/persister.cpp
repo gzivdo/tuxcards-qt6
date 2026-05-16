@@ -236,7 +236,7 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 void Persister::save(CInformationCollection* collection, QString filename)
 {
    CTreeInformationElement* pRootElem = (CTreeInformationElement*)collection->getRootElement();
-   if ( NULLPTR == pRootElem )
+   if ( nullptr == pRootElem )
       return;
       
    QString s= "TuxCardsV0.5" + pRootElem->toStringObsoleted();

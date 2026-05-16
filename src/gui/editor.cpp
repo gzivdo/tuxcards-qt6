@@ -31,7 +31,7 @@
 
 Editor::Editor( QWidget *pParent, const char* /*pName*/ )
   : QTextEdit( pParent )
-  , mpActiveElement( NULLPTR )
+  , mpActiveElement( nullptr )
   , SEMAPHORE_TEXT_WAS_SET( false )
 {
   initialize();
@@ -40,7 +40,7 @@ Editor::Editor( QWidget *pParent, const char* /*pName*/ )
 
 Editor::~Editor( void )
 {
-   mpActiveElement = NULLPTR;
+   mpActiveElement = nullptr;
 }
 
 
@@ -48,7 +48,7 @@ void Editor::aboutToRemoveElement( CInformationElement* pIE )
 {
    if ( mpActiveElement == pIE )
    {
-      mpActiveElement = NULLPTR;
+      mpActiveElement = nullptr;
    }
 }
 
@@ -76,7 +76,7 @@ void Editor::setText( QString text )
 
 void Editor::rereadInformation( void )
 {
-   if ( NULLPTR == mpActiveElement )
+   if ( nullptr == mpActiveElement )
       return;
 
    setText( mpActiveElement->getInformation() );
@@ -95,7 +95,7 @@ void Editor::initialize( void )
 {
   QTextEdit::clear();
   QTextEdit::setAutoFormatting(AutoNone);
-  mpActiveElement = NULLPTR;
+  mpActiveElement = nullptr;
 
   SEMAPHORE_TEXT_WAS_SET = false;
   connect( this, SIGNAL(textChanged()), this, SLOT(sendUndoAvailableSignal()));
@@ -273,7 +273,7 @@ void Editor::insertImage()
 void Editor::adaptClipboardText( QClipboard::Mode mode )
 {
     QClipboard* pCb = QApplication::clipboard();
-    if ( NULLPTR == pCb )
+    if ( nullptr == pCb )
       return;
 
     const QMimeData* mimeData = pCb->mimeData(mode);

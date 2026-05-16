@@ -38,7 +38,7 @@ CInformationCollection* XMLPersister::createInformationCollection( QFile& xmlFil
       return createInformationCollection( xmlDocument );
    }
 
-   return NULLPTR;
+   return nullptr;
 }
 
 // -------------------------------------------------------------------------------
@@ -47,12 +47,12 @@ CInformationCollection* XMLPersister::createInformationCollection( QString xmlSt
 {
 //   	std::cout << "XMLPersister::createInformationCollection: str: " << xmlString << std::endl;
    QDomDocument* xmlDocument = createDomDocumentFromString(xmlString);
-   if ( NULLPTR != xmlDocument )
+   if ( nullptr != xmlDocument )
    {
       return createInformationCollection( *xmlDocument );
    }
 
-   return NULLPTR;
+   return nullptr;
 }
 
 // -------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ CInformationCollection* XMLPersister::createInformationCollection( QDomDocument&
    {
       QDomElement* pDomElem = parseCollection(collection, doc.documentElement() );
 
-      if ( NULLPTR != pDomElem )
+      if ( nullptr != pDomElem )
       {
          parseElementAttributes(*pDomElem, *e);
          parseChildrenOf(*pDomElem, *e);
@@ -87,7 +87,7 @@ CInformationCollection* XMLPersister::createInformationCollection( QDomDocument&
 QDomElement* XMLPersister::parseCollection(CInformationCollection* collection, QDomNode node)
 // -------------------------------------------------------------------------------
 {
-  QDomElement* retVal = NULLPTR;
+  QDomElement* retVal = nullptr;
 
   if ( node.isElement() )
   {
@@ -259,7 +259,7 @@ QDomDocument* XMLPersister::createDomDocumentFromString( QString xmlString )
    QDomDocument* doc = new QDomDocument( "tuxcards_data_file" );
    if ( !doc->setContent(xmlString) ) {
    		delete doc;
-      return NULLPTR;
+      return nullptr;
    }
 
    return doc;

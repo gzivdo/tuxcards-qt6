@@ -22,13 +22,13 @@
 // -------------------------------------------------------------------------------
 CSingleEntryView::CSingleEntryView( QWidget* pParent )
   : QStackedWidget( pParent )
-  , mpActiveElement( NULLPTR )
-  , mpEditor( NULLPTR )
+  , mpActiveElement( nullptr )
+  , mpEditor( nullptr )
 // -------------------------------------------------------------------------------
 {
    mpEditor = new Editor( this );
 
-   if ( (NULLPTR == mpEditor) )
+   if ( (nullptr == mpEditor) )
    {
       std::cout<<"Constructor 'CSingleEntryView': ERROR not enough memory "
                <<" to create objects!!!"<<std::endl;
@@ -43,7 +43,7 @@ CSingleEntryView::CSingleEntryView( QWidget* pParent )
 CSingleEntryView::~CSingleEntryView( void )
 // -------------------------------------------------------------------------------
 {
-   mpActiveElement = NULLPTR;
+   mpActiveElement = nullptr;
 }
 
 // ************** IView *********************************************************
@@ -53,7 +53,7 @@ void CSingleEntryView::aboutToRemoveElement( CInformationElement* pIE )
 {
    if ( mpActiveElement == pIE )
    {
-      mpActiveElement = NULLPTR;
+      mpActiveElement = nullptr;
    }
    mpEditor->aboutToRemoveElement( pIE );
 }
@@ -83,14 +83,14 @@ void CSingleEntryView::entryDecrypted( void )
 QString CSingleEntryView::getText( void )
 // -------------------------------------------------------------------------------
 {
-   return (NULLPTR != mpEditor) ? mpEditor->getText() : QString("");
+   return (nullptr != mpEditor) ? mpEditor->getText() : QString("");
 }
 
 // -------------------------------------------------------------------------------
 void CSingleEntryView::setText( QString text )
 // -------------------------------------------------------------------------------
 {
-   if (NULLPTR != mpEditor)
+   if (nullptr != mpEditor)
       mpEditor->setText( text );
 }
 
@@ -99,7 +99,7 @@ void CSingleEntryView::setText( QString text )
 void CSingleEntryView::writeCurrentTextToActiveInformationElement( void )
 // -------------------------------------------------------------------------------
 {
-   if (NULLPTR != mpEditor)
+   if (nullptr != mpEditor)
       mpEditor->writeCurrentTextToActiveInformationElement();
 }
 
@@ -107,14 +107,14 @@ void CSingleEntryView::writeCurrentTextToActiveInformationElement( void )
 int CSingleEntryView::countBRs( void )
 // -------------------------------------------------------------------------------
 {
-   return (NULLPTR != mpEditor) ? mpEditor->countBRs() : 0;
+   return (nullptr != mpEditor) ? mpEditor->countBRs() : 0;
 }
 
 // -------------------------------------------------------------------------------
 void CSingleEntryView::activeInformationElementChanged( CInformationElement* pIE )
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == pIE) || (NULLPTR == mpEditor) )
+   if ( (nullptr == pIE) || (nullptr == mpEditor) )
       return;
 
    mpActiveElement = pIE;

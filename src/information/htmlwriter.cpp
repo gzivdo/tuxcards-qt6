@@ -60,7 +60,7 @@ bool HTMLWriter::writeCollectionToHTMLFile( CInformationCollection& collection,
    createTopFrame( dir );
 
    CInformationElement* pRootElem = collection.getRootElement();
-   if ( NULLPTR != pRootElem )
+   if ( nullptr != pRootElem )
    {
       createIndexFile( dir, pRootElem->getDescription() );
       createTreeFrame( collection, dir );
@@ -136,7 +136,7 @@ void HTMLWriter::createTreeFrame( CInformationCollection& collection, const QDir
 
 
    CInformationElement* pCollectionRootElement = collection.getRootElement();
-   if ( NULLPTR != pCollectionRootElement )
+   if ( nullptr != pCollectionRootElement )
    {
       convertInformationElementToHTML( *pCollectionRootElement, dir, sTreeHTML );
    }

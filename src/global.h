@@ -18,14 +18,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-   #ifdef NULL
-      #undef  NULL
-   #endif
-   #define NULL    0
-
-
-   #define NULLPTR 0
-   #define DELETE(x)        delete (x); (x) = NULLPTR
+   // Convenience macro used throughout the code base.
+   #define DELETE(x)        do { delete (x); (x) = nullptr; } while (0)
 
    #define ARRAYLEN(x)      (sizeof(x)/sizeof(x[0]))
 

@@ -38,7 +38,7 @@ CFileEncryptionPasswordDialog::CFileEncryptionPasswordDialog( QWidget* pParent )
 // -------------------------------------------------------------------------------
 void CFileEncryptionPasswordDialog::setUp(QString strFileName)
 {
-	if (NULLPTR == leFilePassword)
+	if (nullptr == leFilePassword)
     	return;
 
 	tlFileName->setText(strFileName);
@@ -55,7 +55,7 @@ void CFileEncryptionPasswordDialog::setUp(QString strFileName)
 // -------------------------------------------------------------------------------
 void CFileEncryptionPasswordDialog::accept()
 {
-   if ( NULLPTR == leFilePassword)
+   if ( nullptr == leFilePassword)
       return;
 
    if ( leFilePassword->text().trimmed().isEmpty() )

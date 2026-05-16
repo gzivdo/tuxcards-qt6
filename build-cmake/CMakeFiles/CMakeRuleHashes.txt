@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+7b052b81a12c2ee64da6e01c3e16a4da CMakeFiles/tuxcards_autogen
+58649a214cbde2a42bb3ed38f0d51d66 tuxcards_autogen/2OST2OT5Q2/qrc_icons.cpp
+3d7cb2957868c37a7bad1d67d8c63e70 tuxcards_autogen/timestamp

@@ -32,7 +32,7 @@ class CInformationCollection : public QObject,
 {
   Q_OBJECT
 public:
-  CInformationCollection( CInformationElement* pRoot = NULLPTR );
+  CInformationCollection( CInformationElement* pRoot = nullptr );
   ~CInformationCollection( void);
   static CInformationCollection* createDefaultCollection( void );
 

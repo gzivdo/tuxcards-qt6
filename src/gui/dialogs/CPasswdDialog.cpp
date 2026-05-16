@@ -39,8 +39,8 @@ CPasswdDialog::CPasswdDialog( QWidget* pParent )
 void CPasswdDialog::setUp( const QString& sIEDescription )
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpIEDescription) || (NULLPTR == mpPasswdLineOne)
-        || (NULLPTR == mpPasswdLineTwo) )
+   if ( (nullptr == mpIEDescription) || (nullptr == mpPasswdLineOne)
+        || (nullptr == mpPasswdLineTwo) )
       return;
 
    mpIEDescription->setText("'"+sIEDescription+"'");
@@ -59,7 +59,7 @@ void CPasswdDialog::setUp( const QString& sIEDescription )
 void CPasswdDialog::verifyAndAccept()
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpPasswdLineOne) || (NULLPTR == mpPasswdLineTwo) )
+   if ( (nullptr == mpPasswdLineOne) || (nullptr == mpPasswdLineTwo) )
       return;
 
    if ( mpPasswdLineOne->text().trimmed().isEmpty() )

@@ -82,25 +82,25 @@
 
 // -------------------------------------------------------------------------------
 MainWindow::MainWindow(QString arg)
- : mpCollection( NULLPTR )
- , mpMenu( NULLPTR )
- , mpOptionsDialog( NULLPTR )
+ : mpCollection( nullptr )
+ , mpMenu( nullptr )
+ , mpOptionsDialog( nullptr )
  , mConfiguration( CTuxCardsConfiguration::getInstance() )
- , mpSplit( NULLPTR )
- , mpColorBar( NULLPTR )
- , mpTree( NULLPTR )
- , mpSingleEntryView( NULLPTR )
- , mpEditor( NULLPTR )
- , mpQuickLoader( NULLPTR )
- , mpRecentFiles( NULLPTR )
- , mpStatusBar( NULLPTR )
- , mpLeftButton( NULLPTR )
- , mpRightButton( NULLPTR )
+ , mpSplit( nullptr )
+ , mpColorBar( nullptr )
+ , mpTree( nullptr )
+ , mpSingleEntryView( nullptr )
+ , mpEditor( nullptr )
+ , mpQuickLoader( nullptr )
+ , mpRecentFiles( nullptr )
+ , mpStatusBar( nullptr )
+ , mpLeftButton( nullptr )
+ , mpRightButton( nullptr )
  , mHistory( )
- , mPasswdDialog( )          // with parent as NULLPTR
- , mpMainTools( NULLPTR )
- , mpEntryTools( NULLPTR )
- , mpEditorTools( NULLPTR )
+ , mPasswdDialog( )          // with parent as nullptr
+ , mpMainTools( nullptr )
+ , mpEntryTools( nullptr )
+ , mpEditorTools( nullptr )
  , miMainToolBarID( 0 )
  , miEntryToolBarID( 0 )
  , miEditorToolBarID( 0 )
@@ -144,7 +144,7 @@ MainWindow::MainWindow(QString arg)
 
    // create optionsDialog
    mpOptionsDialog = new OptionsDialog( this, mConfiguration );
-   if ( NULLPTR != mpOptionsDialog )
+   if ( nullptr != mpOptionsDialog )
    {
       connect( mpOptionsDialog, SIGNAL(configurationChanged()), this, SLOT(applyConfigurationMain()) );
    }
@@ -204,7 +204,7 @@ void MainWindow::lowMemoryExit( void )
 {
    std::cout<<"TuxCards ERROR\nNot enough memory to run application.\nTuxCards"
               " will be stopped!!!"<<std::endl;
-   QMessageBox::critical( NULLPTR, "TuxCards", "Not enough memory to run "
+   QMessageBox::critical( nullptr, "TuxCards", "Not enough memory to run "
                           "application.\nThe program will be quit.",
                           QMessageBox::Abort, QMessageBox::NoButton );
    QApplication::exit( -1 );
@@ -216,7 +216,7 @@ void MainWindow::lowMemoryExit( void )
 void MainWindow::checkPointer( void* pPointer )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == pPointer )
+   if ( nullptr == pPointer )
    {
       lowMemoryExit();
    }
@@ -229,10 +229,10 @@ void MainWindow::historyStatusChanged( bool bHasPreviousElement,
 // -------------------------------------------------------------------------------
 {
    //std::cout<<"historyStatusChanged("<<bHasPreviousElement<<","<<bHasNextElement<<")"<<std::endl;
-   if ( NULLPTR != mpLeftButton )
+   if ( nullptr != mpLeftButton )
       mpLeftButton->setEnabled( bHasPreviousElement );
 
-   if ( NULLPTR != mpRightButton )
+   if ( nullptr != mpRightButton )
       mpRightButton->setEnabled( bHasNextElement );
 }
 
@@ -244,7 +244,7 @@ void MainWindow::historyStatusChanged( bool bHasPreviousElement,
 void MainWindow::activeInformationElementChanged( CInformationElement* pIE )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != pIE )
+   if ( nullptr != pIE )
    {
       mHistory.addElement( *pIE );
    }
@@ -255,7 +255,7 @@ void MainWindow::activeInformationElementChanged( CInformationElement* pIE )
 void MainWindow::activatePreviousHistoryElement( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpCollection )
+   if ( nullptr != mpCollection )
       mpCollection->setActiveElement( mHistory.getPrevious() );
 }
 
@@ -263,7 +263,7 @@ void MainWindow::activatePreviousHistoryElement( void )
 void MainWindow::activateNextHistoryElement( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpCollection )
+   if ( nullptr != mpCollection )
       mpCollection->setActiveElement( mHistory.getNext() );
 }
 
@@ -275,7 +275,7 @@ void MainWindow::settingUpEditor( QWidget* pParent )
    mpSingleEntryView = new CSingleEntryView( pParent );
    checkPointer( mpSingleEntryView );
 
-   if ( NULLPTR == mpSingleEntryView )
+   if ( nullptr == mpSingleEntryView )
       return;
 
    mpEditor = mpSingleEntryView->getEditor();
@@ -388,7 +388,7 @@ void MainWindow::settingUpMenu( void )
    edit->addAction(editRedoAction);
    edit->addSeparator();
 
-   if ( NULLPTR != mpEditor )
+   if ( nullptr != mpEditor )
    {
       edit->addAction( getIcon("editcut"),   "Cu&t",   mpEditor, SLOT(cut()),   QKeySequence(Qt::CTRL | Qt::Key_X) );
       edit->addAction(editCopyAction);
@@ -438,7 +438,7 @@ void MainWindow::settingUpMenu( void )
    about->addAction( QIcon(QPixmap(lo16_app_tuxcards_xpm)), "About TuxCards", this, SLOT(showAbout()) );
 
    mpMenu = menuBar();
-   if ( NULLPTR != mpMenu )
+   if ( nullptr != mpMenu )
    {
       mpMenu->addMenu( file );
       mpMenu->addMenu( edit );
@@ -660,11 +660,11 @@ static QString collectBookmarkPaths( QToolBar* tb )
  */
 void MainWindow::addElementToBookmarksEvent( void )
 {
-   if ( NULLPTR == mpCollection || NULLPTR == mpQuickLoader )
+   if ( nullptr == mpCollection || nullptr == mpQuickLoader )
       return;
 
    CInformationElement* pElement = mpCollection->getActiveElement();
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
       return;
 
    BookmarkButton* b = new BookmarkButton(
@@ -693,11 +693,11 @@ void MainWindow::quicklyLoad(Path* path)
 void MainWindow::changeInformationFormat()
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == mpEditor) )
+   if ( (nullptr == mpCollection) || (nullptr == mpEditor) )
       return;
 
    CInformationElement* pActiveElement = mpCollection->getActiveElement();
-   if ( NULLPTR == pActiveElement )
+   if ( nullptr == pActiveElement )
    {
       QMessageBox::information( 0, "Converter", "There is no active entry.",
                                 QMessageBox::Abort );
@@ -874,7 +874,7 @@ void MainWindow::textAlignmentChanged(int a)
 // -------------------------------------------------------------------------------
 void MainWindow::textBold()
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
    bool nowBold = (mpEditor->fontWeight() == QFont::Bold);
    mpEditor->setFontWeight(nowBold ? QFont::Normal : QFont::Bold);
@@ -883,7 +883,7 @@ void MainWindow::textBold()
 
 void MainWindow::textItalic()
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
    mpEditor->setFontItalic( !mpEditor->fontItalic() );
 }
@@ -891,7 +891,7 @@ void MainWindow::textItalic()
 
 void MainWindow::textUnder()
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
    mpEditor->setFontUnderline( !mpEditor->fontUnderline() );
 }
@@ -901,7 +901,7 @@ void MainWindow::textUnder()
 void MainWindow::textColor()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
 
    QColor c = QColorDialog::getColor(mpEditor->textColor(), this);
@@ -916,7 +916,7 @@ void MainWindow::textColor()
 void MainWindow::textLeft()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
 
    mpEditor->setAlignment(Qt::AlignLeft);
@@ -925,7 +925,7 @@ void MainWindow::textLeft()
 void MainWindow::textHCenter()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
    mpEditor->setAlignment(Qt::AlignHCenter);
 }
@@ -933,7 +933,7 @@ void MainWindow::textHCenter()
 void MainWindow::textRight()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
 
    mpEditor->setAlignment(Qt::AlignRight);
@@ -942,7 +942,7 @@ void MainWindow::textRight()
 void MainWindow::textBlock()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
 
    mpEditor->setAlignment(Qt::AlignJustify);
@@ -968,7 +968,7 @@ void MainWindow::checkFirstTime()
   {
     // write datafile
     QFile file( QDir::homePath() + "/tuxcards_greeting" );
-    QTextStream* pLog = NULLPTR;
+    QTextStream* pLog = nullptr;
 
     if( !file.open(QIODevice::WriteOnly) )
     {
@@ -1006,7 +1006,7 @@ void MainWindow::timerEvent(QTimerEvent*)
 void MainWindow::showMessage(QString s, int seconds)
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpStatusBar )
+   if ( nullptr != mpStatusBar )
       mpStatusBar->showMessage(s, seconds*1000);
 }
 
@@ -1095,7 +1095,7 @@ int MainWindow::askForSaving(QString question)
 bool MainWindow::initializingCollection( QString collectionName )
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == mpSingleEntryView) ) {
+   if ( (nullptr == mpCollection) || (nullptr == mpSingleEntryView) ) {
    		std::cout<<"MainWindow::initializingCollection returning due to null"<<std::endl;
       return false;
    }
@@ -1149,7 +1149,7 @@ bool MainWindow::initializingCollection( QString collectionName )
    connect( mpCollection,      SIGNAL(modelHasChanged()), this, SLOT(recognizeChanges()) );
    connect( mpCollection,      SIGNAL(numElementsChanged(int)), this, SLOT(updateStatusbarElements(int)) );
 
-   if ( NULLPTR != mpEditor )
+   if ( nullptr != mpEditor )
       mpEditor->clear();
 
    // collection successfully created and system set up with it
@@ -1193,8 +1193,8 @@ void MainWindow::deleteCollection(CInformationCollection* collection)
 CInformationElement* MainWindow::getActiveIE()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
-      return NULLPTR;
+   if ( nullptr == mpCollection )
+      return nullptr;
 
    return mpCollection->getActiveElement();
 }
@@ -1248,7 +1248,7 @@ bool MainWindow::open( QString fileName )
 
    if (retVal)
    {
-      if ( NULLPTR != mpRecentFiles )
+      if ( nullptr != mpRecentFiles )
          mpRecentFiles->setOnTop(fileName);
    } else {
 		// Can fail for encrypted files (incorrect password.) or bad xml data.
@@ -1389,7 +1389,7 @@ void MainWindow::slotSaveAndLoadNewFile(QString newFile)
 void MainWindow::selectLastActiveElement()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
+   if ( nullptr == mpCollection )
       return;
 
 
@@ -1439,7 +1439,7 @@ void MainWindow::saveAs()
 
    save(newFileName);
 
-   if ( NULLPTR != mpRecentFiles )
+   if ( nullptr != mpRecentFiles )
    {
       mpRecentFiles->setOnTop(newFileName);
    }
@@ -1453,7 +1453,7 @@ void MainWindow::saveAs()
 void MainWindow::save(QString fileName)
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == mpEditor) )
+   if ( (nullptr == mpCollection) || (nullptr == mpEditor) )
       return;
 
    if ( (QDir::homePath() + TUX_CONFIG_FILE) == fileName )
@@ -1513,7 +1513,7 @@ void MainWindow::toggleFileEncryption()
 {
 	QString strPassword("");
 
-	if ( NULLPTR == mpCollection )
+	if ( nullptr == mpCollection )
 		return;
 
 	// Check current state of encryption before changing it
@@ -1567,7 +1567,7 @@ void MainWindow::toggleFileEncryption()
 void MainWindow::exportHTML()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
+   if ( nullptr == mpCollection )
       return;
 
    QString dirPath = QFileDialog::getExistingDirectory(
@@ -1650,12 +1650,12 @@ void MainWindow::exit()
 void MainWindow::wordCount( void )
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == mpEditor) )
+   if ( (nullptr == mpCollection) || (nullptr == mpEditor) )
       return;
 
    mpEditor->writeCurrentTextToActiveInformationElement();
    CInformationElement* pActiveElement = mpCollection->getActiveElement();
-   if ( NULLPTR == pActiveElement )
+   if ( nullptr == pActiveElement )
    {
       QMessageBox::information( 0, "WordCount", "There is no active entry.",
                                 QMessageBox::Abort );
@@ -1683,7 +1683,7 @@ void MainWindow::wordCount( void )
 void MainWindow::insertCurrentDate( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpEditor )
+   if ( nullptr != mpEditor )
       mpEditor->insertPlainText( QDate::currentDate().toString() );
 }
 
@@ -1691,7 +1691,7 @@ void MainWindow::insertCurrentDate( void )
 void MainWindow::insertCurrentTime()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpEditor )
+   if ( nullptr != mpEditor )
       mpEditor->insertPlainText( QTime::currentTime().toString() );
 }
 
@@ -1755,7 +1755,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 
    // we always save the options; the splitter-size may have changed
-   if ( NULLPTR != mpCollection )
+   if ( nullptr != mpCollection )
    {
       Path path( mpCollection->getActiveElement() );
       mConfiguration.setStringValue( CTuxCardsConfiguration::S_LAST_ACTIVE_ELEM_PATH, path.toString() );
@@ -1767,7 +1767,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
    mConfiguration.setIntValue( CTuxCardsConfiguration::I_TREE_WIDTH,  mpSplit->sizes().first() );
    mConfiguration.setIntValue( CTuxCardsConfiguration::I_EDITOR_WIDTH, mpSplit->sizes().last() );
 
-   if ( NULLPTR != mpRecentFiles )
+   if ( nullptr != mpRecentFiles )
    {
       mConfiguration.setStringValue( CTuxCardsConfiguration::S_RECENT_FILES, mpRecentFiles->toString() );
    }
@@ -1834,7 +1834,7 @@ void MainWindow::setEditorToolbarVisible( bool bVisible )
 void MainWindow::editConfiguration( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpOptionsDialog )
+   if ( nullptr == mpOptionsDialog )
       return;
 
    mpOptionsDialog->setUp();
@@ -1854,7 +1854,7 @@ void MainWindow::applyConfiguration()
 // -------------------------------------------------------------------------------
 {
    // editor
-   if ( NULLPTR != mpEditor )
+   if ( nullptr != mpEditor )
    {
       QFont font = mConfiguration.getASCIIEditorFont().toFont();
       mpEditor->setFont(font);
@@ -1920,7 +1920,7 @@ void MainWindow::setWindowGeometry( int windowWidth, int windowHeight,
 void MainWindow::search()
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpEditor) || (NULLPTR == mpTree) )
+   if ( (nullptr == mpEditor) || (nullptr == mpTree) )
       return;
 
    mpEditor->writeCurrentTextToActiveInformationElement();
@@ -1931,7 +1931,7 @@ void MainWindow::search()
 void MainWindow::print()
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == mpCollection->getActiveElement()) )
+   if ( (nullptr == mpCollection) || (nullptr == mpCollection->getActiveElement()) )
       return;
 
    if ( mpCollection->getActiveElement()->getInformationFormat() == &InformationFormat::ASCII )
@@ -1940,7 +1940,7 @@ void MainWindow::print()
                                "rtf before printing." );
    }
 
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
 
 
@@ -1965,7 +1965,7 @@ void MainWindow::print()
 void MainWindow::makeVisible( SearchPosition* pPosition )
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == pPosition) || (NULLPTR == mpEditor) )
+   if ( (nullptr == mpCollection) || (nullptr == pPosition) || (nullptr == mpEditor) )
       return;
 
    mpCollection->setActiveElement( *(pPosition->getPath()) );
@@ -1991,10 +1991,10 @@ void MainWindow::makeVisible( SearchPosition* pPosition )
 void MainWindow::moveElementUp()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
+   if ( nullptr == mpCollection )
       return;
 
-   if ( NULLPTR == mpCollection->getActiveElement() )
+   if ( nullptr == mpCollection->getActiveElement() )
       return;
 
 
@@ -2005,10 +2005,10 @@ void MainWindow::moveElementUp()
 void MainWindow::moveElementDown()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
+   if ( nullptr == mpCollection )
       return;
 
-   if ( NULLPTR == mpCollection->getActiveElement() )
+   if ( nullptr == mpCollection->getActiveElement() )
       return;
 
 
@@ -2022,7 +2022,7 @@ void MainWindow::moveElementDown()
 void MainWindow::debugShowRTFTextSource()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpEditor )
+   if ( nullptr == mpEditor )
       return;
 
    QTextEdit* outputWindow=new QTextEdit();
@@ -2037,7 +2037,7 @@ void MainWindow::debugShowRTFTextSource()
 void MainWindow::debugShowXMLCode()
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
+   if ( nullptr == mpCollection )
       return;
 
    QTextEdit* outputWindow=new QTextEdit();

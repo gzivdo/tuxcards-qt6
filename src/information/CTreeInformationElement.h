@@ -25,7 +25,7 @@
 
 class CTreeInformationElement : public CInformationElement{
 public:
-   CTreeInformationElement( CInformationElement* pParent = NULLPTR,
+   CTreeInformationElement( CInformationElement* pParent = nullptr,
                            QString description="", QString information="",
                            InformationFormat* pFormat = &InformationFormat::NONE,
                            QString sIconFileName = "none",

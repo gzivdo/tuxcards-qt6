@@ -49,15 +49,15 @@
 
 CTree::CTree( QWidget* pParent, CTuxCardsConfiguration& refTuxConfiguration )
   : QTreeWidget( pParent )
-  , mpCollection( NULLPTR )
+  , mpCollection( nullptr )
   , mContextMenu( pParent )
   , mPropertyDialog( pParent, refTuxConfiguration )
   , mSearchDialog( pParent )
   , mPressPos()
   , mbMousePressed( false )
   , mAutoOpenTimer( pParent )
-  , mpOldCurrent( NULLPTR )
-  , mpDropElement( NULLPTR )
+  , mpOldCurrent( nullptr )
+  , mpDropElement( nullptr )
   , miAutoOpenTime( 750 )
 {
   setColumnCount(1);
@@ -94,15 +94,15 @@ CTree::CTree( QWidget* pParent, CTuxCardsConfiguration& refTuxConfiguration )
 
 CTree::~CTree( void )
 {
-   mpCollection = NULLPTR;
-   mpOldCurrent = NULLPTR;
-   mpDropElement= NULLPTR;
+   mpCollection = nullptr;
+   mpOldCurrent = nullptr;
+   mpDropElement= nullptr;
 }
 
 void CTree::timeoutEvent( void )
 {
    mAutoOpenTimer.stop();
-   if ( NULLPTR == mpDropElement )
+   if ( nullptr == mpDropElement )
       return;
 
    if ( !mpDropElement->isExpanded() )
@@ -114,11 +114,11 @@ void CTree::timeoutEvent( void )
 
 void CTree::aboutToRemoveElement( CInformationElement* pIE )
 {
-   if ( (NULLPTR != mpOldCurrent) && (mpOldCurrent->getInformationElement() == pIE) )
-      mpOldCurrent = NULLPTR;
+   if ( (nullptr != mpOldCurrent) && (mpOldCurrent->getInformationElement() == pIE) )
+      mpOldCurrent = nullptr;
 
-   if ( (NULLPTR != mpDropElement) && (mpDropElement->getInformationElement() == pIE) )
-      mpDropElement = NULLPTR;
+   if ( (nullptr != mpDropElement) && (mpDropElement->getInformationElement() == pIE) )
+      mpDropElement = nullptr;
 }
 
 
@@ -146,7 +146,7 @@ void CTree::settingUpContextMenu( void )
 
 void CTree::currentItemChangedSlot( QTreeWidgetItem* pItem, QTreeWidgetItem* /*previous*/ )
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == pItem) )
+   if ( (nullptr == mpCollection) || (nullptr == pItem) )
       return;
 
    CTreeElement* pTreeElem = dynamic_cast<CTreeElement*>(pItem);
@@ -160,7 +160,7 @@ void CTree::currentItemChangedSlot( QTreeWidgetItem* pItem, QTreeWidgetItem* /*p
 void CTree::showContextMenu( const QPoint& pos )
 {
    QTreeWidgetItem* pItem = itemAt(pos);
-   if ( NULLPTR == pItem )
+   if ( nullptr == pItem )
       return;
 
    mContextMenu.popup( viewport()->mapToGlobal(pos) );
@@ -189,7 +189,7 @@ void CTree::elementClosedEvent( QTreeWidgetItem* pItem )
 
 void CTree::mousePressEvent( QMouseEvent* pE )
 {
-   if ( NULLPTR == pE )
+   if ( nullptr == pE )
       return;
 
    QTreeWidget::mousePressEvent(pE);
@@ -197,7 +197,7 @@ void CTree::mousePressEvent( QMouseEvent* pE )
       return;
 
    CTreeElement* pItem = dynamic_cast<CTreeElement*>( itemAt(pE->pos()) );
-   if ( NULLPTR == pItem )
+   if ( nullptr == pItem )
       return;
 
    mPressPos = pE->pos();
@@ -208,7 +208,7 @@ void CTree::mousePressEvent( QMouseEvent* pE )
 
 void CTree::mouseMoveEvent( QMouseEvent* pE )
 {
-   if ( (NULLPTR == mpCollection) || (NULLPTR == pE) )
+   if ( (nullptr == mpCollection) || (nullptr == pE) )
       return;
 
    if ( mbMousePressed &&
@@ -216,7 +216,7 @@ void CTree::mouseMoveEvent( QMouseEvent* pE )
    {
       mbMousePressed = false;
       QTreeWidgetItem* pItem = itemAt(mPressPos);
-      if ( NULLPTR != pItem )
+      if ( nullptr != pItem )
       {
          emit dragStarted();
 
@@ -245,7 +245,7 @@ void CTree::mouseReleaseEvent( QMouseEvent* pE )
 
 void CTree::dragEnterEvent( QDragEnterEvent* pE )
 {
-   if ( NULLPTR == pE )
+   if ( nullptr == pE )
       return;
 
    if (!pE->mimeData()->hasText())
@@ -257,7 +257,7 @@ void CTree::dragEnterEvent( QDragEnterEvent* pE )
    mpOldCurrent = dynamic_cast<CTreeElement*>( currentItem() );
 
    CTreeElement* pElement = dynamic_cast<CTreeElement*>( itemAt(pE->position().toPoint()) );
-   if ( NULLPTR != pElement )
+   if ( nullptr != pElement )
    {
       mpDropElement = pElement;
       mAutoOpenTimer.start(miAutoOpenTime);
@@ -268,7 +268,7 @@ void CTree::dragEnterEvent( QDragEnterEvent* pE )
 
 void CTree::dragMoveEvent( QDragMoveEvent* pE )
 {
-   if ( NULLPTR == pE )
+   if ( nullptr == pE )
       return;
 
    if (!pE->mimeData()->hasText())
@@ -278,7 +278,7 @@ void CTree::dragMoveEvent( QDragMoveEvent* pE )
    }
 
    CTreeElement* pElement = dynamic_cast<CTreeElement*>( itemAt(pE->position().toPoint()) );
-   if ( NULLPTR != pElement )
+   if ( nullptr != pElement )
    {
       setCurrentItem(pElement);
       pE->setAccepted(true);
@@ -305,7 +305,7 @@ void CTree::dragMoveEvent( QDragMoveEvent* pE )
    } else {
       pE->ignore();
       mAutoOpenTimer.stop();
-      mpDropElement = NULLPTR;
+      mpDropElement = nullptr;
       emit showMessage("", 1);
    }
 }
@@ -314,7 +314,7 @@ void CTree::dragMoveEvent( QDragMoveEvent* pE )
 void CTree::dragLeaveEvent( QDragLeaveEvent* )
 {
   mAutoOpenTimer.stop();
-  mpDropElement = NULLPTR;
+  mpDropElement = nullptr;
 
   if ( mpOldCurrent ) {
      setCurrentItem( mpOldCurrent );
@@ -326,7 +326,7 @@ void CTree::dropEvent( QDropEvent* pE )
 {
   mAutoOpenTimer.stop();
 
-  if ( (NULLPTR == pE) || (NULLPTR == mpOldCurrent) )
+  if ( (nullptr == pE) || (nullptr == mpOldCurrent) )
    return;
 
   if (!pE->mimeData()->hasText())
@@ -344,7 +344,7 @@ void CTree::dropEvent( QDropEvent* pE )
   }
 
    CTreeElement* pItem = dynamic_cast<CTreeElement*>( itemAt(pE->position().toPoint()) );
-   if ( NULLPTR == pItem )
+   if ( nullptr == pItem )
    {
       pE->ignore();
       return;
@@ -369,10 +369,10 @@ void CTree::dropEvent( QDropEvent* pE )
    QString collectionString = pE->mimeData()->text();
 
    CInformationCollection* pCollection = XMLPersister::createInformationCollection(collectionString);
-   if ( NULLPTR != pCollection )
+   if ( nullptr != pCollection )
    {
      CInformationElement* pRoot = pCollection->getRootElement();
-     if ( NULLPTR != pRoot )
+     if ( nullptr != pRoot )
      {
         pItem->getInformationElement()->addChild(
                                          dynamic_cast<CTreeInformationElement*>(pRoot) );
@@ -388,8 +388,8 @@ void CTree::dropEvent( QDropEvent* pE )
 
 CInformationElement* CTree::getCurrentActive( void )
 {
-   if ( NULLPTR == mpCollection )
-      return NULLPTR;
+   if ( nullptr == mpCollection )
+      return nullptr;
 
    return mpCollection->getActiveElement();
 }
@@ -412,9 +412,9 @@ void CTree::createTreeFromCollection( CInformationCollection& collection )
    removeAll();
 
    CTreeInformationElement* pCollectionRootElement = dynamic_cast<CTreeInformationElement*>(collection.getRootElement());
-   if ( NULLPTR == pCollectionRootElement )
+   if ( nullptr == pCollectionRootElement )
    {
-      std::cout<<"CTree::createTreeFromCollection(): NULLPTR == pCollectionRootElement !"<<std::endl;
+      std::cout<<"CTree::createTreeFromCollection(): nullptr == pCollectionRootElement !"<<std::endl;
       return;
    }
    CTreeElement* pTreeElement = new CTreeElement(this, *pCollectionRootElement);
@@ -443,13 +443,13 @@ void CTree::addInformationElementsToTreeItem( CTreeElement& parent, CTreeInforma
 
 void CTree::activeInformationElementChanged( CInformationElement* pElement )
 {
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
       return;
 
    Path path(pElement);
    CTreeElement* pX = getTreeElement(path);
 
-   if ( NULLPTR == pX )
+   if ( nullptr == pX )
       return;
 
    if ( getCurrentActiveTreeElement() == pX )
@@ -467,17 +467,17 @@ CTreeElement* CTree::getTreeElement( Path path )
 {
    QStringList list = path.getPathList();
    if (list.isEmpty())
-      return NULLPTR;
+      return nullptr;
 
    CTreeElement* pX = findChildWithName(list[0]);
-   if ( NULLPTR == pX )
-      return NULLPTR;
+   if ( nullptr == pX )
+      return nullptr;
 
    for ( int i=1; i < list.size(); i++ )
    {
       pX = pX->findChildWithName(list[i]);
-      if ( NULLPTR == pX )
-         return NULLPTR;
+      if ( nullptr == pX )
+         return nullptr;
    }
 
    return pX;
@@ -491,7 +491,7 @@ CTreeElement* CTree::findChildWithName( const QString name )
      if ( pX && pX->text(0) == name )
         return dynamic_cast<CTreeElement*>(pX);
   }
-  return NULLPTR;
+  return nullptr;
 }
 
 
@@ -511,7 +511,7 @@ void CTree::changeActiveElementProperties( void )
 
 void CTree::askForDeletion( void )
 {
-  if ( (NULLPTR == currentItem()) || (NULLPTR == getCurrentActive()) )
+  if ( (nullptr == currentItem()) || (nullptr == getCurrentActive()) )
   {
     emit showMessage("Nothing selected.", 5);
     return;
@@ -537,7 +537,7 @@ void CTree::askForDeletion( void )
 
 void CTree::deleteElement( CTreeElement* pElem, bool bChangeSelection /*= true*/)
 {
-   if ( NULLPTR == pElem )
+   if ( nullptr == pElem )
       return;
 
    if ( pElem == topLevelItem(0) )
@@ -549,10 +549,10 @@ void CTree::deleteElement( CTreeElement* pElem, bool bChangeSelection /*= true*/
    }
 
    CInformationElement* pIE = pElem->getInformationElement();
-   if ( NULLPTR != pIE )
+   if ( nullptr != pIE )
       pIE->deleteSelf();
    else
-      std::cout<<"CTree::deleteElement(): pIE == NULLPTR"<<std::endl;
+      std::cout<<"CTree::deleteElement(): pIE == nullptr"<<std::endl;
 
    DELETE( pElem );
 }
@@ -576,7 +576,7 @@ void CTree::search( void )
 void CTree::resizeEvent( QResizeEvent* pE )
 {
    QTreeWidget::resizeEvent(pE);
-   if ( NULLPTR == pE )
+   if ( nullptr == pE )
       return;
 
    setColumnWidth(0, pE->size().width()-22);
@@ -591,7 +591,7 @@ void CTree::addEntryToBookmarks( void )
 
 void CTree::keyPressEvent( QKeyEvent* pK )
 {
-   if ( NULLPTR == pK )
+   if ( nullptr == pK )
       return;
 
    if( ( (pK->modifiers() & Qt::AltModifier)  &&  (pK->key() == Qt::Key_Left) ) ||
@@ -619,15 +619,15 @@ void CTree::keyPressEvent( QKeyEvent* pK )
 
 void CTree::inPlaceRenaming( QTreeWidgetItem* pItem, int /*iCol*/ )
 {
-   if ( NULLPTR == pItem )
+   if ( nullptr == pItem )
       return;
 
    CTreeElement* pTreeElement = dynamic_cast<CTreeElement*>(pItem);
-   if ( NULLPTR == pTreeElement )
+   if ( nullptr == pTreeElement )
       return;
 
    CTreeInformationElement* pIE = pTreeElement->getInformationElement();
-   if ( NULLPTR == pIE )
+   if ( nullptr == pIE )
       return;
 
    if ( pIE->getDescription() != pItem->text(0) )
@@ -664,7 +664,7 @@ void CTree::renameElement()
 void CTree::setEntryColor()
 {
    CInformationElement* pElement = getCurrentActive();
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
       return;
 
    QColor c = QColorDialog::getColor(pElement->getTextColor());
@@ -677,7 +677,7 @@ void CTree::setEntryColor()
 void CTree::setEntrySubTreeColor()
 {
    CInformationElement* pElement = getCurrentActive();
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
       return;
 
    QColor c = QColorDialog::getColor(pElement->getTextColor());

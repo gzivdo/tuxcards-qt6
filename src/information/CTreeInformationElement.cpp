@@ -39,7 +39,7 @@ CTreeInformationElement::CTreeInformationElement( CInformationElement* pParent,
 void CTreeInformationElement::addChild( CTreeInformationElement* pElement )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == pElement )
+   if ( nullptr == pElement )
       return;
 
    mpChildObjects->append( pElement );
@@ -193,7 +193,7 @@ void CTreeInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 void CTreeInformationElement::moveOneUp( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpParent )
+   if ( nullptr == mpParent )
    {
       std::cout<<"parent == 0 -> moving not possible"<<std::endl;
       return;
@@ -232,7 +232,7 @@ void CTreeInformationElement::moveChildOneUp( CTreeInformationElement* pChild )
 void CTreeInformationElement::moveOneDown( void )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpParent )
+   if ( nullptr == mpParent )
    {
       std::cout<<"parent == 0 -> moving not possible"<<std::endl;
       return;

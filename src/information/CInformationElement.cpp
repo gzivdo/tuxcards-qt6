@@ -40,7 +40,7 @@ CInformationElement::CInformationElement( IParent* pParent,
  , mInformation( sInformation )
  , mIcon()
  , mIconFilename( sIconFileName )
- , mpChildObjects( NULLPTR )
+ , mpChildObjects( nullptr )
  , miInformationYPos( 0 )
  , mbIsEncryptionEnabled( false )
  , msTmpPasswd( "" )
@@ -60,19 +60,19 @@ CInformationElement::~CInformationElement( void )
 {
    //std::cout<<"\t~CIE: "<<getDescription()<<std::endl;
 
-   if ( NULLPTR != mpChildObjects )
+   if ( nullptr != mpChildObjects )
    {
       qDeleteAll(*mpChildObjects);
       mpChildObjects->clear();
    }
 
    DELETE( mpChildObjects );
-   mpInformationFormat = NULLPTR;
+   mpInformationFormat = nullptr;
 
-   if ( NULLPTR != mpParent )
+   if ( nullptr != mpParent )
    {
       mpParent->aboutToRemoveElement(this);
-      mpParent = NULLPTR;
+      mpParent = nullptr;
    }
 }
 
@@ -97,7 +97,7 @@ IParent* CInformationElement::getParent( void )
 void CInformationElement::removeChild( CInformationElement* pChild )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpChildObjects )
+   if ( nullptr == mpChildObjects )
       return;
 
    mpChildObjects->removeAll( pChild );
@@ -108,7 +108,7 @@ void CInformationElement::removeChild( CInformationElement* pChild )
 void CInformationElement::aboutToRemoveElement( CInformationElement* pIE )
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR != mpParent )
+   if ( nullptr != mpParent )
       mpParent->aboutToRemoveElement(pIE);
 }
 // **************************** IParent - End ************************************
@@ -120,7 +120,7 @@ void CInformationElement::deleteSelf( void )
 // -------------------------------------------------------------------------------
 {
   //cout<<"IE::deleteSelf(); parent="<<mpParent<<endl;
-   if ( NULLPTR == mpParent )
+   if ( nullptr == mpParent )
       return;
 
    mpParent->removeChild(this);
@@ -152,7 +152,7 @@ bool CInformationElement::isBatched( void ) const
 void CInformationElement::addChild( CInformationElement* pElement )
 // -------------------------------------------------------------------------------
 {
-   if ( (NULLPTR == pElement) || (NULLPTR == mpChildObjects) )
+   if ( (nullptr == pElement) || (nullptr == mpChildObjects) )
       return;
 
    mpChildObjects->append( pElement );
@@ -172,7 +172,7 @@ QList<CInformationElement*>* CInformationElement::getChildren( void )
 int CInformationElement::childCount( void ) const
 // -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpChildObjects )
+   if ( nullptr == mpChildObjects )
       return 0;
 
    return mpChildObjects->count();
@@ -262,7 +262,7 @@ QString CInformationElement::getTreeString( int tab ) const
   QString result = Strings::spaces(tab)+mDescription+"\n";
   tab++;
 
-  if ( NULLPTR == mpChildObjects )
+  if ( nullptr == mpChildObjects )
     return result;
 
   for (CInformationElement* x : *mpChildObjects) {
@@ -311,7 +311,7 @@ CInformationElement* CInformationElement::findChildWithDescription( QString desc
       return x;
   }
 
-  return NULLPTR;
+  return nullptr;
 }
 
 
