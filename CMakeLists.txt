@@ -131,7 +131,27 @@ set(TUXCARDS_FORMS
 
 set(TUXCARDS_RESOURCES
    src/icons/icons.qrc
+   translations/translations.qrc
 )
+
+# Compile .ts -> .qm at configure time using Qt's lrelease.
+find_package(Qt6 COMPONENTS LinguistTools QUIET)
+if(Qt6LinguistTools_FOUND)
+   set(TS_FILES
+      translations/tuxcards_en.ts
+      translations/tuxcards_ru.ts
+      translations/tuxcards_de.ts
+      translations/tuxcards_zh_CN.ts
+      translations/tuxcards_zh_TW.ts
+      translations/tuxcards_es.ts
+      translations/tuxcards_fr.ts
+      translations/tuxcards_pt_BR.ts
+      translations/tuxcards_ja.ts
+      translations/tuxcards_ko.ts
+   )
+   qt_add_lrelease(tuxcards_translations TS_FILES ${TS_FILES}
+                   QM_FILES_OUTPUT_VARIABLE qm_files)
+endif()
 
 qt_add_executable(tuxcards
    ${TUXCARDS_SOURCES}

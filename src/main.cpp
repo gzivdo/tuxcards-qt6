@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include <QApplication>
+#include <QTranslator>
+#include <QLocale>
 #include "./gui/mainwindow.h"
 
 #include "commandlineoptions.h"
@@ -28,6 +30,13 @@ int main(int argc, char* argv[]){
   }
 
   QApplication app(argc, argv);
+
+  // Load the .qm translation matching the user's locale, if any.
+  // Falls back silently to English (the original source strings) if
+  // the locale has no translation bundled.
+  QTranslator translator;
+  if (translator.load(QLocale(), "tuxcards", "_", ":/translations"))
+     app.installTranslator(&translator);
 
   MainWindow tux(argc>1 ? argv[1] : "");
   tux.show();

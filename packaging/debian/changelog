@@ -1,3 +1,17 @@
+tuxcards-qt6 (3.1.0-1) unstable; urgency=medium
+
+  * Bookmarks toolbar + back-ported CRecentFileList from 2.2.1.
+  * AES-256-GCM + PBKDF2-SHA256 file encryption (legacy Blowfish format
+    still readable).
+  * CMake build alongside qmake; .deb / .rpm / Windows zip / macOS dmg
+    artifacts produced by GitHub Actions on tag.
+  * Auto-save status indicator, Markdown export/import.
+  * QTest unit tests under tests/.
+  * i18n for 10 languages (en, ru fully translated; de/zh_CN/zh_TW/es/
+    fr/pt_BR/ja/ko skeletons).
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 00:00:00 +0000
+
 tuxcards-qt6 (3.0.0-1) unstable; urgency=medium
 
   * First release of the Qt6 port (version 3.0.0, following upstream 2.2.1).

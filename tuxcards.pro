@@ -96,7 +96,19 @@ FORMS += src/gui/dialogs/IFileEncryptionPasswordDialog.ui \
     src/gui/dialogs/IPasswdDialog.ui \
     src/gui/dialogs/IOptionsDialog.ui
 
-RESOURCES += src/icons/icons.qrc
+RESOURCES += src/icons/icons.qrc \
+             translations/translations.qrc
+
+TRANSLATIONS += translations/tuxcards_en.ts \
+                translations/tuxcards_ru.ts \
+                translations/tuxcards_de.ts \
+                translations/tuxcards_zh_CN.ts \
+                translations/tuxcards_zh_TW.ts \
+                translations/tuxcards_es.ts \
+                translations/tuxcards_fr.ts \
+                translations/tuxcards_pt_BR.ts \
+                translations/tuxcards_ja.ts \
+                translations/tuxcards_ko.ts
 
 OTHER_FILES += src/information/space15.xpm \
     src/information/format_rtf.xpm \

@@ -1,0 +1,14 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/translations">
+   <file>tuxcards_en.qm</file>
+   <file>tuxcards_ru.qm</file>
+   <file>tuxcards_de.qm</file>
+   <file>tuxcards_zh_CN.qm</file>
+   <file>tuxcards_zh_TW.qm</file>
+   <file>tuxcards_es.qm</file>
+   <file>tuxcards_fr.qm</file>
+   <file>tuxcards_pt_BR.qm</file>
+   <file>tuxcards_ja.qm</file>
+   <file>tuxcards_ko.qm</file>
+</qresource>
+</RCC>

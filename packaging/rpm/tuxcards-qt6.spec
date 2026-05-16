@@ -1,5 +1,5 @@
 Name:           tuxcards-qt6
-Version:        3.0.0
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Hierarchical note-taking application (Qt6 port)
 
