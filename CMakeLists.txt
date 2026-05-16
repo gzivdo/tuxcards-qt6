@@ -202,31 +202,17 @@ set(TS_FILES
    translations/tuxcards_ko.ts
 )
 find_package(Qt6 COMPONENTS LinguistTools QUIET)
+set(_tuxcards_use_qt_translations OFF)
 if(Qt6LinguistTools_FOUND AND Qt6_VERSION VERSION_GREATER_EQUAL "6.7")
-   # Qt 6.7+ — generate .qm into the build dir and synthesize a .qrc
-   # that points at *those* build-dir .qm files. This makes the
-   # translations refresh fully automatic: `lupdate` + rebuild is
-   # enough, no manual copy of build/*.qm back into the source tree
-   # and no `touch translations.qrc` afterwards.
-   qt_add_lrelease(tuxcards_translations TS_FILES ${TS_FILES}
-                   QM_FILES_OUTPUT_VARIABLE qm_files)
-   qt_add_lupdate(tuxcards_lupdate
-                  SOURCES ${TUXCARDS_SOURCES} ${TUXCARDS_HEADERS} ${TUXCARDS_FORMS}
-                  TS_FILES ${TS_FILES}
-                  NO_GLOBAL_TARGET)
-   set(_generated_qrc_body
-       "<!DOCTYPE RCC><RCC version=\"1.0\">\n  <qresource prefix=\"/translations\">\n")
-   foreach(_qm ${qm_files})
-      get_filename_component(_qm_name "${_qm}" NAME)
-      string(APPEND _generated_qrc_body
-             "    <file alias=\"${_qm_name}\">${_qm}</file>\n")
-   endforeach()
-   string(APPEND _generated_qrc_body "  </qresource>\n</RCC>\n")
-   set(_generated_qrc "${CMAKE_CURRENT_BINARY_DIR}/translations_generated.qrc")
-   file(GENERATE OUTPUT "${_generated_qrc}" CONTENT "${_generated_qrc_body}")
-   list(APPEND TUXCARDS_RESOURCES "${_generated_qrc}")
+   # Qt 6.7+ — defer to qt_add_translations() below (after the
+   # executable target is created). It handles the lrelease target,
+   # generates the .qm files into the build dir, builds a synthetic
+   # .qrc that points at them, and adds the right target-level
+   # dependency so AUTORCC runs *after* lrelease.
+   set(_tuxcards_use_qt_translations ON)
 else()
-   # Pre-Qt-6.7 — use the .qm files committed under translations/.
+   # Pre-Qt-6.7 — qt_add_translations() doesn't exist; use the .qm
+   # files committed under translations/ via the static qrc.
    list(APPEND TUXCARDS_RESOURCES translations/translations.qrc)
 endif()
 
@@ -237,15 +223,16 @@ qt_add_executable(tuxcards
    ${TUXCARDS_RESOURCES}
 )
 
-# AUTORCC of the generated translations_generated.qrc references .qm
-# files that live in the build dir. They are produced by the
-# tuxcards_translations target (qt_add_lrelease above), so we need to
-# wait for that target before AUTORCC scans the .qrc — otherwise rcc
-# fails with "Cannot find file 'build/tuxcards_*.qm'" on parallel
-# builds. The old path (static translations.qrc, .qm in source tree)
-# has no such ordering requirement, hence the guard.
-if(TARGET tuxcards_translations)
-   add_dependencies(tuxcards tuxcards_translations)
+# Translations: on Qt 6.7+ the high-level qt_add_translations() does
+# all the wiring (lupdate target, lrelease, generated .qrc pointing
+# at the just-built .qm files, plus the right target-level
+# dependency so AUTORCC waits for lrelease to finish). On older Qt
+# the static translations.qrc was already appended to
+# TUXCARDS_RESOURCES above and is bundled by AUTORCC as usual.
+if(_tuxcards_use_qt_translations)
+   qt_add_translations(tuxcards
+      TS_FILES ${TS_FILES}
+      RESOURCE_PREFIX "/translations")
 endif()
 
 # qt_add_executable enables MACOSX_BUNDLE/WIN32_EXECUTABLE by default
