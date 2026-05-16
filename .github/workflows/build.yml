@@ -58,14 +58,20 @@ jobs:
   # Windows / macOS don't ship a system Qt6, so for these two we keep
   # using jurplel/install-qt-action with a pinned Qt version. This is
   # what a developer would install from qt.io anyway.
+  # Windows is built both with and without OpenSSL: the "off" variant
+  # is what we'd ship if we wanted a smaller, dependency-free build
+  # (file encryption falls back to legacy Blowfish), the "on" variant
+  # is the full feature set used for releases.
   desktop:
-    name: ${{ matrix.os }} (Qt ${{ matrix.qt }})
+    name: ${{ matrix.os }} (Qt ${{ matrix.qt }}, OpenSSL=${{ matrix.openssl }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
-        qt: ['6.7.3']
+        include:
+          - { os: windows-latest, qt: '6.7.3', openssl: 'on' }
+          - { os: windows-latest, qt: '6.7.3', openssl: 'off' }
+          - { os: macos-latest,   qt: '6.7.3', openssl: 'on' }
 
     steps:
       - uses: actions/checkout@v4
@@ -78,22 +84,31 @@ jobs:
           cache: true
 
       - name: Install OpenSSL (macOS)
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && matrix.openssl == 'on'
         run: brew install openssl@3
 
       - name: Install OpenSSL (Windows)
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.openssl == 'on'
         run: choco install -y openssl
 
       - name: Configure (CMake)
         shell: bash
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: |
+          if [ "${{ matrix.openssl }}" = "on" ]; then
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTUXCARDS_WITH_OPENSSL=ON
+          else
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTUXCARDS_WITH_OPENSSL=OFF
+          fi
 
       - name: Build
         shell: bash
         run: cmake --build build --config Release --parallel
 
+      # Skipped on Windows: the test binaries link Qt6 (+ libcrypto when
+      # openssl=on) and would need windeployqt run against each .exe
+      # for DLLs. The same code is exercised on Linux and macOS.
       - name: Unit tests
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release

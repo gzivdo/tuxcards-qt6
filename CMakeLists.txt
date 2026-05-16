@@ -10,6 +10,11 @@ set(CMAKE_AUTORCC ON)
 # Honor INCLUDE_CURRENT_DIR so AUTOUIC-generated ui_*.h are picked up
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+option(TUXCARDS_WITH_OPENSSL
+       "Build with OpenSSL — required for AES-256-GCM file encryption.\
+ When OFF, file encryption falls back to the legacy Blowfish format\
+ (still safe to read, still works, but weaker)." ON)
+
 find_package(Qt6 REQUIRED COMPONENTS
    Core
    Gui
@@ -19,7 +24,9 @@ find_package(Qt6 REQUIRED COMPONENTS
    Core5Compat
 )
 
-find_package(OpenSSL REQUIRED)
+if(TUXCARDS_WITH_OPENSSL)
+   find_package(OpenSSL REQUIRED)
+endif()
 
 set(TUXCARDS_SOURCES
    src/main.cpp
@@ -135,8 +142,16 @@ set(TUXCARDS_RESOURCES
 )
 
 # Compile .ts -> .qm at configure time using Qt's lrelease.
+# The free-standing form of qt_add_lrelease / qt_add_lupdate that
+# creates its own target (`qt_add_lrelease(name TS_FILES ...)`) only
+# appeared in Qt 6.7. On older distro Qt (Ubuntu 24.04 ships 6.4,
+# Debian 12 ships 6.2) the older signature expects a pre-existing
+# target and would fail. We skip the wiring on those — the .qm files
+# are already checked into the tree and bundled via translations.qrc,
+# so end users still get translations. Refreshing .ts files just has
+# to happen with a newer Qt.
 find_package(Qt6 COMPONENTS LinguistTools QUIET)
-if(Qt6LinguistTools_FOUND)
+if(Qt6LinguistTools_FOUND AND Qt6_VERSION VERSION_GREATER_EQUAL "6.7")
    set(TS_FILES
       translations/tuxcards_en.ts
       translations/tuxcards_ru.ts
@@ -151,15 +166,10 @@ if(Qt6LinguistTools_FOUND)
    )
    qt_add_lrelease(tuxcards_translations TS_FILES ${TS_FILES}
                    QM_FILES_OUTPUT_VARIABLE qm_files)
-   # qt_add_lupdate only exists in Qt 6.7+. On older distro Qt (Ubuntu
-   # 24.04 ships 6.4, Debian 12 ships 6.2) we silently skip the helper
-   # target — translators can still run `lupdate` from the command line.
-   if(COMMAND qt_add_lupdate)
-      qt_add_lupdate(tuxcards_lupdate
-                     SOURCES ${TUXCARDS_SOURCES} ${TUXCARDS_HEADERS} ${TUXCARDS_FORMS}
-                     TS_FILES ${TS_FILES}
-                     NO_GLOBAL_TARGET)
-   endif()
+   qt_add_lupdate(tuxcards_lupdate
+                  SOURCES ${TUXCARDS_SOURCES} ${TUXCARDS_HEADERS} ${TUXCARDS_FORMS}
+                  TS_FILES ${TS_FILES}
+                  NO_GLOBAL_TARGET)
 endif()
 
 qt_add_executable(tuxcards
@@ -176,8 +186,16 @@ target_link_libraries(tuxcards PRIVATE
    Qt6::Xml
    Qt6::PrintSupport
    Qt6::Core5Compat
-   OpenSSL::Crypto
 )
+
+if(TUXCARDS_WITH_OPENSSL)
+   target_link_libraries(tuxcards PRIVATE OpenSSL::Crypto)
+else()
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_NO_OPENSSL)
+   message(STATUS "TuxCards: OpenSSL disabled — new AES-GCM encryption "
+                  "is unavailable, files will be written in the legacy "
+                  "Blowfish format instead.")
+endif()
 
 # MSVC needs /utf-8 because the source files contain UTF-8 byte
 # sequences in strings (German umlauts in comments, fallback strings,

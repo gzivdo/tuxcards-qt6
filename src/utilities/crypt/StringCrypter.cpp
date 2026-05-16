@@ -13,9 +13,11 @@
 #include <iostream>
 #include <cstring>
 
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include <openssl/err.h>
+#ifndef TUXCARDS_NO_OPENSSL
+#  include <openssl/evp.h>
+#  include <openssl/rand.h>
+#  include <openssl/err.h>
+#endif
 
 #include "StringCrypter.h"
 
@@ -41,6 +43,7 @@ static const int BFISH_BUF_MOD = 8;
 void StringCrypter::encryptString( const QString& sInputString, const QString& sPassWd,
                                    QByteArray& encryptedData )
 {
+#ifndef TUXCARDS_NO_OPENSSL
    // Always write the current (AES-GCM) format.
    //
    // Legacy "Fh_enc:BF10" (Blowfish + MD5(password)) is only kept on
@@ -49,6 +52,12 @@ void StringCrypter::encryptString( const QString& sInputString, const QString& s
    // primitive. On the first save after decrypting an old file the
    // payload is silently upgraded to AES-256-GCM.
    encryptStringAESGCM( sInputString, sPassWd, encryptedData );
+#else
+   // Build without OpenSSL — fall back to the legacy Blowfish + MD5
+   // format. Files produced this way can still be read by builds that
+   // do have OpenSSL (legacy format is auto-detected on decrypt).
+   encryptStringLegacyBF( sInputString, sPassWd, encryptedData );
+#endif
 }
 
 int StringCrypter::decryptString( const QByteArray& encryptedData,
@@ -63,7 +72,14 @@ int StringCrypter::decryptString( const QByteArray& encryptedData,
    if ( encryptedData.size() >= aesLen &&
         0 == std::memcmp(encryptedData.constData(), AESGCM_MAGIC, aesLen) )
    {
+#ifndef TUXCARDS_NO_OPENSSL
       return decryptStringAESGCM( encryptedData, sPassWd, sOutputString );
+#else
+      std::cerr << "StringCrypter: file is AES-256-GCM encrypted, but "
+                   "this build was compiled without OpenSSL support."
+                << std::endl;
+      return ERROR_CRYPTO;
+#endif
    }
    if ( encryptedData.size() >= legacyLen &&
         0 == std::memcmp(encryptedData.constData(), LEGACY_MAGIC, legacyLen) )
@@ -79,10 +95,16 @@ int StringCrypter::decryptString( const QByteArray& encryptedData,
 // =========================================================================
 //                AES-256-GCM + PBKDF2-HMAC-SHA256 (current)
 // =========================================================================
-
+//
 //  Layout of an AES-GCM blob:
 //  [ MAGIC (23) | ver (1) | salt (16) | iv (12) | iters (4 LE)
 //  | tag (16) | ciphertext (variable) ]
+//
+// Both helpers are only compiled when OpenSSL is available — see the
+// public encryptString/decryptString dispatchers above for the no-
+// OpenSSL fallbacks (Blowfish for writes, ERROR_CRYPTO for reads).
+
+#ifndef TUXCARDS_NO_OPENSSL
 
 void StringCrypter::encryptStringAESGCM( const QString& sInputString,
                                          const QString& sPassWd,
@@ -248,6 +270,8 @@ int StringCrypter::decryptStringAESGCM( const QByteArray& encryptedData,
    sOutputString = QString::fromUtf8(plain);
    return NO_ERROR;
 }
+
+#endif  // TUXCARDS_NO_OPENSSL
 
 
 // =========================================================================
