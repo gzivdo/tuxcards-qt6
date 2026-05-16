@@ -17,12 +17,12 @@
 #ifndef CSINGLE_ENTRY_VIEW_H
 #define CSINGLE_ENTRY_VIEW_H
 
-#include <q3widgetstack.h>
+#include <QStackedWidget>
 #include "../information/IView.h"
 #include "editor.h"
 
 
-class CSingleEntryView : public Q3WidgetStack,
+class CSingleEntryView : public QStackedWidget,
                          public IView
 {
    Q_OBJECT

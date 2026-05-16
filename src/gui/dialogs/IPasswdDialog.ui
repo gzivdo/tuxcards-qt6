@@ -140,11 +140,5 @@
       <receiver>IPasswdDialog</receiver>
       <slot>reject()</slot>
     </connection>
-    <connection>
-      <sender>mpOkButton</sender>
-      <signal>clicked()</signal>
-      <receiver>IPasswdDialog</receiver>
-      <slot>done()</slot>
-    </connection>
   </connections>
 </ui>

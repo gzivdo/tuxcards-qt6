@@ -19,7 +19,7 @@
 
 #include "../../global.h"
 #include "ui_IPasswdDialog.h"
-#include <qstring.h>
+#include <QString>
 
 
 class CPasswdDialog : public QDialog, public Ui_IPasswdDialog {
@@ -31,7 +31,7 @@ public:
   QString getPasswd( void );
 
 protected slots:
-   virtual void   done( );
+   void   verifyAndAccept();
 
 private:
    QString msPasswd;

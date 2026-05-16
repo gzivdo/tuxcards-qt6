@@ -42,7 +42,7 @@ Path::Path( IParent* pElement )
 Path::Path( QString pathString )
 // -------------------------------------------------------------------------------
 {
-   mPathList = QStringList::split(separator, pathString);
+   mPathList = pathString.split(separator, Qt::SkipEmptyParts);
 }
 
 

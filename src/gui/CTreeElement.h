@@ -17,17 +17,19 @@
 #ifndef CTREE_ELEMENT_H
 #define CTREE_ELEMENT_H
 
-#include <q3listview.h>
-#include <qobject.h>
-#include <qpainter.h>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QHeaderView>
+#include <QObject>
+#include <QPainter>
 #include "../information/CTreeInformationElement.h"
 #include "../information/Path.h"
 
 
-class CTreeElement : public QObject, public Q3ListViewItem{
+class CTreeElement : public QObject, public QTreeWidgetItem {
    Q_OBJECT
 public:
-  CTreeElement( Q3ListView* pParent, CTreeInformationElement& element );
+  CTreeElement( QTreeWidget* pParent, CTreeInformationElement& element );
   CTreeElement( CTreeElement* pParent, CTreeInformationElement& element );
   virtual ~CTreeElement( void );
 
@@ -40,12 +42,13 @@ public:
   bool         isChildOrSelfSelected( void );
 
   void         search( QString pattern, bool recursive, bool caseSensitive,
-                       bool SearchOnlyTitles, Q3ListView& list );
+                       bool SearchOnlyTitles, QTreeWidget& list );
 
   CTreeElement* findChildWithName( QString name );
 
-  virtual void paintCell( QPainter *p, const QColorGroup &cg,
-			    int column, int width, int alignment );
+  CTreeElement* firstChildElem() const;
+  CTreeElement* nextSiblingElem() const;
+  CTreeElement* itemAboveElem() const;
 
 public slots:
   // slot which is called from a "mediator"

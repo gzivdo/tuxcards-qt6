@@ -18,8 +18,8 @@
 #ifndef FONTSETTINGS_H
 #define FONTSETTINGS_H
 
-#include <qstring.h>
-#include <qfont.h>
+#include <QString>
+#include <QFont>
 
 class FontSettings {
 public: 

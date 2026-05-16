@@ -21,9 +21,9 @@
 #include "../information/IView.h"
 
 #include <iostream>
-#include <qstring.h>
-#include <q3listview.h>
-//Added by qt3to4:
+#include <QString>
+#include <QTreeWidget>
+#include <QHeaderView>
 #include <QResizeEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -34,14 +34,14 @@
 
 #include "./dialogs/CPropertyDialog.h"
 #include "./dialogs/searchdialog.h"
-#include <q3popupmenu.h>
-#include <qmessagebox.h>
+#include <QMenu>
+#include <QMessageBox>
 
-#include <qpixmap.h>
+#include <QPixmap>
 
-#include <q3frame.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
+#include <QFrame>
+#include <QLineEdit>
+#include <QPushButton>
 
 #include "../information/CInformationCollection.h"
 #include "../information/CTreeInformationElement.h"
@@ -49,21 +49,20 @@
 #include "../fontsettings.h"
 #include "../CTuxCardsConfiguration.h"
 
-#include <qtimer.h>
+#include <QTimer>
 
 #include "../information/Path.h"
 
-class CTree : public Q3ListView,
+class CTree : public QTreeWidget,
               public IView
 {
   Q_OBJECT
 private:
   CInformationCollection* mpCollection;
-  Q3PopupMenu              mContextMenu;
+  QMenu                   mContextMenu;
   CPropertyDialog         mPropertyDialog;
   SearchDialog            mSearchDialog;
 
-  //CTreeElement* draggedElement;
   QPoint                  mPressPos;
   bool                    mbMousePressed;
   QTimer                  mAutoOpenTimer;
@@ -76,35 +75,35 @@ private:
   CTreeElement*           getTreeElement(Path path);
   CTreeElement*           findChildWithName(const QString name);
   void                    clearTree( void );
-  void                    setDefaultTreeContents( void );
   void                    settingUpContextMenu( void );
 
   void                    addInformationElementsToTreeItem( CTreeElement&,
                                                             CTreeInformationElement& );
 
 protected:
-//  virtual void startDrag();
-  void                    contentsMousePressEvent( QMouseEvent* pE );
-  void                    contentsMouseMoveEvent( QMouseEvent* pE );
-  void                    contentsMouseReleaseEvent( QMouseEvent* pE );
+  void                    mousePressEvent( QMouseEvent* pE ) override;
+  void                    mouseMoveEvent( QMouseEvent* pE ) override;
+  void                    mouseReleaseEvent( QMouseEvent* pE ) override;
 
-  void                    contentsDragEnterEvent( QDragEnterEvent* pE );
-  void                    contentsDragMoveEvent( QDragMoveEvent* pE );
-  void                    contentsDragLeaveEvent( QDragLeaveEvent* pE );
-  void                    contentsDropEvent( QDropEvent* pE );
+  void                    dragEnterEvent( QDragEnterEvent* pE ) override;
+  void                    dragMoveEvent( QDragMoveEvent* pE ) override;
+  void                    dragLeaveEvent( QDragLeaveEvent* pE ) override;
+  void                    dropEvent( QDropEvent* pE ) override;
 
-  void                    resizeEvent( QResizeEvent* pE );
+  void                    resizeEvent( QResizeEvent* pE ) override;
 
 protected slots:
-  void                    elementOpenedEvent( Q3ListViewItem* pItem );
-  void                    elementClosedEvent( Q3ListViewItem* pItem );
-  void                    rightButtonPressed( Q3ListViewItem* pItem );
+  void                    elementOpenedEvent( QTreeWidgetItem* pItem );
+  void                    elementClosedEvent( QTreeWidgetItem* pItem );
+  void                    showContextMenu( const QPoint& pos );
   void                    timeoutEvent( void );
   void                    addEntryToBookmarks( void );
 
-  void                    inPlaceRenaming( Q3ListViewItem* pItem , int iCol, const QString& sText );
+  void                    inPlaceRenaming( QTreeWidgetItem* pItem, int iCol );
   void                    moveElementUp();
   void                    moveElementDown();
+
+  void                    currentItemChangedSlot( QTreeWidgetItem* current, QTreeWidgetItem* previous );
 
 public:
   CTree( QWidget* pParent, CTuxCardsConfiguration& refTuxConfiguration );
@@ -112,35 +111,28 @@ public:
   void                    setColumnText( QString text );
   void                    createTreeFromCollection( CInformationCollection& collection );
 
-  void                    deleteElement( CTreeElement* pElem, bool bChangeSelection = true);
+  void                    deleteElement( CTreeElement* pElem, bool bChangeSelection = true );
 
   // ************** IView **********************************
-   virtual void aboutToRemoveElement( CInformationElement* pIE );
+  virtual void aboutToRemoveElement( CInformationElement* pIE ) override;
 
 public slots:
   // "contextmenu"
   void                    addElement( void );
-  void 						renameElement( void );
+  void                    renameElement( void );
   void                    changeActiveElementProperties( void );
   void                    askForDeletion( void );
 
-  // "mousecalls"
-  void                    selectionChanged( Q3ListViewItem* pItem );
-  void                    currentChanged( Q3ListViewItem* pItem );
+  void                    keyPressEvent( QKeyEvent* pK ) override;
 
-  virtual void            keyPressEvent( QKeyEvent* pK );
-
-  //
   void                    removeAll( void );
   void                    search( void );
 
-//  void makeVisible(Knoten*, int, int, int);
-
   void                    activeInformationElementChanged( CInformationElement* );
 
-  void						setEntryColor();
-  void 						setEntrySubTreeColor();
-  
+  void                    setEntryColor();
+  void                    setEntrySubTreeColor();
+
 signals:
   void                    showMessage(QString, int time);
   void                    makeVisible( SearchPosition* );

@@ -19,7 +19,7 @@
 #define CICON_MANAGER_H
 
 #include <qstringlist.h>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <qmap.h>
 
 class CIconManager {

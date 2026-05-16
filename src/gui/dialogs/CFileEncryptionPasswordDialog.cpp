@@ -17,21 +17,22 @@
 
 #include "CFileEncryptionPasswordDialog.h"
 
-#include <qlineedit.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QLabel>
 
 #include <iostream>
 
 // -------------------------------------------------------------------------------
 CFileEncryptionPasswordDialog::CFileEncryptionPasswordDialog( QWidget* pParent )
- : QDialog( pParent, "CFileEncryptionPasswordDialog", TRUE )
+ : QDialog( pParent )
  , msPasswd( "" )
 {
+	setObjectName("CFileEncryptionPasswordDialog");
+	setModal(true);
 	setupUi(this);
 	connect( buttonOk, SIGNAL(clicked()), this, SLOT(accept()) );
-
 }
 
 // -------------------------------------------------------------------------------
@@ -57,14 +58,14 @@ void CFileEncryptionPasswordDialog::accept()
    if ( NULLPTR == leFilePassword)
       return;
 
-   if ( leFilePassword->text().stripWhiteSpace().isEmpty() )
+   if ( leFilePassword->text().trimmed().isEmpty() )
    {
       (void) QMessageBox::warning( this, "TuxCards", "Password field is empty. Please specify a valid password");
       show();
       return;
    }
 
-   msPasswd = leFilePassword->text().stripWhiteSpace();
+   msPasswd = leFilePassword->text().trimmed();
    close();
 }
 

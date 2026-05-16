@@ -16,17 +16,193 @@
  ***************************************************************************/
 
 #include "optionsdialog.h"
-#include <qradiobutton.h>
-#include <qfontdialog.h>
-#include <q3filedialog.h>
+#include "../colorbar/CColorBar.h"
+#include <QRadioButton>
+#include <QFontDialog>
+#include <QFileDialog>
+#include <QButtonGroup>
+#include <QGroupBox>
+#include <QTabWidget>
 #include <iostream>
 
 OptionsDialog::OptionsDialog( QWidget* parent, CTuxCardsConfiguration& config )
- : QDialog( parent, "OptionsDialog", TRUE )
+ : QDialog( parent )
  , mrefConfig( config )
 {
-	setupUi(this);
-  connect( mpOkButton, SIGNAL(clicked()), this, SLOT(changeProperties()) );
+   setObjectName("OptionsDialog");
+   setModal(true);
+   setupUi(this);
+   connect( mpOkButton, SIGNAL(clicked()), this, SLOT(changeProperties()) );
+   connect( treeFontButton, SIGNAL(clicked()), this, SLOT(changeTreeFont()) );
+   connect( editorFontButton, SIGNAL(clicked()), this, SLOT(changeEditFont()) );
+
+   buildSidebarTab();
+}
+
+
+void OptionsDialog::setButtonSwatch(QPushButton* b, const QColor& c)
+{
+   QPixmap pix(60, 16);
+   pix.fill(c);
+   b->setIcon(QIcon(pix));
+}
+
+
+void OptionsDialog::buildSidebarTab()
+{
+   QWidget* tab = new QWidget(TabWidget2);
+   QHBoxLayout* outer = new QHBoxLayout(tab);
+
+   // preview bar on the left
+   mpSidebarPreview = new CColorBar( tab, QColor(0,0,0), QColor(33,72,170),
+                                     "Tux", "Cards", QColor(Qt::white) );
+   mpSidebarPreview->setMinimumWidth(40);
+   outer->addWidget(mpSidebarPreview);
+
+   // form on the right
+   QVBoxLayout* form = new QVBoxLayout();
+   outer->addLayout(form, 1);
+
+   // colors
+   QGroupBox* colorBox = new QGroupBox("Choose Colors", tab);
+   QGridLayout* colorGrid = new QGridLayout(colorBox);
+   colorGrid->addWidget(new QLabel("Top Color"), 0, 0);
+   mpTopColorBtn = new QPushButton("Top Color");
+   colorGrid->addWidget(mpTopColorBtn, 0, 1);
+   colorGrid->addWidget(new QLabel("Bottom Color"), 1, 0);
+   mpBottomColorBtn = new QPushButton("Bottom Color");
+   colorGrid->addWidget(mpBottomColorBtn, 1, 1);
+   colorGrid->addWidget(new QLabel("Text Color"), 2, 0);
+   mpTextColorBtn = new QPushButton("Text Color");
+   colorGrid->addWidget(mpTextColorBtn, 2, 1);
+   form->addWidget(colorBox);
+   connect(mpTopColorBtn,    SIGNAL(clicked()), this, SLOT(chooseTopColor()));
+   connect(mpBottomColorBtn, SIGNAL(clicked()), this, SLOT(chooseBottomColor()));
+   connect(mpTextColorBtn,   SIGNAL(clicked()), this, SLOT(chooseTextColor()));
+
+   // horizontal text
+   mpShowHText = new QCheckBox("Show Horizontal Text", tab);
+   form->addWidget(mpShowHText);
+   QGroupBox* hBox = new QGroupBox(tab);
+   QGridLayout* hGrid = new QGridLayout(hBox);
+   hGrid->addWidget(new QLabel("First Text Line"), 0, 0);
+   mpTextOne = new QLineEdit;
+   hGrid->addWidget(mpTextOne, 0, 1);
+   hGrid->addWidget(new QLabel("Second Text Line"), 1, 0);
+   mpTextTwo = new QLineEdit;
+   hGrid->addWidget(mpTextTwo, 1, 1);
+   form->addWidget(hBox);
+
+   // vertical text
+   mpShowVText = new QCheckBox("Show Vertical Text", tab);
+   form->addWidget(mpShowVText);
+   QGroupBox* vBox = new QGroupBox(tab);
+   QVBoxLayout* vBoxLay = new QVBoxLayout(vBox);
+   mpVText = new QLineEdit;
+   vBoxLay->addWidget(mpVText);
+   QHBoxLayout* posLay = new QHBoxLayout();
+   posLay->addWidget(new QLabel("Text Position"));
+   mpVTextTop    = new QRadioButton("Top");
+   mpVTextBottom = new QRadioButton("Bottom");
+   QButtonGroup* g = new QButtonGroup(vBox);
+   g->addButton(mpVTextTop, 0);
+   g->addButton(mpVTextBottom, 1);
+   posLay->addWidget(mpVTextTop);
+   posLay->addWidget(mpVTextBottom);
+   vBoxLay->addLayout(posLay);
+   form->addWidget(vBox);
+
+   form->addStretch(1);
+
+   TabWidget2->addTab(tab, "SideBar");
+
+   // live preview when fields change
+   connect(mpShowHText, SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
+   connect(mpShowVText, SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
+   connect(mpTextOne,   SIGNAL(textChanged(QString)), this, SLOT(refreshPreviewSlot()));
+   connect(mpTextTwo,   SIGNAL(textChanged(QString)), this, SLOT(refreshPreviewSlot()));
+   connect(mpVText,     SIGNAL(textChanged(QString)), this, SLOT(refreshPreviewSlot()));
+   connect(mpVTextTop,  SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
+}
+
+
+void OptionsDialog::refreshPreview()
+{
+   if (!mpSidebarPreview) return;
+   QString t1 = mpShowHText->isChecked() ? mpTextOne->text() : "";
+   QString t2 = mpShowHText->isChecked() ? mpTextTwo->text() : "";
+   mpSidebarPreview->change( mTopColor, mBottomColor, t1, t2, mTextColor );
+   QString vt = mpShowVText->isChecked() ? mpVText->text() : "";
+   mpSidebarPreview->setVerticalText( vt, mpVTextBottom->isChecked() );
+   mpSidebarPreview->update();
+}
+
+
+void OptionsDialog::loadSidebarFromConfig()
+{
+   mTopColor    = mrefConfig.getTopColor();
+   mBottomColor = mrefConfig.getBottomColor();
+   mTextColor   = mrefConfig.getFontColor();
+   setButtonSwatch(mpTopColorBtn,    mTopColor);
+   setButtonSwatch(mpBottomColorBtn, mBottomColor);
+   setButtonSwatch(mpTextColorBtn,   mTextColor);
+
+   mpShowHText->setChecked( mrefConfig.getBoolValue( CTuxCardsConfiguration::B_IS_HTEXT_ENABLED ) );
+   mpTextOne->setText( mrefConfig.getStringValue( CTuxCardsConfiguration::S_TEXT_ONE ) );
+   mpTextTwo->setText( mrefConfig.getStringValue( CTuxCardsConfiguration::S_TEXT_TWO ) );
+
+   mpShowVText->setChecked( mrefConfig.getBoolValue( CTuxCardsConfiguration::B_IS_VTEXT_ENABLED ) );
+   mpVText->setText( mrefConfig.getStringValue( CTuxCardsConfiguration::S_VERTICAL_TEXT ) );
+   if ( mrefConfig.getBoolValue( CTuxCardsConfiguration::B_ALIGN_VTEXT ) )
+      mpVTextBottom->setChecked(true);
+   else
+      mpVTextTop->setChecked(true);
+
+   refreshPreview();
+}
+
+
+void OptionsDialog::saveSidebarToConfig()
+{
+   mrefConfig.setTopColor(mTopColor);
+   mrefConfig.setBottomColor(mBottomColor);
+   mrefConfig.setFontColor(mTextColor);
+   mrefConfig.setBoolValue(CTuxCardsConfiguration::B_IS_HTEXT_ENABLED, mpShowHText->isChecked());
+   mrefConfig.setStringValue(CTuxCardsConfiguration::S_TEXT_ONE, mpTextOne->text());
+   mrefConfig.setStringValue(CTuxCardsConfiguration::S_TEXT_TWO, mpTextTwo->text());
+   mrefConfig.setBoolValue(CTuxCardsConfiguration::B_IS_VTEXT_ENABLED, mpShowVText->isChecked());
+   mrefConfig.setStringValue(CTuxCardsConfiguration::S_VERTICAL_TEXT, mpVText->text());
+   mrefConfig.setBoolValue(CTuxCardsConfiguration::B_ALIGN_VTEXT, mpVTextBottom->isChecked());
+}
+
+
+void OptionsDialog::chooseTopColor()
+{
+   QColor c = QColorDialog::getColor(mTopColor, this, "Top Color");
+   if (!c.isValid()) return;
+   mTopColor = c;
+   setButtonSwatch(mpTopColorBtn, c);
+   refreshPreview();
+}
+
+
+void OptionsDialog::chooseBottomColor()
+{
+   QColor c = QColorDialog::getColor(mBottomColor, this, "Bottom Color");
+   if (!c.isValid()) return;
+   mBottomColor = c;
+   setButtonSwatch(mpBottomColorBtn, c);
+   refreshPreview();
+}
+
+
+void OptionsDialog::chooseTextColor()
+{
+   QColor c = QColorDialog::getColor(mTextColor, this, "Text Color");
+   if (!c.isValid()) return;
+   mTextColor = c;
+   setButtonSwatch(mpTextColorBtn, c);
+   refreshPreview();
 }
 
 
@@ -40,9 +216,9 @@ int OptionsDialog::setUp( void )
    mpIconDirecory ->setText( mrefConfig.getStringValue( CTuxCardsConfiguration::S_ICON_DIR ));
 
    treeFontText  ->setFont(mrefConfig.getTreeFont().toFont());
-   treeFontText  ->setText(mrefConfig.getTreeFont().toFont().rawName().section(':', 0,0));
+   treeFontText  ->setText(mrefConfig.getTreeFont().toFont().family());
    editorFontText->setFont(mrefConfig.getASCIIEditorFont().toFont());
-   editorFontText->setText(mrefConfig.getASCIIEditorFont().toFont().rawName().section(':', 0,0));
+   editorFontText->setText(mrefConfig.getASCIIEditorFont().toFont().family());
 
    tabSize->setText(QString::number(mrefConfig.getIntValue( CTuxCardsConfiguration::I_TAB_SIZE )));
 
@@ -64,6 +240,8 @@ int OptionsDialog::setUp( void )
       wrapColumn->setText( QString::number(iWordWrap) );
       break;
    };
+
+   loadSidebarFromConfig();
 
    show();
    return exec();
@@ -107,6 +285,8 @@ void OptionsDialog::changeProperties(){
 
    mrefConfig.setIntValue(  CTuxCardsConfiguration::I_TAB_SIZE,  getTabSize() );
    mrefConfig.setIntValue(  CTuxCardsConfiguration::I_WORD_WRAP, getWordWrap() );
+
+   saveSidebarToConfig();
 
    // done
    mrefConfig.saveToFile();
@@ -160,7 +340,7 @@ void OptionsDialog::changeTreeFont(){
 	// a valid font was selected
 	if(ok){
 		treeFontText->setFont(f);
-		treeFontText->setText(f.rawName().section(':', 0,0));
+		treeFontText->setText(f.family());
 	}
 }
 
@@ -176,7 +356,7 @@ void OptionsDialog::changeEditFont(){
 	// a valid font was selected
 	if(ok){
 		editorFontText->setFont(f);
-		editorFontText->setText(f.rawName().section(':', 0,0));
+		editorFontText->setText(f.family());
 	}
 }
 

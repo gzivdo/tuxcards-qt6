@@ -17,10 +17,10 @@
 
 #include "xmlpersister.h"
 #include "../global.h"
-#include <q3ptrlist.h>
-#include <q3textedit.h>
+#include <QList>
+#include <QTextEdit>
 //Added by qt3to4:
-#include <Q3TextStream>
+#include <QTextStream>
 
 QString XMLPersister::mpathOfLastActiveElement("");
 
@@ -155,7 +155,7 @@ void XMLPersister::parseNode( QDomNode& node,
          if (informationElement.isEncryptionEnabled())
          {
             // do base64 decoding & set as encrypted data
-            QByteArray encryptedData = QByteArray::fromBase64(elem.text().toAscii());
+            QByteArray encryptedData = QByteArray::fromBase64(elem.text().toLatin1());
             informationElement.setEncryptedData( encryptedData );
          }
          else
@@ -230,12 +230,12 @@ void XMLPersister::parseElementAttributes( QDomElement& elem,
 bool XMLPersister::createDomDocumentFromFile( QFile& xmlFile, QDomDocument& doc )
 // -------------------------------------------------------------------------------
 {
-   bool bRetVal = FALSE;
+   bool bRetVal = false;
 
    if ( !xmlFile.open( QIODevice::ReadOnly ) )
       return bRetVal;
 
-   bRetVal = doc.setContent( &xmlFile );
+   bRetVal = (bool)doc.setContent( &xmlFile );
    xmlFile.close();
 
    return bRetVal;
@@ -285,8 +285,8 @@ void XMLPersister::save( CInformationCollection& collection, QString fileName )
    QFile f(fileName);
    if ( f.open(QIODevice::WriteOnly) )
    {
-      Q3TextStream t( &f );
-      t.setEncoding(Q3TextStream::UnicodeUTF8);
+      QTextStream t( &f );
+      t.setEncoding(QStringConverter::Utf8);
       t<<s;
       f.close();
    }

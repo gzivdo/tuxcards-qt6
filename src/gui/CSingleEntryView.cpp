@@ -21,7 +21,7 @@
 
 // -------------------------------------------------------------------------------
 CSingleEntryView::CSingleEntryView( QWidget* pParent )
-  : Q3WidgetStack( pParent )
+  : QStackedWidget( pParent )
   , mpActiveElement( NULLPTR )
   , mpEditor( NULLPTR )
 // -------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ CSingleEntryView::CSingleEntryView( QWidget* pParent )
       return;
    }
 
-   (void)addWidget( mpEditor, EDITOR );
+   (void)addWidget( mpEditor );
 }
 
 
@@ -120,6 +120,6 @@ void CSingleEntryView::activeInformationElementChanged( CInformationElement* pIE
    mpActiveElement = pIE;
 
    mpEditor->activeInformationElementChanged( mpActiveElement );
-   raiseWidget( EDITOR );
+   setCurrentWidget( mpEditor );
 //   signalEntryDecrypted();
 }

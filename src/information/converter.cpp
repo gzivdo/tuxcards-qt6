@@ -17,10 +17,10 @@
 
 #include "converter.h"
 
-#include <qregexp.h>
-#include <q3stylesheet.h>
-#include <qmessagebox.h>
-#include <q3textedit.h>
+#include <QRegExp>
+#include <QTextDocument>
+#include <QMessageBox>
+#include <QTextEdit>
 
 /**
  * Takes an informationElement as parameter, recognizes whether it is
@@ -55,7 +55,7 @@ QString Converter::convertASCII2RTF(QString asciiText)
 // -------------------------------------------------------------------------------
 {
    //QString result = QStyleSheet::convertFromPlainText(asciiText);
-   return asciiText.replace( QRegExp( "\n" ), "<br/>" );
+   return asciiText.replace( QChar('\n'), QString("<br/>") );
 }
 
 

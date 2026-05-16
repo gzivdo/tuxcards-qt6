@@ -19,7 +19,8 @@
 
 #include <iostream>
 #include "CInformationElement.h"
-#include <qdom.h>
+#include <QDomDocument>
+#include <QDomElement>
 #include "../global.h"
 
 class CTreeInformationElement : public CInformationElement{

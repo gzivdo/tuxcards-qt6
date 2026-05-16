@@ -20,143 +20,99 @@
 #include "./dialogs/searchlistitem.h"
 
 #include "../global.h"
-//Added by qt3to4:
 #include <QPixmap>
-#include <Q3PtrList>
+#include <QIcon>
+#include <QBrush>
+#include <QList>
 
-/**
- * creates a treeElement from the treeInformatoinElement and
- * adds it to 'parent'
- */
-// -------------------------------------------------------------------------------
-CTreeElement::CTreeElement( Q3ListView* pParent, CTreeInformationElement& element )
-  : Q3ListViewItem( pParent, element.getDescription() )
+CTreeElement::CTreeElement( QTreeWidget* pParent, CTreeInformationElement& element )
+  : QObject()
+  , QTreeWidgetItem( pParent )
   , mpInformationElement( NULLPTR )
-// -------------------------------------------------------------------------------
 {
    init(element);
 }
 
-/**
- * creates a treeElement from the treeInformatoinElement and
- * adds it to 'parent'
- */
-// -------------------------------------------------------------------------------
 CTreeElement::CTreeElement( CTreeElement* pParent, CTreeInformationElement& element )
-  : Q3ListViewItem(pParent, pParent->getLastChild(), element.getDescription())
+  : QObject()
+  , QTreeWidgetItem( pParent )
   , mpInformationElement( NULLPTR )
-// -------------------------------------------------------------------------------
 {
    init(element);
 }
 
-// -------------------------------------------------------------------------------
 CTreeElement::~CTreeElement( void )
-// -------------------------------------------------------------------------------
 {
    mpInformationElement = NULLPTR;
 }
 
-// -------------------------------------------------------------------------------
 void CTreeElement::init( CTreeInformationElement& element )
-// -------------------------------------------------------------------------------
 {
   mpInformationElement = &element;
+  setFlags(flags() | Qt::ItemIsEditable);
   copyPropertiesFromInformationElement();
   connect( &element, SIGNAL(propertyChanged()), this, SLOT(propertyChangeEvent()) );
   connect( &element, SIGNAL(childAdded(CInformationElement*)), this, SLOT(childAddEvent(CInformationElement*)) );
   connect( &element, SIGNAL(childMoved(int, int)), this, SLOT(childMovedEvent(int, int)) );
-
-  setRenameEnabled(0, TRUE);
 }
 
-/**
- * Returns the last child of this element. Utility-method needed to
- * place the elements in correct order.
- */
-// -------------------------------------------------------------------------------
 CTreeElement* CTreeElement::getLastChild( void )
-// -------------------------------------------------------------------------------
 {
-   CTreeElement* pResult = (CTreeElement*)firstChild();
-   if ( NULLPTR == pResult )
+   int n = childCount();
+   if ( n == 0 )
       return NULLPTR;
-
-   while ( NULLPTR != pResult->nextSibling() )
-      pResult = (CTreeElement*) pResult->nextSibling();
-
-   return pResult;
+   return dynamic_cast<CTreeElement*>( child(n-1) );
 }
 
-// -------------------------------------------------------------------------------
 CTreeInformationElement* CTreeElement::getInformationElement( void )
-// -------------------------------------------------------------------------------
 {
    return mpInformationElement;
 }
 
-/**
- * This slot is called if an attribut of the informationelement
- * belonging to this object was changed.
- */
-// -------------------------------------------------------------------------------
 void CTreeElement::propertyChangeEvent( void )
-// -------------------------------------------------------------------------------
 {
-   //cout<<"CTreeElement::propertyChangeEvent()"<<endl;
    copyPropertiesFromInformationElement();
 }
 
-/**
- * Copies all necessary attributes from the informationelement (data)
- * to this object (view).
- */
-// -------------------------------------------------------------------------------
 void CTreeElement::copyPropertiesFromInformationElement( void )
-// -------------------------------------------------------------------------------
 {
    if ( NULLPTR == mpInformationElement )
       return;
 
-   setText(  0, mpInformationElement->getDescription() );
-   setPixmap(0, QPixmap(mpInformationElement->getIconFileName()) );
-   setOpen( mpInformationElement->isOpen() );
+   QTreeWidget* tw = treeWidget();
+   bool oldBlock = tw ? tw->blockSignals(true) : false;
+
+   setText( 0, mpInformationElement->getDescription() );
+   QPixmap pix( mpInformationElement->getIconFileName() );
+   if (!pix.isNull())
+      setIcon( 0, QIcon(pix) );
+   setExpanded( mpInformationElement->isOpen() );
+   QColor c = mpInformationElement->getTextColor();
+   if ( c.isValid() )
+      setForeground( 0, QBrush( c ) );
+
+   if ( tw )
+      tw->blockSignals(oldBlock);
 }
 
-
-/**
- * This method is called whenever a child is added within the "data-model"
- * to the equivalent of this treeElement.
- */
-// -------------------------------------------------------------------------------
 void CTreeElement::childAddEvent( CInformationElement* pChild )
-// -------------------------------------------------------------------------------
 {
-   //cout<<"CTreeElement::childAddEvent()"<<endl;
    if ( NULLPTR == pChild )
       return;
 
    CTreeElement* pNewElement = new CTreeElement(this, *((CTreeInformationElement*)pChild));
 
-
-   // recursive (i.e. if a whole subtree was added during drag&drop)
-   Q3PtrList<CInformationElement>* pList = pChild->getChildren();
-   for ( CInformationElement* pX = pList->first(); NULLPTR != pX; pX = pList->next() )
+   QList<CInformationElement*>* pList = pChild->getChildren();
+   for ( CInformationElement* pX : *pList )
    {
       pNewElement->childAddEvent(pX);
    }
 
-   pNewElement->listView()->setSelected(pNewElement, true);
+   if ( pNewElement->treeWidget() )
+      pNewElement->treeWidget()->setCurrentItem( pNewElement );
 }
 
-
-/**
- * This slot is called, whenever one of the element's children
- * has been moved upwards or downwards.
- */
-// -------------------------------------------------------------------------------
 void CTreeElement::childMovedEvent( int oldPos, int newPos )
-// -------------------------------------------------------------------------------
 {
   if ( oldPos == newPos )
     return;
@@ -165,131 +121,85 @@ void CTreeElement::childMovedEvent( int oldPos, int newPos )
   if ( NULLPTR == pElementToMove )
     return;
 
-  Q3ListViewItem* pTmp = getChildAtPosition(newPos);
-  if ( NULLPTR == pTmp )
-    return;
-
-  if ( newPos < oldPos )
-  {
-    // moving upwards
-    if ( (newPos - 1) >= 0  )
-    {
-      pTmp = getChildAtPosition(newPos-1);
-      pElementToMove->moveItem(pTmp);
-    }
-    else
-    {
-      // insert temporary dummy element
-      Q3ListViewItem* pDummy = new Q3ListViewItem(this);
-      pDummy->setText(0, "pDummy");
-      pTmp = pDummy;
-      pElementToMove->moveItem(pTmp);
-      DELETE( pDummy );
-    }
-  }
-  else
-  {
-    // moving downwards
-    pElementToMove->moveItem(pTmp);
-  }
+  takeChild( oldPos );
+  insertChild( newPos, pElementToMove );
 }
 
-
-/**
- * Returns the child position at 'pos'. If it does not exist
- * 0 is returned.
- */
-// -------------------------------------------------------------------------------
 CTreeElement* CTreeElement::getChildAtPosition( int pos )
-// -------------------------------------------------------------------------------
 {
-  if ( pos > childCount()-1 )
+  if ( pos < 0 || pos > childCount()-1 )
     return NULLPTR;
 
-  Q3ListViewItem* pX;
-  int pos2 = -1;
-  for ( pX = firstChild(); NULLPTR != pX; pX = pX->nextSibling())
-  {
-    pos2++;
-    if ( pos2 == pos )
-      return (CTreeElement*)pX;
-  }
-
-  return NULLPTR;
+  return dynamic_cast<CTreeElement*>( child(pos) );
 }
 
-
-
-/**
- * returns true if this Knoten or one of its children
- * is selected right now
- */
-// -------------------------------------------------------------------------------
 bool CTreeElement::isChildOrSelfSelected( void )
-// -------------------------------------------------------------------------------
 {
    if (isSelected())
       return true;
 
-   for ( CTreeElement* pElem = (CTreeElement*)firstChild();
-         NULLPTR != pElem;
-         pElem = (CTreeElement*)pElem->nextSibling() )
+   for (int i = 0; i < childCount(); ++i)
    {
-      if ( pElem->isChildOrSelfSelected() )
+      CTreeElement* pElem = dynamic_cast<CTreeElement*>( child(i) );
+      if ( pElem && pElem->isChildOrSelfSelected() )
          return true;
    }
 
    return false;
 }
 
-/**
- * find the specified 'QString pattern' within the text/information of the
- * appropriate 'CInformationElement' (evtl. recursive) and append the found
- * "places" as 'SearchListItem's at the list's end.
- */
-// -------------------------------------------------------------------------------
 void CTreeElement::search( QString pattern, bool recursive, bool caseSensitive,
-                          bool SearchOnlyTitles, Q3ListView& list )
-// -------------------------------------------------------------------------------
+                          bool SearchOnlyTitles, QTreeWidget& list )
 {
    if ( NULLPTR == mpInformationElement )
       return;
 
    mpInformationElement->search(pattern, recursive, caseSensitive,
-   		SearchOnlyTitles, list);
+                                SearchOnlyTitles, list);
 }
 
-
-/**
- * Returns the first child whose "name"/text(0) equals
- * 'name'. If it does not exist return 0. (searches within direct children
- * only)
- */
-// -------------------------------------------------------------------------------
 CTreeElement* CTreeElement::findChildWithName( QString name )
-// -------------------------------------------------------------------------------
 {
-  Q3ListViewItem* pX = NULLPTR;
-  for (pX = firstChild(); NULLPTR != pX; pX = pX->nextSibling())
+  for (int i = 0; i < childCount(); ++i)
   {
-    //std::cout<<"***TE::search through "<<x->text(0)<<std::endl;
-    if ( pX->text(0) == name )
-      return (CTreeElement*)pX;
+    QTreeWidgetItem* pX = child(i);
+    if ( pX && pX->text(0) == name )
+      return dynamic_cast<CTreeElement*>(pX);
   }
 
   return NULLPTR;
 }
 
-// -------------------------------------------------------------------------------
-void CTreeElement::paintCell( QPainter *p, const QColorGroup &cg,
-			    int column, int width, int alignment )
+CTreeElement* CTreeElement::firstChildElem() const
 {
-    QColorGroup _cg( cg );
-
-	_cg.setColor( QPalette::Text/*QColorGroup::Text*/, mpInformationElement->getTextColor());
-//    std::cout << "paintCell: Text color: desired " << mpInformationElement->getTextColor().name().toStdString() <<
-//          "actual " << _cg.text().name().toStdString() << std::endl;
-    Q3ListViewItem::paintCell( p, _cg, column, width, alignment );
-
+   if ( childCount() == 0 )
+      return NULLPTR;
+   return dynamic_cast<CTreeElement*>( child(0) );
 }
 
+CTreeElement* CTreeElement::nextSiblingElem() const
+{
+   QTreeWidgetItem* p = QTreeWidgetItem::parent();
+   QTreeWidget* tw = treeWidget();
+   if ( p ) {
+      int idx = p->indexOfChild( const_cast<CTreeElement*>(this) );
+      if ( idx < 0 || idx >= p->childCount()-1 )
+         return NULLPTR;
+      return dynamic_cast<CTreeElement*>( p->child(idx+1) );
+   } else if ( tw ) {
+      int idx = tw->indexOfTopLevelItem( const_cast<CTreeElement*>(this) );
+      if ( idx < 0 || idx >= tw->topLevelItemCount()-1 )
+         return NULLPTR;
+      return dynamic_cast<CTreeElement*>( tw->topLevelItem(idx+1) );
+   }
+   return NULLPTR;
+}
+
+CTreeElement* CTreeElement::itemAboveElem() const
+{
+   QTreeWidget* tw = treeWidget();
+   if ( !tw )
+      return NULLPTR;
+   QTreeWidgetItem* prev = tw->itemAbove( const_cast<CTreeElement*>(this) );
+   return dynamic_cast<CTreeElement*>( prev );
+}

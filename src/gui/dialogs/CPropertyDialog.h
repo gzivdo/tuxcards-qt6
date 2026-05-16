@@ -26,7 +26,7 @@
 class CInformationElement;
 class CTuxCardsConfiguration;
 
-#include <q3datetimeedit.h>
+#include <QDateTimeEdit>
 
 
 class CPropertyDialog : public QDialog, public Ui_IPropertyDialog {

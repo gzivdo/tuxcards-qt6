@@ -18,15 +18,15 @@
 #ifndef RECENTFILELIST_H
 #define RECENTFILELIST_H
 
-#include <q3popupmenu.h>
-#include <qaction.h>
+#include <QMenu>
+#include <QAction>
 //Added by qt3to4:
-#include <Q3ActionGroup>
+#include <QActionGroup>
 
 class RecentFileList : public QObject {
   Q_OBJECT
 public:
-  RecentFileList(QWidget* parent, Q3PopupMenu* menu, QString files="");
+  RecentFileList(QWidget* parent, QMenu* menu, QString files="");
   
   void setOnTop(QString absPath);
 
@@ -34,10 +34,10 @@ public:
 
 private:
   QWidget* parent;
-  Q3PopupMenu* menu;
+  QMenu* menu;
   QStringList fileList;
-  Q3ActionGroup * recentFileGroup;
-  Q3PopupMenu* recentlyFilesMenu;
+  QActionGroup * recentFileGroup;
+  QMenu* recentlyFilesMenu;
 
   static /*const*/ QString separator;
   static /*const*/ uint MAX_ELEMENT_COUNT;
@@ -50,7 +50,7 @@ private:
   void remove(QString absPath);
 
 private slots:
-  void slotRecenlyOpenedFilesActivated( int id );
+  void slotRecenlyOpenedFilesActivated( QAction* action );
   
 signals:
   void openFile(QString fileName);

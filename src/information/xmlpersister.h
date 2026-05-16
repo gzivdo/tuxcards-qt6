@@ -19,9 +19,10 @@
 #define XMLPERSISTER_H
 
 #include <iostream>
-#include <qstring.h>
-#include <qfile.h>
-#include <qdom.h>
+#include <QString>
+#include <QFile>
+#include <QDomDocument>
+#include <QDomElement>
 #include "CInformationCollection.h"
 #include "CTreeInformationElement.h"
 

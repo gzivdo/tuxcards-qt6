@@ -1,7 +1,7 @@
 /***************************************************************************
                           main.cpp  -  description
                              -------------------
-    begin                : Son Mär 26 23:04:15 CEST 2000
+    begin                : Son Mï¿½r 26 23:04:15 CEST 2000
     copyright            : (C) 2000 by Alexander Theel
     email                : alex.theel@gmx.net
  ***************************************************************************/
@@ -19,7 +19,7 @@
 #include "./gui/mainwindow.h"
 
 #include "commandlineoptions.h"
-#include <qstylefactory.h>
+#include <QStyleFactory>
 
 int main(int argc, char* argv[]){
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
   QApplication app(argc, argv);
 
   MainWindow tux(argc>1 ? argv[1] : "");
-  app.setMainWidget( &tux );
+  tux.show();
   return app.exec();
 
 }

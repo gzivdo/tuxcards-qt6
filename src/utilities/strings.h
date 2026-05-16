@@ -17,7 +17,7 @@
 #ifndef STRINGS_H
 #define STRINGS_H
 
-#include <qstring.h>
+#include <QString>
 
 class Strings{
 public:

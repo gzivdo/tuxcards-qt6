@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	mkdir -p build
+	cd build && qmake6 ../tuxcards.pro
+
+override_dh_auto_build:
+	$(MAKE) -C build
+
+override_dh_auto_install:
+	install -D -m 755 build/tuxcards \
+	        debian/tuxcards-qt6/usr/bin/tuxcards
+	install -D -m 644 packaging/desktop/tuxcards.desktop \
+	        debian/tuxcards-qt6/usr/share/applications/tuxcards.desktop
+	install -D -m 644 src/icons/lo32-app-tuxcards.png \
+	        debian/tuxcards-qt6/usr/share/icons/hicolor/32x32/apps/tuxcards.png
+	install -D -m 644 src/icons/lo16-app-tuxcards.png \
+	        debian/tuxcards-qt6/usr/share/icons/hicolor/16x16/apps/tuxcards.png
+
+override_dh_auto_clean:
+	rm -rf build

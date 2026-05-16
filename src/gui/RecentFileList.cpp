@@ -18,13 +18,13 @@
 #include "RecentFileList.h"
 #include <iostream>
 #include <qstringlist.h>
-#include <qfile.h>
-#include <qmessagebox.h>
+#include <QFile>
+#include <QMessageBox>
 
-#include <qobject.h>
-#include <q3ptrlist.h>
+#include <QObject>
+#include <QList>
 //Added by qt3to4:
-#include <Q3PopupMenu>
+#include <QMenu>
 
 QString RecentFileList::separator = ",";
 uint RecentFileList::MAX_ELEMENT_COUNT = 5;
@@ -33,18 +33,18 @@ uint RecentFileList::MAX_ELEMENT_COUNT = 5;
  * Constructor
  */
 // -------------------------------------------------------------------------------
-RecentFileList::RecentFileList(QWidget* parent, Q3PopupMenu* parentMenu, QString files)
+RecentFileList::RecentFileList(QWidget* parent, QMenu* parentMenu, QString files)
  : QObject()
 // -------------------------------------------------------------------------------
 {
   this->parent = parent;
   this->menu   = parentMenu;
   recentFileGroup = 0;
-  recentlyFilesMenu = new Q3PopupMenu( parent );
-  parentMenu->insertItem( "Recently Used Files", recentlyFilesMenu );
+  recentlyFilesMenu = new QMenu( "Recently Used Files", parent );
+  parentMenu->addMenu( recentlyFilesMenu );
 
-  connect( recentlyFilesMenu, SIGNAL( activated( int ) ),
-           this, SLOT( slotRecenlyOpenedFilesActivated( int ) ) );
+  connect( recentlyFilesMenu, SIGNAL( triggered(QAction*) ),
+           this, SLOT( slotRecenlyOpenedFilesActivated(QAction*) ) );
 
   setList(files);
   update();
@@ -82,7 +82,7 @@ void RecentFileList::setList(QString files)
   //  files = "test 1,test 2,ende";
   }
 
-  fileList = QStringList::split(separator, files);
+  fileList = files.split(separator, Qt::SkipEmptyParts);
 }
 
 
@@ -106,11 +106,9 @@ void RecentFileList::update()
 void RecentFileList::checkSize()
 // -------------------------------------------------------------------------------
 {
-  QString tmp;
-  while (fileList.count() > MAX_ELEMENT_COUNT)
+  while (fileList.count() > (int)MAX_ELEMENT_COUNT)
   {
-    tmp = fileList.last();
-    fileList.remove( tmp );
+    fileList.removeLast();
   }
 }
 
@@ -128,20 +126,22 @@ void RecentFileList::updateMenu()
 {
    recentlyFilesMenu->clear();
 
-   int id = 0;
-   for (uint i=0; i < fileList.count(); i++)
+   for (int i=0; i < fileList.count(); i++)
    {
-     recentlyFilesMenu->insertItem( fileList[i], id );
-     id++;
+     QAction* a = recentlyFilesMenu->addAction( fileList[i] );
+     a->setData(i);
    }
 }
 
 
 // -------------------------------------------------------------------------------
-void RecentFileList::slotRecenlyOpenedFilesActivated( int id )
+void RecentFileList::slotRecenlyOpenedFilesActivated( QAction* action )
 // -------------------------------------------------------------------------------
 {
-   if ( id == -1 )
+   if ( !action )
+      return;
+   int id = action->data().toInt();
+   if ( id < 0 || id >= fileList.count() )
       return;
 
    QString fileName = fileList[id];
@@ -175,7 +175,7 @@ void RecentFileList::remove(QString absPath)
 {
   if ( fileList.contains( absPath ) )
   {
-    fileList.remove(absPath);
+    fileList.removeAll(absPath);
     //std::cout<<" file removed; new list = "<<toString()<<std::endl;
   }
 }

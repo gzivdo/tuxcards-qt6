@@ -17,8 +17,9 @@
 #ifndef SEARCHPOSITION_H
 #define SEARCHPOSITION_H
 
-#include <qstring.h>
-#include <q3listview.h>
+#include <QString>
+#include <QTreeWidget>
+#include <QHeaderView>
 #include "../CTreeElement.h"
 
 class SearchPosition {

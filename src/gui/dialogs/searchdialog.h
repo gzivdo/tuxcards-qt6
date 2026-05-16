@@ -17,17 +17,17 @@
 #ifndef SEARCHDIALOG_H
 #define SEARCHDIALOG_H
 
-#include <qdialog.h>
-#include <q3hbox.h>
-#include <q3vbox.h>
-#include <qlabel.h>
-#include <qradiobutton.h>
-#include <q3buttongroup.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
+#include <QDialog>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QRadioButton>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QCheckBox>
 
-#include <qstring.h>
+#include <QString>
 #include "searchlistitem.h"
 
 #include "../CTreeElement.h"
@@ -39,29 +39,32 @@ public:
 
   int          setUp( CTreeElement* rootTreeElement, CTreeElement* activeTreeElement );
   QString      getText( void );
-  int          whatMode( void );
 
 public slots:
-  virtual void tell( int id );
   virtual void startSearching( void );
-  virtual void selectionChange( Q3ListViewItem* x );
+  virtual void selectionChange( QTreeWidgetItem* x );
   virtual void close( void );
+  void         toggleMore( bool );
 
 signals:
   void         makeVisible(SearchPosition*);
-  //void makeVisible(TreeElement*, int, int, int);
-    
+
 private:
+  int          whatMode( void );
+
   QLineEdit*    edit;
-  int           choice;
   CTreeElement* rootTreeElement;
   CTreeElement* activeTreeElement;
   QLabel*       status;
   QCheckBox*    caseSensitive;
   QCheckBox*    searchTitles;
+  QPushButton*  moreBtn;
+  QGroupBox*    moreBox;
+  QRadioButton* rbWholeTree;
+  QRadioButton* rbActiveAndChildren;
+  QRadioButton* rbActiveOnly;
 
-  Q3ListView*   list;
-
+  QTreeWidget*   list;
 };
 
 #endif

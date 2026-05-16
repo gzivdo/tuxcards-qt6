@@ -1,0 +1,22 @@
+Source: tuxcards-qt6
+Section: utils
+Priority: optional
+Maintainer: gzivdo <gzivdo@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13),
+               qt6-base-dev,
+               qt6-base-dev-tools,
+               qmake6,
+               libqt6core5compat6-dev,
+               qt6-tools-dev
+Standards-Version: 4.6.2
+Homepage: https://github.com/gzivdo/tuxcards-qt6
+
+Package: tuxcards-qt6
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Hierarchical note-taking application (Qt6 port)
+ TuxCards is a Qt-based personal information manager / tree-based notebook
+ with rich-text editing, per-entry icons and colors, search, HTML export
+ and optional Blowfish encryption.
+ .
+ This package is a Qt6 port of the original TuxCards 2.0 / 2010.06.1.

@@ -19,7 +19,7 @@
 
 #include "../../global.h"
 #include "ui_IFileEncryptionPasswordDialog.h"
-#include <qstring.h>
+#include <QString>
 
 
 class CFileEncryptionPasswordDialog :  public QDialog, public Ui_IFileEncryptionPasswordDialog {

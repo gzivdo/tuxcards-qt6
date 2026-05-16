@@ -18,8 +18,8 @@
 #ifndef HTMLWRITER_H
 #define HTMLWRITER_H
 
-#include <qstring.h>
-#include <qdir.h>
+#include <QString>
+#include <QDir>
 #include "CInformationCollection.h"
 
 #include <qstringlist.h>

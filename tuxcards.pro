@@ -1,13 +1,10 @@
-# -------------------------------------------------
-# Project created by QtCreator 2009-06-29T17:12:16
-# -------------------------------------------------
-#Added by amitc, temporary to build release on linux
-CONFIG=qt threads release
+# Project migrated to Qt6 (originally created 2009-06-29 by QtCreator)
+CONFIG += qt thread release c++17
+QT += widgets xml printsupport core5compat
 
-QT += qt3support
-QT += xml
 TARGET = tuxcards
 TEMPLATE = app
+
 SOURCES += src/persister.cpp \
     src/fontsettings.cpp \
     src/CTuxCardsConfiguration.cpp \
@@ -45,7 +42,9 @@ SOURCES += src/persister.cpp \
     src/utilities/crypt/MD5.cpp \
     src/utilities/crypt/BlowFish.cpp \
     src/utilities/iniparser/configparser.cpp \
-    src/utilities/iniparser/configgroup.cpp
+    src/utilities/iniparser/configgroup.cpp \
+    src/gui/colorbar/CColorBar.cpp
+
 HEADERS += src/gui/dialogs/searchlistitem.h \
     src/gui/dialogs/searchdialog.h \
     src/gui/dialogs/optionsdialog.h \
@@ -84,11 +83,16 @@ HEADERS += src/gui/dialogs/searchlistitem.h \
     src/gui/CSingleEntryView.h \
     src/gui/BookmarkButton.h \
     src/gui/RecentFileList.h \
-    src/gui/CTreeElement.h
+    src/gui/CTreeElement.h \
+    src/gui/colorbar/CColorBar.h
+
 FORMS += src/gui/dialogs/IFileEncryptionPasswordDialog.ui \
     src/gui/dialogs/IPropertyDialog.ui \
     src/gui/dialogs/IPasswdDialog.ui \
     src/gui/dialogs/IOptionsDialog.ui
+
+RESOURCES += src/icons/icons.qrc
+
 OTHER_FILES += src/information/space15.xpm \
     src/information/format_rtf.xpm \
     src/information/format_rtf.png \

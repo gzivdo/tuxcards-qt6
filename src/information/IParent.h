@@ -18,7 +18,7 @@
 #define IPARENT_H
 
 #include "IRemoveElementListener.h"
-#include <qstring.h>
+#include <QString>
 
 class CInformationElement;
 

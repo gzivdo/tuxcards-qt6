@@ -93,7 +93,7 @@
                 </layout>
               </item>
               <item>
-                <widget class="Q3ButtonGroup" name="buttonGroup1">
+                <widget class="QGroupBox" name="buttonGroup1">
                   <property name="font">
                     <font>
                       <bold>true</bold>
@@ -226,7 +226,7 @@
                 </widget>
               </item>
               <item>
-                <widget class="Q3ButtonGroup" name="mpEncryptionPanel">
+                <widget class="QGroupBox" name="mpEncryptionPanel">
                   <property name="maximumSize">
                     <size>
                       <width>0</width>

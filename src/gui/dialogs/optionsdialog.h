@@ -21,23 +21,26 @@
 #include "ui_IOptionsDialog.h"
 #include <qtabbar.h>
 
-#include <q3hbox.h>
-#include <q3vbox.h>
-#include <q3grid.h>
-#include <qcheckbox.h>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QCheckBox>
 
-#include <qlabel.h>
-#include <qlineedit.h>
+#include <QLabel>
+#include <QLineEdit>
 #include <qvalidator.h>
 
-#include <qpushbutton.h>
-#include <qcolordialog.h>
-#include <qstring.h>
-#include <qfont.h>
+#include <QPushButton>
+#include <QColorDialog>
+#include <QString>
+#include <QFont>
 
 #include "../../CTuxCardsConfiguration.h"
 
 #include <iostream>
+class CColorBar;
+class QRadioButton;
+
 class OptionsDialog : public QDialog, public Ui_IOptionsDialog {
    Q_OBJECT
 public:
@@ -60,11 +63,38 @@ protected slots:
 
    virtual void changeProperties();
 
+   void chooseTopColor();
+   void chooseBottomColor();
+   void chooseTextColor();
+   void refreshPreviewSlot() { refreshPreview(); }
+
 signals:
   void configurationChanged();
 
 private:
   CTuxCardsConfiguration& mrefConfig;
+
+  // SideBar tab widgets
+  CColorBar*    mpSidebarPreview;
+  QPushButton*  mpTopColorBtn;
+  QPushButton*  mpBottomColorBtn;
+  QPushButton*  mpTextColorBtn;
+  QColor        mTopColor;
+  QColor        mBottomColor;
+  QColor        mTextColor;
+  QCheckBox*    mpShowHText;
+  QLineEdit*    mpTextOne;
+  QLineEdit*    mpTextTwo;
+  QCheckBox*    mpShowVText;
+  QLineEdit*    mpVText;
+  QRadioButton* mpVTextTop;
+  QRadioButton* mpVTextBottom;
+
+  void          buildSidebarTab();
+  void          loadSidebarFromConfig();
+  void          saveSidebarToConfig();
+  void          refreshPreview();
+  static void   setButtonSwatch(QPushButton* b, const QColor& c);
 };
 
 #endif

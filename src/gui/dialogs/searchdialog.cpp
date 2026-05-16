@@ -19,85 +19,99 @@
 #include "searchdialog.h"
 #include <iostream>
 
-#include <qtabwidget.h>
-#include <qlayout.h>
-//Added by qt3to4:
-#include <Q3VBoxLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QLabel>
+#include <QHeaderView>
 
-// -------------------------------------------------------------------------------
 SearchDialog::SearchDialog( QWidget* pParent )
-  : QDialog( pParent, "searchWindow", false )
-// -------------------------------------------------------------------------------
+  : QDialog( pParent )
 {
-   setMinimumWidth(550);					// height is set in 'go(..)' and 'setUp(..)'
+   setObjectName("SearchDialog");
+   setModal(false);
+   setWindowTitle("SearchDialog");
+   setMinimumSize(650, 380);
 
-   // general Layout
-   Q3VBoxLayout* layout = new Q3VBoxLayout( this, 5, 5 );
-   QTabWidget*  tabWidget = new QTabWidget( this );
+   QVBoxLayout* root = new QVBoxLayout(this);
+   root->setContentsMargins(10,10,10,10);
+   root->setSpacing(6);
 
-   // search tab
-   Q3VBox* pTab = new Q3VBox( tabWidget );
-   pTab->setMargin(10);
-   pTab->setSpacing(5);
+   // -- top: "Search for ..." + line + Go --
+   root->addWidget(new QLabel("Search for ...", this));
+   QHBoxLayout* topRow = new QHBoxLayout();
+   edit = new QLineEdit(this);
+   topRow->addWidget(edit, 1);
+   QPushButton* go = new QPushButton("Go", this);
+   go->setDefault(true);
+   topRow->addWidget(go);
+   root->addLayout(topRow);
 
+   // -- middle: case sensitive + More button --
+   QHBoxLayout* midRow = new QHBoxLayout();
+   caseSensitive = new QCheckBox("Case &Sensitive", this);
+   searchTitles  = new QCheckBox("Search Only &Titles", this);
+   midRow->addWidget(caseSensitive);
+   midRow->addWidget(searchTitles);
+   midRow->addStretch(1);
+   moreBtn = new QPushButton("More >>>", this);
+   moreBtn->setCheckable(true);
+   midRow->addWidget(moreBtn);
+   root->addLayout(midRow);
 
-   // general layout
-//   QVBox* main=new QVBox(this); main->setMargin(10); main->setSpacing(5);
+   // -- collapsible: "Search in ..." radio group --
+   moreBox = new QGroupBox("Search in ...", this);
+   QHBoxLayout* moreLay = new QHBoxLayout(moreBox);
+   rbWholeTree         = new QRadioButton(".. &Whole tree", moreBox);
+   rbActiveAndChildren = new QRadioButton(".. active Entry and &Children", moreBox);
+   rbActiveOnly        = new QRadioButton(".. active &Entry only", moreBox);
+   rbWholeTree->setChecked(true);
+   moreLay->addWidget(rbWholeTree);
+   moreLay->addWidget(rbActiveAndChildren);
+   moreLay->addWidget(rbActiveOnly);
+   moreBox->hide();
+   root->addWidget(moreBox);
 
-   // top
-   Q3HBox* search=new Q3HBox( pTab ); search->setSpacing(10);
-   (void) new QLabel("Search for:", search);
-   edit=new QLineEdit( search ); edit->setMinimumWidth(200);
-   QPushButton* go=new QPushButton( "Go", search );
-   go->setDefault(TRUE);
-   QPushButton* cancel=new QPushButton("Cancel", search);
-   Q3ButtonGroup* cgroup = new Q3ButtonGroup(2, Qt::Horizontal, pTab);
-   caseSensitive = new QCheckBox("Case &Sensitive", cgroup);
-   searchTitles = new QCheckBox("Search Only &Titles", cgroup);
+   // -- results list --
+   list = new QTreeWidget(this);
+   list->setColumnCount(2);
+   QStringList headers; headers << "Entry Name" << "Entry Content";
+   list->setHeaderLabels(headers);
+   list->setColumnWidth(0, 200);
+   list->setColumnWidth(1, 400);
+   list->setSortingEnabled(false);
+   list->setRootIsDecorated(false);
+   root->addWidget(list, 1);
 
-   // middle
-   Q3ButtonGroup* bgroup = new Q3ButtonGroup(3, Qt::Horizontal, "Search in ...", pTab);
-   bgroup->setMinimumHeight(50);
-   QRadioButton* rb1 = new QRadioButton(".. &Whole tree", bgroup);
-   rb1->setChecked(TRUE); tell(0);
-   (void) new QRadioButton(".. active Entry and &Children", bgroup);
-   (void) new QRadioButton(".. active &Entry only", bgroup);
-
-   // bottom
-   list=new Q3ListView( pTab ); //list->setMinimumHeight(70);
-   list->addColumn("Entry"); list->addColumn("SearchResult");
-   list->setColumnWidth(0, 150); list->setColumnWidth(1, 350);
-   list->setSorting(-1);
-
-   status=new QLabel("", pTab);
+   // -- status line --
+   status = new QLabel("", this);
+   root->addWidget(status);
 
    // Communication
-   connect( bgroup, SIGNAL(pressed(int)), this, SLOT(tell(int)) );
-   connect( edit, SIGNAL(returnPressed()),this, SLOT(startSearching()) );
-   connect( go, SIGNAL(clicked()),        this, SLOT(startSearching()) );
-   connect( cancel, SIGNAL(clicked()),    this, SLOT(reject()) );
-   connect( list, SIGNAL(selectionChanged(Q3ListViewItem*)), this, SLOT(selectionChange(Q3ListViewItem*)) );
-
-
-   // search tab created
-   tabWidget->insertTab( pTab, "Search" );
-   layout->addWidget( tabWidget );
+   connect( edit, SIGNAL(returnPressed()), this, SLOT(startSearching()) );
+   connect( go,   SIGNAL(clicked()),       this, SLOT(startSearching()) );
+   connect( list, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
+            this, SLOT(selectionChange(QTreeWidgetItem*)) );
+   connect( moreBtn, SIGNAL(toggled(bool)), this, SLOT(toggleMore(bool)) );
 }
 
 
-
-// -------------------------------------------------------------------------------
-int SearchDialog::setUp( CTreeElement* rootTreeElement,
-                                                   CTreeElement* activeTreeElement)
-// -------------------------------------------------------------------------------
+void SearchDialog::toggleMore( bool bChecked )
 {
-  this->rootTreeElement   = rootTreeElement;
-  this->activeTreeElement = activeTreeElement;
-  status->setText("");
+   moreBox->setVisible(bChecked);
+   moreBtn->setText( bChecked ? "More <<<" : "More >>>" );
+}
 
-  list->hide();
-  this->resize(550, 150);
+
+int SearchDialog::setUp( CTreeElement* rootTreeElement_,
+                         CTreeElement* activeTreeElement_ )
+{
+  this->rootTreeElement   = rootTreeElement_;
+  this->activeTreeElement = activeTreeElement_;
+  status->setText("");
+  list->clear();
+
+  if (size().width() < 650 || size().height() < 380)
+     resize(650, 380);
 
   edit->selectAll();
   edit->setFocus();
@@ -108,119 +122,54 @@ int SearchDialog::setUp( CTreeElement* rootTreeElement,
 
 
 
-/**
- * start searching
- */
-// -------------------------------------------------------------------------------
 void SearchDialog::startSearching( void )
-// -------------------------------------------------------------------------------
 {
   status->setText("Searching ...");
+  list->clear();
 
-  // clear list
-  Q3ListViewItem* dummy;
-  if ( list->firstChild() )
-  {
-    // 'list' is not empty
-    dummy = list->firstChild();
-    list->setSelected(dummy, true);
+  QString text = edit->text();
+  if (text.length() == 0) return;
+  int mode = whatMode();
 
-    while(list->childCount()>1)
-    {
-      Q3ListViewItem* pNextSibling = dummy->nextSibling();
-      DELETE( pNextSibling );
-    }
-  }
-  else
-  {
-    dummy = 0;
-  }
+  if (mode == 0)
+    rootTreeElement->search(edit->text(), true, caseSensitive->isChecked(),
+                            searchTitles->isChecked(), *list);
+  else if (mode == 1)
+    activeTreeElement->search(edit->text(), true, caseSensitive->isChecked(),
+                              searchTitles->isChecked(), *list);
+  else if (mode == 2)
+    activeTreeElement->search(edit->text(), false, caseSensitive->isChecked(),
+                              searchTitles->isChecked(), *list);
 
-  // showing list
-  list->show();
-  resize(550, 350);
-
-  QString text=edit->text();
-  if (text.length()==0) return;
-  int mode=whatMode();
-
-  // searching
-  if (mode==0)              // search whole tree
-    rootTreeElement->search(edit->text(), true, caseSensitive->isOn(),
-    												searchTitles->isOn(), *list);
-  else if(mode==1)          // search active entry and children
-    activeTreeElement->search(edit->text(), true, caseSensitive->isOn(),
-    												searchTitles->isOn(), *list);
-  else if(mode==2)          // search active entry only
-    activeTreeElement->search(edit->text(), false, caseSensitive->isOn(),
-    												searchTitles->isOn(), *list);
-
-
-  // remove rest of old list if exists (select an item above
-  //                                    or below and delete 'x')
-  bool resultsShown=false;
-  if (dummy && (list->childCount()>1)){
-    if (dummy->itemBelow())
-      list->setSelected(dummy->itemBelow(),true);
-    else
-      list->setSelected(dummy->itemAbove(),true);
-
-    DELETE( dummy );
-    status->setText("<b>"+QString::number(list->childCount())+" matches found.</b>");
-    resultsShown=true;
-  }else if(dummy && (list->childCount()==1)){
-    // no new item, but an old undeleted one
-    list->hide(); this->resize(550, 150);
+  int n = list->topLevelItemCount();
+  if (n == 0)
     status->setText("<b>No match found.</b>");
-    resultsShown=true;
-  }else{
-    status->setText("<b>"+QString::number(list->childCount())+" matches found.</b>");
-    resultsShown=true;
-  }
-
-  // exceptional case; not really expected
-  if (!resultsShown)
-    status->setText("<b>"+QString::number(list->childCount())+" matches found.</b>");
+  else if (n == 1)
+    status->setText("<b>One match found.</b>");
+  else
+    status->setText("<b>" + QString::number(n) + " matches found.</b>");
 }
 
 
+int SearchDialog::whatMode( void )
+{
+   if (rbActiveAndChildren && rbActiveAndChildren->isChecked()) return 1;
+   if (rbActiveOnly        && rbActiveOnly->isChecked())        return 2;
+   return 0;  // whole tree (default)
+}
 
-// -------------------------------------------------------------------------------
-void SearchDialog::tell(int id)
-// -------------------------------------------------------------------------------
-{ choice=id; }
 
-
-// -------------------------------------------------------------------------------
 QString SearchDialog::getText( void )
-// -------------------------------------------------------------------------------
 { return edit->text(); }
 
 
-// -------------------------------------------------------------------------------
-int SearchDialog::whatMode( void )
-// -------------------------------------------------------------------------------
-{ return choice; }
-
-
-
-// -------------------------------------------------------------------------------
-void SearchDialog::selectionChange( Q3ListViewItem* x )
-// -------------------------------------------------------------------------------
+void SearchDialog::selectionChange( QTreeWidgetItem* x )
 {
-  emit makeVisible( ((SearchListItem*)x)->getSearchPosition() );
-/*  emit makeVisible((CTreeElement*)( ((SearchListItem*)x) ->getReferenceKnoten() ),
-                    ((SearchListItem*)x) ->getLine(),
-                    ((SearchListItem*)x) ->getPos(),
-                    ((SearchListItem*)x) ->getLen()   );
-*/
+  if (!x) return;
+  SearchListItem* sli = dynamic_cast<SearchListItem*>(x);
+  if (sli)
+     emit makeVisible( sli->getSearchPosition() );
 }
 
-/**
- * this is a slot which is called from 'Tree' as soon
- * as a CTreeElement is deleted
- */
-// -------------------------------------------------------------------------------
 void SearchDialog::close( void )
-// -------------------------------------------------------------------------------
 { reject(); }

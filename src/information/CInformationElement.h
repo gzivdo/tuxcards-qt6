@@ -19,18 +19,20 @@
 
 #include "IParent.h"
 #include <iostream>
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QPixmap>
-#include <Q3PtrList>
+#include <QList>
 #include "informationformat.h"
-#include <qobject.h>
-#include <q3listview.h>
-#include <q3textedit.h>
+#include <QObject>
+#include <QTreeWidget>
+#include <QHeaderView>
+#include <QTextEdit>
 
 #include <qdatetime.h>
 
-#include <Qt/qdom.h>
+#include <QDomDocument>
+#include <QDomElement>
 
 
 class CInformationElement : public QObject,
@@ -55,7 +57,7 @@ public:
   bool isBatched( void ) const;
 
   virtual void addChild( CInformationElement* pElement );
-  Q3PtrList<CInformationElement>* getChildren( void );
+  QList<CInformationElement*>* getChildren( void );
   int childCount( void ) const;
   void setParent( IParent* pParent = 0 );
 
@@ -80,7 +82,7 @@ public:
   virtual void toXML( QDomDocument xmlDocument, QDomNode parent );
 
   void search( QString pattern, bool recursive, bool caseSensitive, bool SearchOnlyTitles,
-  						Q3ListView& list );
+  						QTreeWidget& list );
 
   CInformationElement* findChildWithDescription( QString desc );
 
@@ -128,7 +130,7 @@ protected:
   QPixmap             mIcon;
   QString             mIconFilename;
 
-  Q3PtrList<CInformationElement>* mpChildObjects;
+  QList<CInformationElement*>* mpChildObjects;
 
   int                 miInformationYPos;
 
@@ -141,10 +143,10 @@ protected:
   QColor 			  msubtreeTextColor;
 
 private:
-  void searchLine( QString pattern, bool caseSensitive, Q3ListView& list, QString oneLine,
+  void searchLine( QString pattern, bool caseSensitive, QTreeWidget& list, QString oneLine,
                   int lineNumber, int searchLocation );
-  void searchDescription( QString pattern, bool caseSensitive, Q3ListView& list );
-  void searchInformation( QString pattern, bool caseSensitive, Q3ListView& list );
+  void searchDescription( QString pattern, bool caseSensitive, QTreeWidget& list );
+  void searchInformation( QString pattern, bool caseSensitive, QTreeWidget& list );
 };
 #endif
 

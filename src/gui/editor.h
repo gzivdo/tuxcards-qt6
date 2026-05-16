@@ -19,7 +19,7 @@
 
 #include "../global.h"
 #include "./../information/IView.h"
-#include <q3textedit.h>
+#include <QTextEdit>
 #include <qclipboard.h>
 //Added by qt3to4:
 #include <QKeyEvent>
@@ -29,7 +29,7 @@
 #include <iostream>
 
 
-class Editor : public Q3TextEdit,
+class Editor : public QTextEdit,
                public IView
 {
    Q_OBJECT

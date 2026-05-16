@@ -18,14 +18,14 @@
 #ifndef CONFIGPARSER_H
 #define CONFIGPARSER_H
 
-#include <qstring.h>
-#include <q3ptrlist.h>
+#include <QString>
+#include <QList>
 #include "configgroup.h"
-#include <qfile.h>
-#include <q3textstream.h>
+#include <QFile>
+#include <QTextStream>
 
 class ConfigParser {
-public: 
+public:
    ConfigParser(QString fileName, bool writeAtOnce);
    ~ConfigParser();
 
@@ -41,14 +41,12 @@ public:
    QString toString();
 
 protected:
-   Q3PtrList<ConfigGroup>* list;
+   QList<ConfigGroup*> list;
    bool ready;
    ConfigGroup* currentGroup;
 
    QString fileName;
-   bool writeAtOnce;                           // if it is =true, all changes are written to the file,
-                                               //    immediatly -> if =false -> 'writeChanges()' must
-                                               // be called, otherwise the changes are not saved
+   bool writeAtOnce;
 };
 
 #endif

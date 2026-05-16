@@ -71,11 +71,11 @@ void CommandLineOptions::htmlExport(QString fileName)
 // -------------------------------------------------------------------------------
 {
   // Verzeichnis erstellen
-  QDir dir(QDir::homeDirPath());
+  QDir dir(QDir::homePath());
   dir.mkdir("tuxcardsHTML");
   dir.cd("tuxcardsHTML");
 
-  htmlExport(fileName, dir.absPath());
+  htmlExport(fileName, dir.absolutePath());
 }
 
 

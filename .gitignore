@@ -1,0 +1,32 @@
+# Build artifacts
+build/
+*.o
+*.so
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+Makefile
+Makefile.Debug
+Makefile.Release
+*.qmake.stash
+.qmake.stash
+
+# Editor / IDE
+*.user
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.DS_Store
+
+# Packaging
+debian/.debhelper/
+debian/tuxcards-qt6/
+debian/files
+debian/*.log
+debian/*.substvars
+debian/debhelper-build-stamp
+../tuxcards-qt6_*
+~/rpmbuild/

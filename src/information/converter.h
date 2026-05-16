@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include <qstring.h>
+#include <QString>
 #include "CInformationElement.h"
 
 class Converter{

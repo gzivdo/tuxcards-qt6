@@ -17,20 +17,22 @@
 
 #include "CPasswdDialog.h"
 
-#include <qlineedit.h>
-#include <qlabel.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
+#include <QLineEdit>
+#include <QLabel>
+#include <QMessageBox>
+#include <QPushButton>
 
 #include <iostream>
 
 // -------------------------------------------------------------------------------
 CPasswdDialog::CPasswdDialog( QWidget* pParent )
- : QDialog( pParent, "CPasswdDialog", TRUE )
+ : QDialog( pParent )
  , msPasswd( "" )
-// -------------------------------------------------------------------------------
 {
-	setupUi(this);
+   setObjectName("CPasswdDialog");
+   setModal(true);
+   setupUi(this);
+   connect( mpOkButton, SIGNAL(clicked()), this, SLOT(verifyAndAccept()) );
 }
 
 // -------------------------------------------------------------------------------
@@ -54,36 +56,31 @@ void CPasswdDialog::setUp( const QString& sIEDescription )
 
 
 // -------------------------------------------------------------------------------
-void CPasswdDialog::done()
+void CPasswdDialog::verifyAndAccept()
 // -------------------------------------------------------------------------------
 {
    if ( (NULLPTR == mpPasswdLineOne) || (NULLPTR == mpPasswdLineTwo) )
       return;
 
-   if ( mpPasswdLineOne->text().stripWhiteSpace().isEmpty() )
+   if ( mpPasswdLineOne->text().trimmed().isEmpty() )
    {
-      (void) QMessageBox::warning( this, "TuxCards", "Password field is empty. Please specify a valid password",
-                                         "Ok" );
-      //std::cout<<"no passwd"<<std::endl;
-      show();
+      (void) QMessageBox::warning( this, "TuxCards",
+                                   "Password field is empty. Please specify a valid password" );
       return;
    }
 
-   if ( 0 != mpPasswdLineOne->text().stripWhiteSpace().compare(
-                        mpPasswdLineTwo->text().stripWhiteSpace())
-      )
+   if ( 0 != mpPasswdLineOne->text().trimmed().compare(
+                        mpPasswdLineTwo->text().trimmed()) )
    {
-      (void) QMessageBox::warning( this, "TuxCards", "Passwords did not match. Please try again",
-                                         "Ok" );
+      (void) QMessageBox::warning( this, "TuxCards",
+                                   "Passwords did not match. Please try again" );
       mpPasswdLineOne->setText("");
       mpPasswdLineTwo->setText("");
-
       mpPasswdLineOne->setFocus();
-      show();
       return;
    }
-   msPasswd = mpPasswdLineOne->text().stripWhiteSpace();
-   close();
+   msPasswd = mpPasswdLineOne->text().trimmed();
+   accept();
 }
 
 

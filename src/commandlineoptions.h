@@ -18,7 +18,7 @@
 #ifndef COMMANDLINEOPTIONS_H
 #define COMMANDLINEOPTIONS_H
 
-#include <qstring.h>
+#include <QString>
 
 /**
   *@author Alexander Theel

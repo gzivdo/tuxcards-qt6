@@ -18,7 +18,7 @@
 #ifndef GREETINGS_H
 #define GREETINGS_H
 
-#include <qstring.h>
+#include <QString>
 
 QString sGreetingsText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
 "<!DOCTYPE tuxcards_data_file>"

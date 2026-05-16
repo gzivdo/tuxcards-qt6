@@ -1,0 +1,7 @@
+tuxcards-qt6 (1.0.0-1) unstable; urgency=medium
+
+  * Initial Debian packaging of the Qt6 port.
+  * Based on TuxCards 2010.06.1 with SideBar and PNG icons back-ported
+    from TuxCards 2.2.1.
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 00:00:00 +0000

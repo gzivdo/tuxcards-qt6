@@ -22,8 +22,8 @@
 
 #include <iostream>
 #include "CInformationElement.h"
-#include <q3ptrlist.h>
-#include <qobject.h>
+#include <QList>
+#include <QObject>
 #include "Path.h"
 #include "IView.h"
 
@@ -83,7 +83,7 @@ private:
   CInformationElement* mpRootElement;
   CInformationElement* mpActiveElement;
 
-  Q3PtrList<IView> mViews;
+  QList<IView*> mViews;
   void notifyViewsToRemoveElement( CInformationElement* pIE );
 
   bool			mbEncrypted;

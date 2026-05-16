@@ -16,9 +16,9 @@
  ***************************************************************************/
 
 #include "persister.h"
-#include <qfile.h>
+#include <QFile>
 //Added by qt3to4:
-#include <Q3TextStream>
+#include <QTextStream>
 
 CInformationCollection* Persister::createInformationCollection(QString s){
   return unpack(s);
@@ -76,33 +76,33 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 
 	//packe Paket aus
 	s=s.mid(3);							// remove "***" from front
-	i=s.find("*");
+	i=s.indexOf("*");
 	int l=s.mid(0, i).toInt();		// l= verbleibende Länge d. gesamten
 													// Knotens (inkl. Kinder)
 
 	QString knoten=s.mid(i+1, l); s=s.mid(l+1);
-	i=knoten.find("*");
+	i=knoten.indexOf("*");
 	l1=knoten.mid(0, i).toInt();
 	name=knoten.mid(i+1, l1);
 
 	knoten=knoten.mid(i+1+l1);
-	i=knoten.find("*");
+	i=knoten.indexOf("*");
 	l2=knoten.mid(0, i).toInt();
 	text=knoten.mid(i+1, l2);
 
 	knoten=knoten.mid(i+1+l2);
 
 	// check whether this Knoten was opened or closed
-	isOpen = (knoten.left(1)=="+" ? FALSE : TRUE );
+	isOpen = (knoten.left(1)=="+" ? false : true );
 	knoten=knoten.mid(1);
 
 	// extract icon file
-	i=knoten.find("*");
+	i=knoten.indexOf("*");
 	iconFile=knoten.mid(0, i);
 	knoten=knoten.mid(i+1);
 
 	// check for # of children
-	i=knoten.find("*");
+	i=knoten.indexOf("*");
 	amountOfChilds=knoten.mid(0, i).toInt();
 
 	knoten=knoten.mid(i);
@@ -130,7 +130,7 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
   
 	for (i=1; i<=amountOfChilds; i++){
 		knoten=knoten.mid(3);														// cutting "***" off
-		int i=knoten.find("*");													//get length of child
+		int i=knoten.indexOf("*");													//get length of child
 		int l=knoten.mid(0, i).toInt();
 
 		unpackWithIcons("***"+knoten.mid(0, l+i), false, self);
@@ -172,27 +172,27 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 //
 //	//packe Paket aus
 //	s=s.mid(3);							// remove "***" from front
-//	i=s.find("*");
+//	i=s.indexOf("*");
 //	int l=s.mid(0, i).toInt();		// l= verbleibende Länge d. gesamten
 //													// Knotens (inkl. Kinder)
 //
 //	QString knoten=s.mid(i+1, l); s=s.mid(l+1);
-//	i=knoten.find("*");
+//	i=knoten.indexOf("*");
 //	l1=knoten.mid(0, i).toInt();
 //	name=knoten.mid(i+1, l1);
 //
 //	knoten=knoten.mid(i+1+l1);
-//	i=knoten.find("*");
+//	i=knoten.indexOf("*");
 //	l2=knoten.mid(0, i).toInt();
 //	text=knoten.mid(i+1, l2);
 //
 //	knoten=knoten.mid(i+1+l2);
 //
 //	// check whether this Knoten was opened or closed
-//	isOpen = (knoten.left(1)=="+" ? FALSE : TRUE );
+//	isOpen = (knoten.left(1)=="+" ? false : true );
 //	knoten=knoten.mid(1);
 //
-//	i=knoten.find("*");
+//	i=knoten.indexOf("*");
 //	amountOfChilds=knoten.mid(0, i).toInt();
 //
 //	knoten=knoten.mid(i);
@@ -220,7 +220,7 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 //
 //	for (i=1; i<=amountOfChilds; i++){
 //		knoten=knoten.mid(3);														// cutting "***" off
-//		int i=knoten.find("*");													//get length of child
+//		int i=knoten.indexOf("*");													//get length of child
 //		int l=knoten.mid(0, i).toInt();
 //
 //		unpackWithoutIcons("***"+knoten.mid(0, l+i), false, self);
@@ -243,7 +243,7 @@ void Persister::save(CInformationCollection* collection, QString filename)
 
    QFile f(filename);
    if ( f.open(QIODevice::WriteOnly) ) {          // file opened successfully
-      Q3TextStream t( &f );                // use a text stream
+      QTextStream t( &f );                // use a text stream
       t<<s;
       f.close();
    }

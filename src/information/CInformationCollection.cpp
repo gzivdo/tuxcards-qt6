@@ -18,7 +18,8 @@
 #include "CInformationCollection.h"
 
 #include "CTreeInformationElement.h"
-#include <qdom.h>
+#include <QDomDocument>
+#include <QDomElement>
 
 
 // -------------------------------------------------------------------------------
@@ -304,7 +305,7 @@ void CInformationCollection::addView( IView* pView )
 void CInformationCollection::removeView( IView* pView )
 // -------------------------------------------------------------------------------
 {
-   mViews.removeRef( pView );
+   mViews.removeAll( pView );
 }
 
 
@@ -312,7 +313,7 @@ void CInformationCollection::removeView( IView* pView )
 void CInformationCollection::notifyViewsToRemoveElement( CInformationElement* pIE )
 // -------------------------------------------------------------------------------
 {
-   for ( IView* pView = mViews.first(); pView != NULLPTR; pView = mViews.next() )
+   for (IView* pView : mViews)
    {
       pView->aboutToRemoveElement( pIE );
    }

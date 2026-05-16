@@ -20,9 +20,9 @@
 #include "version.h"
 #include "global.h"
 #include "./utilities/iniparser/configparser.h"
-#include <qdir.h>
+#include <QDir>
 
-#include <qmessagebox.h>
+#include <QMessageBox>
 
 
 // -------------------------------------------------------------------------------
@@ -49,12 +49,12 @@ void CTuxCardsConfiguration::readConfigurationFile()
 {
    // set default options just to be sure; if the config-file
    // might not be there or version 0.4 was used before
-   ConfigParser parser( QDir::homeDirPath() + TUX_CONFIG_FILE, false );
+   ConfigParser parser( QDir::homePath() + TUX_CONFIG_FILE, false );
 
    parser.setGroup("General");
    QString version   = parser.readEntry("Version",   QString("TuxCards_") + TUX_VERSION);
 
-   mStringMap[S_DATA_FILE_NAME]     = parser.readEntry("Data_File", QDir::homeDirPath()+"/tuxcards_greeting");
+   mStringMap[S_DATA_FILE_NAME]     = parser.readEntry("Data_File", QDir::homePath()+"/tuxcards_greeting");
    mBoolMap  [B_AUTOSAVE]           = parser.readNumEntry("Autosave",            0);
    mIntMap   [I_SAVE_ALL_MINUTES]   = parser.readNumEntry("Save_All_Minutes",   15);
    mBoolMap  [B_SAVE_WHEN_LEAVING]  = parser.readNumEntry("Save_when_Leaving",   0);
@@ -63,10 +63,25 @@ void CTuxCardsConfiguration::readConfigurationFile()
    mStringMap[S_RECENT_FILES]       = parser.readEntry("Recent_Files",          "");
    mBoolMap  [B_ENCRYPTION_USED]    = parser.readNumEntry("Encryption_Used",     0);
 
-//   colorR                           = parser.readNumEntry("Color_Font_R"      ,255);
-//   colorG                           = parser.readNumEntry("Color_Font_G"      ,255);
-//   colorB                           = parser.readNumEntry("Color_Font_B"      ,255);
-//   fontColor                        = QColor(colorR, colorG, colorB);
+   int colorR                       = parser.readNumEntry("Color_Top_R",         0);
+   int colorG                       = parser.readNumEntry("Color_Top_G",         0);
+   int colorB                       = parser.readNumEntry("Color_Top_B",         0);
+   topColor                         = QColor(colorR, colorG, colorB);
+   colorR                           = parser.readNumEntry("Color_Bottom_R",     33);
+   colorG                           = parser.readNumEntry("Color_Bottom_G",     72);
+   colorB                           = parser.readNumEntry("Color_Bottom_B",    170);
+   bottomColor                      = QColor(colorR, colorG, colorB);
+   colorR                           = parser.readNumEntry("Color_Font_R",     255);
+   colorG                           = parser.readNumEntry("Color_Font_G",     255);
+   colorB                           = parser.readNumEntry("Color_Font_B",     255);
+   fontColor                        = QColor(colorR, colorG, colorB);
+
+   mBoolMap  [B_IS_HTEXT_ENABLED]   = parser.readNumEntry("Enable_H_Text",       1);
+   mStringMap[S_TEXT_ONE]           = parser.readEntry   ("Text_One",        "Tux");
+   mStringMap[S_TEXT_TWO]           = parser.readEntry   ("Text_Two",      "Cards");
+   mBoolMap  [B_IS_VTEXT_ENABLED]   = parser.readNumEntry("Enable_V_Text",       0);
+   mStringMap[S_VERTICAL_TEXT]      = parser.readEntry   ("Vertical_Text",      "");
+   mBoolMap  [B_ALIGN_VTEXT]        = parser.readNumEntry("Align_Vertical_Text", 0);
 
    mStringMap[S_ICON_DIR]           = parser.readEntry("Icon_Dir", "/usr/local/tuxcards/icons");
 
@@ -114,7 +129,7 @@ void CTuxCardsConfiguration::saveToFile()
 {
   // -- write to config-file ".tuxcards" ---------------------------
   // "Version" is the version of this program (not the version of a datafile)
-  ConfigParser p(QDir::homeDirPath()+"/.tuxcards", false);
+  ConfigParser p(QDir::homePath()+"/.tuxcards", false);
 
   p.setGroup("General");
   p.changeEntry("Version",             "TuxCardsV2.0");
@@ -126,9 +141,23 @@ void CTuxCardsConfiguration::saveToFile()
   p.changeEntry("Execution_Statement",      mStringMap[S_EXECUTE_STATEMENT] );
   p.changeEntry("Recent_Files",             mStringMap[S_RECENT_FILES]      );
   p.changeEntry("Encryption_Used",     (int)mBoolMap  [B_ENCRYPTION_USED]   );
-//  p.changeEntry("Color_Font_R",             fontColor.red());
-//  p.changeEntry("Color_Font_G",             fontColor.green());
-//  p.changeEntry("Color_Font_B",             fontColor.blue());
+
+  p.changeEntry("Color_Top_R",              topColor.red());
+  p.changeEntry("Color_Top_G",              topColor.green());
+  p.changeEntry("Color_Top_B",              topColor.blue());
+  p.changeEntry("Color_Bottom_R",           bottomColor.red());
+  p.changeEntry("Color_Bottom_G",           bottomColor.green());
+  p.changeEntry("Color_Bottom_B",           bottomColor.blue());
+  p.changeEntry("Color_Font_R",             fontColor.red());
+  p.changeEntry("Color_Font_G",             fontColor.green());
+  p.changeEntry("Color_Font_B",             fontColor.blue());
+  p.changeEntry("Enable_H_Text",       (int)mBoolMap  [B_IS_HTEXT_ENABLED]);
+  p.changeEntry("Text_One",                 mStringMap [S_TEXT_ONE]);
+  p.changeEntry("Text_Two",                 mStringMap [S_TEXT_TWO]);
+  p.changeEntry("Enable_V_Text",       (int)mBoolMap  [B_IS_VTEXT_ENABLED]);
+  p.changeEntry("Vertical_Text",            mStringMap [S_VERTICAL_TEXT]);
+  p.changeEntry("Align_Vertical_Text", (int)mBoolMap  [B_ALIGN_VTEXT]);
+
   p.changeEntry("Icon_Dir",                 mStringMap[S_ICON_DIR]          );
 
   p.changeEntry("Font_Family",              asciiEditorFont.getFamily());
@@ -167,13 +196,17 @@ void CTuxCardsConfiguration::saveToFile()
 
 
 /****** getter *************************/
-//QColor CTuxCardsConfiguration::getFontColor() const { return fontColor; }
+QColor CTuxCardsConfiguration::getTopColor() const    { return topColor; }
+QColor CTuxCardsConfiguration::getBottomColor() const { return bottomColor; }
+QColor CTuxCardsConfiguration::getFontColor() const   { return fontColor; }
 
 FontSettings CTuxCardsConfiguration::getASCIIEditorFont() const { return asciiEditorFont; }
 FontSettings CTuxCardsConfiguration::getTreeFont() const { return treeFont; }
 
 /****** setter *************************/
-//void CTuxCardsConfiguration::setFontColor(QColor c){ this->fontColor=c; }
+void CTuxCardsConfiguration::setTopColor(QColor c){ this->topColor=c; }
+void CTuxCardsConfiguration::setBottomColor(QColor c){ this->bottomColor=c; }
+void CTuxCardsConfiguration::setFontColor(QColor c){ this->fontColor=c; }
 
 void CTuxCardsConfiguration::setASCIIEditorFont(FontSettings f){ this->asciiEditorFont=f; }
 void CTuxCardsConfiguration::setTreeFont(FontSettings f){ this->treeFont=f; }

@@ -18,7 +18,7 @@
 #define PERSISTER_H
 
 #include <iostream>
-#include <qstring.h>
+#include <QString>
 #include "./information/CInformationCollection.h"
 #include "./information/CTreeInformationElement.h"
 

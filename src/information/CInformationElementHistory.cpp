@@ -43,21 +43,14 @@ CInformationElementHistory::~CInformationElementHistory( void )
 void CInformationElementHistory::aboutToRemoveElement( CInformationElement* pIE )
 // -------------------------------------------------------------------------------
 {
-   while ( 0 < mList.containsRef( pIE ) )
+   while ( mList.contains( pIE ) )
    {
-      int iIndex = mList.findRef( pIE );
+      int iIndex = mList.indexOf( pIE );
       if ( iIndex < miCurrentIndex )
       {
          miCurrentIndex--;
       }
-      else
-      {
-         // There are the cases:
-         //   a) iIndex > miCurrentIndex
-         //   b) iIndex == miCurrentIndex
-         // do nothing in both cases.
-      }
-      (void)mList.remove(iIndex);
+      mList.removeAt(iIndex);
    }
 
    if ( 0 == mList.count() )
@@ -106,7 +99,7 @@ void CInformationElementHistory::addElement( const CInformationElement& ie )
       }
    }
 
-   mList.prepend( &ie );
+   mList.prepend( const_cast<CInformationElement*>(&ie) );
    miCurrentIndex = 0;
 
    notifyListener();
@@ -156,10 +149,10 @@ void CInformationElementHistory::dump( void )
 
       CInformationElement* pIE = mList.at(i);
       std::cout<<i;
-      std::cout<<sSeparator.toAscii().constData();
+      std::cout<<sSeparator.toLatin1().constData();
       std::cout<<pIE<<"\t";
       sDesc =  (NULLPTR != pIE) ? pIE->getDescription() : "NULLPTR";
-      std::cout<<sDesc.toAscii().constData()<<std::endl;
+      std::cout<<sDesc.toLatin1().constData()<<std::endl;
    }
 
    std::cout<<"--History - End"<<std::endl;

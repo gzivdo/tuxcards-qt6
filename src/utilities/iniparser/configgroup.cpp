@@ -18,73 +18,50 @@
 #include "../../global.h"
 #include "configgroup.h"
 #include <iostream>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 ConfigGroup::ConfigGroup(QString groupName)
- : entries( NULLPTR )
 {
-	name=groupName;
-	entries=new Q3PtrList<QString>;
+	name = groupName;
 }
 
 
-ConfigGroup::~ConfigGroup(){ DELETE( entries ); }
+ConfigGroup::~ConfigGroup() {}
 
 QString ConfigGroup::getName(){ return name; }
-	
+
 void ConfigGroup::addEntry(QString name, QString value){
-	entries->append(new QString(name));
-	entries->append(new QString(value));
+	entries.append(qMakePair(name, value));
 }
 
 void ConfigGroup::changeEntry(QString name, QString value){
-	QString* n; int counter=-1; bool done=false;
-	
-	for ( n=entries->first(); (n!=0 && !done); n=entries->next() ){
-		counter++;
-		if (counter/2*2==counter
-				&& (*n)==name){		// found it -> go on and change it
-			entries->remove(counter+1);
-			entries->insert(counter+1, new QString(value));
-			
-			done=true;
-		}	
+	for (int i = 0; i < entries.size(); ++i) {
+		if (entries[i].first == name) {
+			entries[i].second = value;
+			return;
+		}
 	}
-
-	if(!done) addEntry(name, value);			// if the entry did not ex. -> it is created
+	addEntry(name, value);
 }
 
 /**
  * returns the value of the entry 'name'
- * if it is not found '0' is returned
- */	
+ * if it is not found '-1none' is returned
+ */
 QString ConfigGroup::getValue(QString name){
-	QString* x;     											// to walk through the list
-	QString* s=new QString("-1none");			// to hold the result
-
-	//cerr<<"wir suchen: '"<<name<<"'"<<endl;
-
-		
-	if (entries->first()){
-  	for ( x=entries->first(); (x!=0 && s!=0); x=entries->next() ){
-			//cerr<<"  finden: '"<<(*x)<<"'"<<endl;
-  		if((*x)==name) s=entries->next();
-  		x=entries->next();                   		// go one further (only every 2nd holds a name)
-  	}
+	for (const auto& kv : entries) {
+		if (kv.first == name)
+			return kv.second;
 	}
-	
-	return ((*s)=="-1none" ? QString("-1none") : (*s));
+	return QString("-1none");
 }
 
 QString ConfigGroup::toString(){
-	QString s="["+name+"]\n";
-	QString* n;
-	
-	for ( n=entries->first(); n!=0; n=entries->next() ){
-		s.append(*n); 								s.append("=");
-		s.append(*(entries->next())); s.append("\n");
+	QString s = "[" + name + "]\n";
+	for (const auto& kv : entries) {
+		s.append(kv.first);
+		s.append("=");
+		s.append(kv.second);
+		s.append("\n");
 	}
-	
 	return s;
 }

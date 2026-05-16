@@ -18,8 +18,8 @@
 #define INFORMATION_FORMAT_H
 
 #include <iostream>
-#include <qstring.h>
-#include <qpixmap.h>
+#include <QString>
+#include <QPixmap>
 #include <qimage.h>
 
 class InformationFormat{

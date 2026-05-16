@@ -17,7 +17,7 @@
 #ifndef STRING_CRYPTER_H
 #define STRING_CRYPTER_H
 
-#include <qstring.h>
+#include <QString>
 
 
 class StringCrypter{

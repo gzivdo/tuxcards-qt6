@@ -134,7 +134,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Q3GroupBox" name="groupBox7" >
+        <widget class="QGroupBox" name="groupBox7" >
          <property name="title" >
           <string>Execute Command after Saving</string>
          </property>
@@ -169,7 +169,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Q3GroupBox" name="groupBox7_2" >
+        <widget class="QGroupBox" name="groupBox7_2" >
          <property name="title" >
           <string>Icon Directory</string>
          </property>
@@ -219,7 +219,7 @@
         <number>11</number>
        </property>
        <item>
-        <widget class="Q3GroupBox" name="GroupBox7_2" >
+        <widget class="QGroupBox" name="GroupBox7_2" >
          <property name="font" >
           <font>
            <weight>75</weight>
@@ -336,7 +336,7 @@
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
-        <widget class="Q3GroupBox" name="GroupBox7" >
+        <widget class="QGroupBox" name="GroupBox7" >
          <property name="font" >
           <font>
            <weight>75</weight>
@@ -414,7 +414,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Q3GroupBox" name="GroupBox5" >
+        <widget class="QGroupBox" name="GroupBox5" >
          <property name="font" >
           <font>
            <weight>75</weight>
@@ -498,7 +498,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Q3ButtonGroup" name="ButtonGroup17" >
+        <widget class="QGroupBox" name="ButtonGroup17" >
          <property name="font" >
           <font>
            <weight>75</weight>
@@ -703,20 +703,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
- <customwidgets>
-  <customwidget>
-   <class>Q3GroupBox</class>
-   <extends>QGroupBox</extends>
-   <header>Qt3Support/Q3GroupBox</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Q3ButtonGroup</class>
-   <extends>Q3GroupBox</extends>
-   <header>Qt3Support/Q3ButtonGroup</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -772,38 +758,6 @@
    <signal>toggled(bool)</signal>
    <receiver>saveMinutes</receiver>
    <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>treeFontButton</sender>
-   <signal>clicked()</signal>
-   <receiver>IOptionsDialog</receiver>
-   <slot>changeTreeFont()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>editorFontButton</sender>
-   <signal>clicked()</signal>
-   <receiver>IOptionsDialog</receiver>
-   <slot>changeEditFont()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>20</x>

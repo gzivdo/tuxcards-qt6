@@ -18,7 +18,7 @@
 #include "strings.h"
 #include <iostream>
 
-#include <qregexp.h>
+#include <QRegExp>
 
 /**
  * returns a string that has length 'n' and is filled with spaces
@@ -43,12 +43,12 @@ QString Strings::spaces(int n)
 int Strings::wordCount(QString text)
 // -------------------------------------------------------------------------------
 {
-  text = text.simplifyWhiteSpace();
+  text = text.simplified();
 
   int words = 0;
   int currentPos = 1;
 
-  while ( (currentPos = text.find(" ", currentPos) +1) > 0 )
+  while ( (currentPos = text.indexOf(" ", currentPos) +1) > 0 )
   {
     words++;
   }
@@ -66,7 +66,7 @@ int Strings::wordCount(QString text)
 QString Strings::removeAndReturnFirstLine(QString& s)
 // -------------------------------------------------------------------------------
 {
-  int i = s.find("\n");
+  int i = s.indexOf("\n");
   if (i < 0 )
     return 0;
 
@@ -86,24 +86,24 @@ QString Strings::removeHTMLTags(const QString text)
 {
   QString retVal = text;
   
-  retVal.replace(QRegExp("<br />"), " ");
+  retVal.replace(QString("<br />"), QString(" "));
 
-  int tagStart = retVal.find("<");
+  int tagStart = retVal.indexOf("<");
   int tagEnd = 0;
   while ( tagStart >= 0 )
   {
-    tagEnd = retVal.find(">", tagStart);
+    tagEnd = retVal.indexOf(">", tagStart);
     retVal = retVal.remove(tagStart, tagEnd-tagStart+1);
 
     // prepare next turn
-    tagStart = retVal.find("<");
+    tagStart = retVal.indexOf("<");
   }
   retVal = retVal.mid(1);           // kill first '\n' which
                                     // does not belong to the
                                     // real information text
   // replace existing encoded tags
-  retVal.replace(QRegExp("&lt;"), "<");
-  retVal.replace(QRegExp("&gt;"), ">");
+  retVal.replace(QString("&lt;"), QString("<"));
+  retVal.replace(QString("&gt;"), QString(">"));
 
   //std::cout<<"___"<<retVal<<"___"<<std::endl;
   return retVal;

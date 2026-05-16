@@ -23,13 +23,13 @@
 #include "../../information/CTreeInformationElement.h"
 #include "../../CTuxCardsConfiguration.h"
 
-#include <qmessagebox.h>
+#include <QMessageBox>
 #include <qradiobutton.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qcombobox.h>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
 //Added by qt3to4:
 #include <QPixmap>
 
@@ -37,16 +37,17 @@
 // -------------------------------------------------------------------------------
 CPropertyDialog::CPropertyDialog( QWidget* pParent,
                                   CTuxCardsConfiguration& refTuxConfiguration )
- : QDialog( pParent, "CPropertyDialog", TRUE )
+ : QDialog( pParent )
  , mBlankIcon( blank_xpm )
  , mIconSelector()
  , miMode( MODE_NONE )
  , miChoice( 0 )
  , mpEditingElement( NULLPTR )
  , mrefTuxConfiguration( refTuxConfiguration )
-// -------------------------------------------------------------------------------
 {
-	setupUi(this);
+   setObjectName("CPropertyDialog");
+   setModal(true);
+   setupUi(this);
 
    connect( mpIconButton, SIGNAL(clicked()), this, SLOT(chooseIcon()) );
    connect( mpButtonApply, SIGNAL(clicked()), this, SLOT(changeProperties()) );
@@ -70,15 +71,15 @@ void CPropertyDialog::setUp( CInformationElement* pElement, int iMode )
 
    if ( iMode == MODE_CHANGE_PROPERTIES )
    {
-      setCaption("Change Properties of existing Entry");
+      setWindowTitle("Change Properties of existing Entry");
       setAttributes( pElement->getDescription(), pElement->getIconFileName());
-      mpTextFormatChoser->setEnabled( FALSE );
+      mpTextFormatChoser->setEnabled( false );
    }
    else if ( iMode == MODE_CREATE_NEW_ELEMENT )
    {
-      setCaption( "Add new Entry" );
+      setWindowTitle( "Add new Entry" );
       setAttributes( "", "none" );
-      mpTextFormatChoser->setEnabled( TRUE );
+      mpTextFormatChoser->setEnabled( true );
    }
    else
    {
@@ -102,11 +103,11 @@ void CPropertyDialog::setAttributes( QString sDescription, QString sIconFilename
    {
       // entry without icon
       mpNoIconRB->setChecked(true); mpUseIconRB->setChecked(false);
-      mpIconButton->setPixmap( mBlankIcon );
+      mpIconButton->setIcon(QIcon( mBlankIcon ));
    }
    else
    {
-      mpIconButton->setPixmap( sIconFilename );
+      mpIconButton->setIcon(QIcon( sIconFilename ));
       mpNoIconRB->setChecked(false); mpUseIconRB->setChecked(true);
    }
    mpLocationLabel->setText( sIconFilename );
@@ -132,7 +133,8 @@ void CPropertyDialog::chooseIcon( void )
    QPixmap pix(h);
    if ( ! pix.isNull() )
    {
-      mpIconButton->setPixmap(h); mpLocationLabel->setText(h);
+      mpIconButton->setIcon(QIcon(h));
+      mpLocationLabel->setText(h);
    }
 }
 
@@ -168,7 +170,7 @@ void CPropertyDialog::changeProperties( void )
 //   if ( (NULLPTR == mpPasswdLineOne) || (NULLPTR == mpPasswdLineTwo) )
 //      return;
 
-   if ( getName().stripWhiteSpace().isEmpty() )
+   if ( getName().trimmed().isEmpty() )
    {
       int iAnswer = QMessageBox::warning( this, "TuxCards", "The name of your note is empty.\n"
                                           "Do you want to change this?",
@@ -185,10 +187,10 @@ void CPropertyDialog::changeProperties( void )
    if ( miMode == MODE_CHANGE_PROPERTIES )
    {
       // change properties: name & icon
-      mpEditingElement->setBatched( TRUE );
+      mpEditingElement->setBatched( true );
       mpEditingElement->setDescription( getName() );
       mpEditingElement->setIconFileName( getIconFileName() );
-      mpEditingElement->setBatched( FALSE );
+      mpEditingElement->setBatched( false );
    }
    else if ( miMode == MODE_CREATE_NEW_ELEMENT )
    {

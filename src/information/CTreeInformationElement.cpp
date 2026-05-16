@@ -92,12 +92,9 @@ QString CTreeInformationElement::toStringObsoleted( void )
   int n = childCount();
   result += QString::number(n);
 
-  //jedes Kind hinzuf�gen
-  Q3PtrListIterator<CInformationElement> it(*getChildren());
-  CTreeInformationElement* x;
-  while( (x = (CTreeInformationElement*)it.current()) != 0 ){
-    ++it;
-    result+=x->toString();
+  for (CInformationElement* __ie : *getChildren()) {
+    CTreeInformationElement* x = (CTreeInformationElement*)__ie;
+    result += x->toString();
   }
 
   // add terminationString & header
@@ -180,11 +177,7 @@ void CTreeInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 
 
    // add children
-   Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-   CInformationElement* x;
-   while( (x = it.current()) != 0 )
-   {
-      ++it;
+   for (CInformationElement* x : *(mpChildObjects)) {
       x->toXML(xmlDocument, thisElement);
    }
 
@@ -219,23 +212,16 @@ void CTreeInformationElement::moveOneUp( void )
 void CTreeInformationElement::moveChildOneUp( CTreeInformationElement* pChild )
 // -------------------------------------------------------------------------------
 {
-   int pos = mpChildObjects->findRef( pChild );
+   int pos = mpChildObjects->indexOf( pChild );
    if ( (pos == -1) || (pos == 0) )
    {
-      //std::cout<<"child not found or at first position -> moving not possible"<<std::endl;
       return;
    }
 
-   bool tmpAutoDelete = mpChildObjects->autoDelete();
-   mpChildObjects->setAutoDelete( false );              // do not kill the pointer
-   mpChildObjects->remove( pos );
-   mpChildObjects->setAutoDelete( tmpAutoDelete );
-
+   mpChildObjects->removeAt( pos );
    mpChildObjects->insert( pos-1, pChild );
 
    if (!mbBatched) emit childMoved(pos, pos-1);
-
-   //std::cout<<getTreeString(1)<<std::endl;
 }
 
 /**
@@ -264,20 +250,15 @@ void CTreeInformationElement::moveOneDown( void )
 void CTreeInformationElement::moveChildOneDown( CTreeInformationElement* pChild )
 // -------------------------------------------------------------------------------
 {
-   int pos = mpChildObjects->findRef( pChild );
+   int pos = mpChildObjects->indexOf( pChild );
    if ( (pos == -1) || (pos == childCount()-1) )
    {
       return;
    }
 
-   bool tmpAutoDelete = mpChildObjects->autoDelete();
-   mpChildObjects->setAutoDelete( false );              // do not kill the pointer
-   mpChildObjects->remove( pos );
-   mpChildObjects->setAutoDelete( tmpAutoDelete );
-
+   mpChildObjects->removeAt( pos );
    mpChildObjects->insert( pos+1, pChild );
 
    if (!mbBatched) emit childMoved(pos, pos+1);
-
 }
 

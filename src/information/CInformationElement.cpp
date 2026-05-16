@@ -20,10 +20,10 @@
 #include "../utilities/strings.h"
 #include "../gui/dialogs/searchlistitem.h"
 
-#include <qregexp.h>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QPixmap>
-#include <Q3PtrList>
+#include <QList>
 #include "../utilities/crypt/StringCrypter.h"
 
 
@@ -49,16 +49,7 @@ CInformationElement::CInformationElement( IParent* pParent,
  , msubtreeTextColor (Qt::black)
 // -------------------------------------------------------------------------------
 {
-   mpChildObjects = new Q3PtrList<CInformationElement>();
-   if ( NULLPTR == mpChildObjects )
-   {
-      std::cout<<"TuxCards-ERROR: in constructor 'CInformationElement'\n"
-               <<"NULLPTR == mpChildObjects\n"
-               <<"Not enough memory to create objects. TuxCards might crash."
-               <<std::endl;
-      return;
-   }
-   mpChildObjects->setAutoDelete( true );
+   mpChildObjects = new QList<CInformationElement*>();
 
    if (!mbBatched) emit propertyChanged();
 }
@@ -71,6 +62,7 @@ CInformationElement::~CInformationElement( void )
 
    if ( NULLPTR != mpChildObjects )
    {
+      qDeleteAll(*mpChildObjects);
       mpChildObjects->clear();
    }
 
@@ -108,8 +100,8 @@ void CInformationElement::removeChild( CInformationElement* pChild )
    if ( NULLPTR == mpChildObjects )
       return;
 
-   // autodeletion is set to true (look at constructor)
-   mpChildObjects->removeRef( pChild );
+   mpChildObjects->removeAll( pChild );
+   delete pChild;
 }
 
 // -------------------------------------------------------------------------------
@@ -171,7 +163,7 @@ void CInformationElement::addChild( CInformationElement* pElement )
    if (!mbBatched) emit childAdded( pElement );
 }
 // -------------------------------------------------------------------------------
-Q3PtrList<CInformationElement>* CInformationElement::getChildren( void )
+QList<CInformationElement*>* CInformationElement::getChildren( void )
 // -------------------------------------------------------------------------------
 {
   return mpChildObjects;
@@ -273,10 +265,7 @@ QString CInformationElement::getTreeString( int tab ) const
   if ( NULLPTR == mpChildObjects )
     return result;
 
-  Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-  CInformationElement* x;
-  while( (x = it.current()) != 0 ){
-    ++it;
+  for (CInformationElement* x : *mpChildObjects) {
     result += x->getTreeString(tab);
   }
 
@@ -305,11 +294,7 @@ void CInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 
 
   // add children
-  Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-  CInformationElement* x;
-  while( (x = it.current()) != 0 )
-  {
-    ++it;
+  for (CInformationElement* x : *mpChildObjects) {
     x->toXML(xmlDocument, thisElement);
   }
 
@@ -321,11 +306,7 @@ void CInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 CInformationElement* CInformationElement::findChildWithDescription( QString desc )
 // -------------------------------------------------------------------------------
 {
-  Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-  CInformationElement* x;
-  while( (x = it.current()) != 0 )
-  {
-    ++it;
+  for (CInformationElement* x : *mpChildObjects) {
     if (x->getDescription() == desc)
       return x;
   }
@@ -341,7 +322,7 @@ CInformationElement* CInformationElement::findChildWithDescription( QString desc
  */
 // -------------------------------------------------------------------------------
 void CInformationElement::search( QString pattern, bool recursive, bool caseSensitive,
-                                  bool SearchOnlyTitles, Q3ListView& list)
+                                  bool SearchOnlyTitles, QTreeWidget& list)
 // -------------------------------------------------------------------------------
 {
   searchDescription(pattern, caseSensitive, list);
@@ -352,11 +333,7 @@ void CInformationElement::search( QString pattern, bool recursive, bool caseSens
   // if recursive -> do so
   if (recursive)
   {
-    Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-    CInformationElement* x;
-    while( (x = it.current()) != 0 )
-    {
-      ++it;
+    for (CInformationElement* x : *mpChildObjects) {
       x->search( pattern, true, caseSensitive, SearchOnlyTitles, list );
     }
   }
@@ -365,32 +342,28 @@ void CInformationElement::search( QString pattern, bool recursive, bool caseSens
 
 // -------------------------------------------------------------------------------
 void CInformationElement::searchLine( QString pattern, bool caseSensitive,
-                                      Q3ListView& list, QString line,
+                                      QTreeWidget& list, QString line,
                                       int lineNumber, int searchLocation )
 // -------------------------------------------------------------------------------
 {
-  int pos = line.find(pattern, 0, caseSensitive);
+  Qt::CaseSensitivity cs = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+  int pos = line.indexOf(pattern, 0, cs);
   while (pos >= 0)
   {
-    // found something -> add it to 'list'
-
-	// Removed everything before the search string
     QString listtext = line;
-	listtext.remove(0, pos);
+    listtext.remove(0, pos);
 
-	// Limit length to a certain limit so no wrap around happens.
     listtext.truncate(MAX_SEARCHLIST_STRLEN);
     (void) new SearchListItem( &list, new Path(this), searchLocation,
                                lineNumber, pos, pattern.length(), listtext);
 
-    // prepare for next evtl. occurance within this 'oneLine'
-    pos = line.find( pattern, pos+pattern.length(), caseSensitive );
+    pos = line.indexOf( pattern, pos+pattern.length(), cs );
   }
 }
 
 // -------------------------------------------------------------------------------
 void CInformationElement::searchDescription( QString pattern, bool caseSensitive,
-                                             Q3ListView& list)
+                                             QTreeWidget& list)
 // -------------------------------------------------------------------------------
 {
   searchLine( pattern, caseSensitive, list, mDescription, -1, SearchPosition::SP_NAME );
@@ -398,7 +371,7 @@ void CInformationElement::searchDescription( QString pattern, bool caseSensitive
 
 // -------------------------------------------------------------------------------
 void CInformationElement::searchInformation( QString pattern, bool caseSensitive,
-                                             Q3ListView& list )
+                                             QTreeWidget& list )
 // -------------------------------------------------------------------------------
 {
   QString text = getInformationText() +"\n";    // add "\n" -> so, the last line is also searched
@@ -452,7 +425,7 @@ void CInformationElement::appendInformation( QString text )
 {
   if ( mpInformationFormat == &InformationFormat::RTF )
   {
-    text.replace( QRegExp("\n"), "<br>\n" );
+    text.replace( QChar('\n'), QString("<br>\n") );
   }
 
   mInformation += text;
@@ -574,12 +547,8 @@ void CInformationElement::enableEncryptionForElementTree(QString& password)
 	enableEncryption(true, password);
 
 	// Go through all children and call the same function for them.
-	Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-	CInformationElement* x;
-	while( (x = it.current()) != 0 )
-	{
+	for (CInformationElement* x : *mpChildObjects) {
     	x->enableEncryptionForElementTree(password);
-	    ++it;
 	}
 }
 
@@ -591,12 +560,8 @@ void CInformationElement::disableEncryptionForElementTree()
 	enableEncryption(false, QString(""));
 
 	// Go through all children and call the same function for them.
-	Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-	CInformationElement* x;
-	while( (x = it.current()) != 0 )
-	{
+	for (CInformationElement* x : *mpChildObjects) {
     	x->disableEncryptionForElementTree();
-	    ++it;
 	}
 }
 
@@ -608,13 +573,9 @@ bool CInformationElement::checkEncryptionForElementTree()
 		return true;
 
 	// Go through all children and call the same function for them.
-	Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-	CInformationElement* x;
-	while( (x = it.current()) != 0 )
-	{
+	for (CInformationElement* x : *mpChildObjects) {
     	if (x->checkEncryptionForElementTree())
     		return true;
-	    ++it;
 	}
 	return false;
 }
@@ -634,16 +595,12 @@ bool CInformationElement::decryptTree(QString password)
 	}
 
 	// Go through all children and call the same function for them.
-	Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-	CInformationElement* x;
-	while( (x = it.current()) != 0 )
-	{
+	for (CInformationElement* x : *mpChildObjects) {
 		if (x->isCurrentlyEncrypted()) {
 	    	bCorrectPasswd = x->decryptTree(password);
 			if (!bCorrectPasswd)
 				return bCorrectPasswd;
 		}
-	    ++it;
 	}
 	return true;
 }
@@ -667,11 +624,7 @@ void CInformationElement::setSubTreeTextColor(QColor& c)
 	msubtreeTextColor = mtextColor = c;
 
 	// Go through all children and call the same function for them.
-	Q3PtrListIterator<CInformationElement> it(*mpChildObjects);
-	CInformationElement* x;
-	while( (x = it.current()) != 0 )
-	{
+	for (CInformationElement* x : *mpChildObjects) {
     	x->setSubTreeTextColor(c);
-	    ++it;
 	}
 }

@@ -17,7 +17,7 @@
 #ifndef BOOKMARK_BUTTON_H
 #define BOOKMARK_BUTTON_H
 
-#include <qpushbutton.h>
+#include <QPushButton>
 //Added by qt3to4:
 #include <QPixmap>
 #include <iostream>

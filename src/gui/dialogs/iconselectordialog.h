@@ -1,56 +1,43 @@
 /****************************************************************************
-** $Id: qt/examples/fileiconview/mainwindow.h   2.3.0   edited 2001-01-26 $
-**
-** Copyright (C) 1992-2000 Trolltech AS.  All rights reserved.
-**
-** This file is part of an example program for Qt.  This example
-** program may be used, distributed and modified without limitation.
-**
+** Icon selector dialog (Qt6 rewrite)
 *****************************************************************************/
 
 #ifndef ICONSELECTORDIALOG_H
 #define ICONSELECTORDIALOG_H
 
-#include <qdialog.h>
-#include <q3iconview.h>
-//Added by qt3to4:
+#include <QDialog>
+#include <QListWidget>
 #include <QLabel>
+#include <QPushButton>
 
 class IconSelector;
-//class DirectoryView;
-class Q3ProgressBar;
-class QLabel;
+class QProgressBar;
 class QComboBox;
-class Button;
 
 class IconSelectorDialog : public QDialog{
-	Q_OBJECT
+    Q_OBJECT
 
 public:
   IconSelectorDialog();
 
-	IconSelector *fileView() { return fileview; }
-//	DirectoryView *dirList() { return dirlist; }
+    IconSelector *fileView() { return fileview; }
 
-	void    show();
-	bool    getResult();
-	QString getIconFileName();
-	
+    void    show();
+    bool    getResult();
+    QString getIconFileName();
+
 protected:
   void setup();
   void setPathCombo();
 
   IconSelector *fileview;
   QLabel* location;
-//    QPushButton* ok;
-//    QPushButton
-//    DirectoryView *dirlist;
-  Q3ProgressBar *progress;
+  QProgressBar *progress;
   QLabel *label;
   QComboBox *pathCombo;
   QPushButton *upButton, *mkdirButton;
 
-  bool result;				// states whether the user pressed 'ok' or 'cancel'
+  bool result;
 
 protected slots:
   void directoryChanged( const QString & );
@@ -58,18 +45,16 @@ protected slots:
   void slotReadNextDir();
   void slotReadDirDone();
   void cdUp();
-//  void newFolder();
   void changePath( const QString &path );
   void enableUp();
   void disableUp();
-//  void enableMkdir();
-//  void disableMkdir();
 
-	void slotOkPressed();
-	void slotCancelPressed();
-	void slotFileSelected(Q3IconViewItem* item);
+  void slotOkPressed();
+  void slotCancelPressed();
+  void slotFileSelected( QListWidgetItem* item );
+
 private:
-	QString mstrIconDir;
+  QString mstrIconDir;
 };
 
 #endif

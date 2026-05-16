@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=TuxCards
+GenericName=Hierarchical Notes
+Comment=Tree-based note-taking with optional encryption
+Exec=tuxcards %f
+Icon=tuxcards
+Terminal=false
+Categories=Office;Utility;TextEditor;
+MimeType=application/x-tuxcards;

@@ -17,7 +17,7 @@
 
 #include "CIconManager.h"
 #include "../global.h"
-#include <qfile.h>
+#include <QFile>
 //Added by qt3to4:
 #include <QPixmap>
 #include <iostream>
@@ -84,47 +84,56 @@ CIconManager& CIconManager::getInstance()
 
 
 // -------------------------------------------------------------------------------
+// Prefer PNG from Qt resource bundle; fall back to inline XPM if missing.
+static QPixmap pickIcon( const QString& sQrcPath, const QPixmap& fallback )
+{
+   QPixmap pix( sQrcPath );
+   if ( !pix.isNull() )
+      return pix;
+   return fallback;
+}
+
 void CIconManager::buildupDefaultIconMap()
 // -------------------------------------------------------------------------------
 {
-   mDefaultIconMap["fileopen"]       = QPixmap(fileopen_xpm);
-   mDefaultIconMap["filenew"]        = QPixmap(filenew_xpm);
-   mDefaultIconMap["filesave"]       = QPixmap(filesave_xpm);
-   mDefaultIconMap["fileprint"]      = QPixmap(fileprint_xpm);
-   mDefaultIconMap["exit"]           = QPixmap(exit_xpm);
+   mDefaultIconMap["fileopen"]       = pickIcon(":/icons/fileopen.png",  QPixmap(fileopen_xpm));
+   mDefaultIconMap["filenew"]        = pickIcon(":/icons/filenew.png",   QPixmap(filenew_xpm));
+   mDefaultIconMap["filesave"]       = pickIcon(":/icons/filesave.png",  QPixmap(filesave_xpm));
+   mDefaultIconMap["fileprint"]      = pickIcon(":/icons/fileprint.png", QPixmap(fileprint_xpm));
+   mDefaultIconMap["exit"]           = pickIcon(":/icons/exit.png",      QPixmap(exit_xpm));
    mDefaultIconMap["addTreeElement"] = QPixmap(addTreeElement_xpm);
    mDefaultIconMap["changeProperty"] = QPixmap(changeProperty_xpm);
    mDefaultIconMap["delete"]         = QPixmap(delete_xpm);
    mDefaultIconMap["lock"]           = QPixmap(lock_xpm);
    mDefaultIconMap["unlock"]         = QPixmap(unlock_xpm);
-   mDefaultIconMap["find"]           = QPixmap(find_xpm);
+   mDefaultIconMap["find"]           = pickIcon(":/icons/find.png",      QPixmap(find_xpm));
 
-   mDefaultIconMap["redo"]           = QPixmap(redo_xpm);
-   mDefaultIconMap["undo"]           = QPixmap(undo_xpm);
-   mDefaultIconMap["editcut"]        = QPixmap(editcut_xpm);
-   mDefaultIconMap["editcopy"]       = QPixmap(editcopy_xpm);
-   mDefaultIconMap["editpaste"]      = QPixmap(editpaste_xpm);
-   mDefaultIconMap["editentrycolor"]       = QPixmap(editentrycolor_xpm);
-   mDefaultIconMap["editentrysubtreecolor"]      = QPixmap(editentrysubtreecolor_xpm);
+   mDefaultIconMap["redo"]           = pickIcon(":/icons/editredo.png",  QPixmap(redo_xpm));
+   mDefaultIconMap["undo"]           = pickIcon(":/icons/editundo.png",  QPixmap(undo_xpm));
+   mDefaultIconMap["editcut"]        = pickIcon(":/icons/editcut.png",   QPixmap(editcut_xpm));
+   mDefaultIconMap["editcopy"]       = pickIcon(":/icons/editcopy.png",  QPixmap(editcopy_xpm));
+   mDefaultIconMap["editpaste"]      = pickIcon(":/icons/editpaste.png", QPixmap(editpaste_xpm));
+   mDefaultIconMap["editentrycolor"]        = QPixmap(editentrycolor_xpm);
+   mDefaultIconMap["editentrysubtreecolor"] = QPixmap(editentrysubtreecolor_xpm);
 
-   mDefaultIconMap["text_bold"]      = QPixmap(text_bold_xpm);
-   mDefaultIconMap["text_italic"]    = QPixmap(text_italic_xpm);
-   mDefaultIconMap["text_under"]     = QPixmap(text_under_xpm);
+   mDefaultIconMap["text_bold"]      = pickIcon(":/icons/textbold.png",     QPixmap(text_bold_xpm));
+   mDefaultIconMap["text_italic"]    = pickIcon(":/icons/textitalic.png",   QPixmap(text_italic_xpm));
+   mDefaultIconMap["text_under"]     = pickIcon(":/icons/textunder.png",    QPixmap(text_under_xpm));
    mDefaultIconMap["text_color"]     = QPixmap(text_color_xpm);
-   mDefaultIconMap["text_left"]      = QPixmap(text_left_xpm);
-   mDefaultIconMap["text_center"]    = QPixmap(text_center_xpm);
-   mDefaultIconMap["text_right"]     = QPixmap(text_right_xpm);
-   mDefaultIconMap["text_block"]     = QPixmap(text_block_xpm);
+   mDefaultIconMap["text_left"]      = pickIcon(":/icons/textleft.png",     QPixmap(text_left_xpm));
+   mDefaultIconMap["text_center"]    = pickIcon(":/icons/textcenter.png",   QPixmap(text_center_xpm));
+   mDefaultIconMap["text_right"]     = pickIcon(":/icons/textright.png",    QPixmap(text_right_xpm));
+   mDefaultIconMap["text_block"]     = pickIcon(":/icons/textjustify.png",  QPixmap(text_block_xpm));
 
    mDefaultIconMap["upArrow"]        = QPixmap(upArrow_xpm);
    mDefaultIconMap["downArrow"]      = QPixmap(downArrow_xpm);
-   mDefaultIconMap["back"]           = QPixmap(back_xpm);
-   mDefaultIconMap["forward"]        = QPixmap(forward_xpm);
+   mDefaultIconMap["back"]           = pickIcon(":/icons/back.png",     QPixmap(back_xpm));
+   mDefaultIconMap["forward"]        = pickIcon(":/icons/forward.png",  QPixmap(forward_xpm));
 
-   mDefaultIconMap["locksm"]           = QPixmap(locksm_xpm);
-   mDefaultIconMap["unlocksm"]         = QPixmap(unlocksm_xpm);
-   mDefaultIconMap["filelock"]           = QPixmap(filelock_xpm);
-   mDefaultIconMap["fileunlock"]         = QPixmap(fileunlock_xpm);
+   mDefaultIconMap["locksm"]         = QPixmap(locksm_xpm);
+   mDefaultIconMap["unlocksm"]       = QPixmap(unlocksm_xpm);
+   mDefaultIconMap["filelock"]       = QPixmap(filelock_xpm);
+   mDefaultIconMap["fileunlock"]     = QPixmap(fileunlock_xpm);
 }
 
 

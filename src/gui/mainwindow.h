@@ -17,44 +17,44 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <q3mainwindow.h>
+#include <QMainWindow>
 //Added by qt3to4:
 #include <QCloseEvent>
 #include <QTimerEvent>
-#include <Q3ValueList>
+#include <QList>
 #include <QLabel>
 #include <QKeyEvent>
 #include "../information/IHistoryListener.h"
 #include "../information/CInformationElementHistory.h"
 
-#include <qaction.h>
-#include <qmenubar.h>
-#include <q3popupmenu.h>
-#include <q3filedialog.h>
-#include <qmessagebox.h>
-#include <qstatusbar.h>
+#include <QAction>
+#include <QMenuBar>
+#include <QMenu>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QStatusBar>
 
 #include "./dialogs/optionsdialog.h"
 
-#include <q3toolbar.h>
-#include <qtoolbutton.h>
-#include <qpixmap.h>
-#include <qmime.h>
-#include <q3whatsthis.h>
-#include <qcombobox.h>
+#include <QToolBar>
+#include <QToolButton>
+#include <QPixmap>
+#include <QMimeData>
+#include <QWhatsThis>
+#include <QComboBox>
 
-#include <q3hbox.h>
+#include <QHBoxLayout>
 //#include "qwidgetstack.h"
-#include <qsplitter.h>
+#include <QSplitter>
 #include "CSingleEntryView.h"
 #include "editor.h"
 #include "CTree.h"
 
-#include <qobject.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <q3textstream.h>
-#include <qstring.h>
+#include <QObject>
+#include <QDir>
+#include <QFile>
+#include <QTextStream>
+#include <QString>
 
 #include "../information/CInformationCollection.h"
 #include "../CTuxCardsConfiguration.h"
@@ -64,7 +64,7 @@
 
 #include <iostream>
 
-class MainWindow : public Q3MainWindow,
+class MainWindow : public QMainWindow,
                    public IHistoryListener
 {
   Q_OBJECT
@@ -75,11 +75,12 @@ private:
   CTuxCardsConfiguration& mConfiguration;
 
   QSplitter*              mpSplit;
-  Q3ValueList<int>* lst;
+  class CColorBar*        mpColorBar;
+  QList<int>* lst;
   CTree*                  mpTree;
   CSingleEntryView*       mpSingleEntryView;
   Editor*                 mpEditor;
-  Q3ToolBar*               mpQuickLoader;
+  QToolBar*               mpQuickLoader;
   RecentFileList*         mpRecentFiles;
 
   QStatusBar*             mpStatusBar;
@@ -111,27 +112,27 @@ private:
   QComboBox* pComboFont;
   QComboBox* pComboSize;
 
-  QToolButton* textFormatTool;
-  QToolButton* textBoldTool;
-  QToolButton* textItalicTool;
-  QToolButton* textUnderTool;
-  QToolButton* textColorTool;
+  QAction* textFormatTool;
+  QAction* textBoldTool;
+  QAction* textItalicTool;
+  QAction* textUnderTool;
+  QAction* textColorTool;
 
-  QToolButton* textLeftTool;
-  QToolButton* textCenterTool;
-  QToolButton* textRightTool;
-  QToolButton* textBlockTool;
+  QAction* textLeftTool;
+  QAction* textCenterTool;
+  QAction* textRightTool;
+  QAction* textBlockTool;
 
-  QToolButton* mpLeftButton;
-  QToolButton* mpRightButton;
+  QAction* mpLeftButton;
+  QAction* mpRightButton;
 
   // actions
-  Q3Action* mfileEncryptFile;
-  Q3Action* editUndoAction;
-  Q3Action* editRedoAction;
-  Q3Action* editCopyAction;
-  Q3Action* editSetEntryColor;
-  Q3Action* editSetEntrySubTreeColor;
+  QAction* mfileEncryptFile;
+  QAction* editUndoAction;
+  QAction* editRedoAction;
+  QAction* editCopyAction;
+  QAction* editSetEntryColor;
+  QAction* editSetEntrySubTreeColor;
 
 	int PromptBeforeNewFile();
   int askForSaving(QString question);
@@ -143,12 +144,12 @@ private:
   CInformationElementHistory mHistory;
   CPasswdDialog              mPasswdDialog;
 
-  Q3ToolBar*  mpMainTools;
-  Q3ToolBar*  mpEntryTools;
-  Q3ToolBar*  mpEditorTools;
-  int        miMainToolBarID;
-  int        miEntryToolBarID;
-  int        miEditorToolBarID;
+  QToolBar*  mpMainTools;
+  QToolBar*  mpEntryTools;
+  QToolBar*  mpEditorTools;
+  QAction*   miMainToolBarID;
+  QAction*   miEntryToolBarID;
+  QAction*   miEditorToolBarID;
 
 
   CInformationElement* getActiveIE();

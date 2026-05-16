@@ -18,7 +18,7 @@
 #ifndef CTUXCARDS_CONFIGURATION_H
 #define CTUXCARDS_CONFIGURATION_H
 
-#include <qstring.h>
+#include <QString>
 #include <qcolor.h>
 #include "fontsettings.h"
 
@@ -40,7 +40,11 @@ public:
     B_SHOW_EDITOR_TOOLBAR,
 
     B_LINEBREAK_MODERN,
-    B_ENCRYPTION_USED
+    B_ENCRYPTION_USED,
+
+    B_IS_HTEXT_ENABLED,
+    B_IS_VTEXT_ENABLED,
+    B_ALIGN_VTEXT
   };
   bool    getBoolValue( eBoolValue eKey ) const;
   void    setBoolValue( eBoolValue eKey, bool bValue );
@@ -54,6 +58,10 @@ public:
 
     S_ICON_DIR,
     S_LAST_ACTIVE_ELEM_PATH,
+
+    S_TEXT_ONE,
+    S_TEXT_TWO,
+    S_VERTICAL_TEXT
   };
   QString getStringValue( eStringValue eKey ) const;
   void    setStringValue( eStringValue eKey, const QString& sValue );
@@ -77,13 +85,17 @@ public:
   bool    askForUsingEncryption();
 
   /****** getter *************************/
-//  QColor  getFontColor() const;
+  QColor  getTopColor() const;
+  QColor  getBottomColor() const;
+  QColor  getFontColor() const;
 
   FontSettings getASCIIEditorFont() const;
   FontSettings getTreeFont() const;
 
   /****** setter *************************/
-//  void    setFontColor(QColor c);
+  void    setTopColor(QColor c);
+  void    setBottomColor(QColor c);
+  void    setFontColor(QColor c);
 
   void    setASCIIEditorFont(FontSettings f);
   void    setTreeFont(FontSettings f);
@@ -92,7 +104,9 @@ private:
   CTuxCardsConfiguration();
   void readConfigurationFile();
 
-//  QColor  fontColor;
+  QColor  topColor;
+  QColor  bottomColor;
+  QColor  fontColor;
 
   FontSettings asciiEditorFont;
   FontSettings treeFont;

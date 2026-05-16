@@ -19,7 +19,7 @@
 
 #include "CInformationElement.h"
 #include "IView.h"
-#include <q3ptrlist.h>
+#include <QList>
 #include "IHistoryListener.h"
 
 
@@ -45,7 +45,7 @@ public:
 private:
    #define HISTORY_SIZE 8
    #define LAST_POSITION (HISTORY_SIZE - 1)
-   Q3PtrList<CInformationElement> mList;
+   QList<CInformationElement*> mList;
 
    #define INVALID_INDEX -1
    int                           miCurrentIndex;

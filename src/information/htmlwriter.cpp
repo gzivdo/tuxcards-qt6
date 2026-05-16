@@ -18,10 +18,10 @@
 #include "htmlwriter.h"
 #include "../version.h"
 
-#include <qdir.h>
-#include <qfile.h>
-#include <q3textstream.h>
-#include <qregexp.h>
+#include <QDir>
+#include <QFile>
+#include <QTextStream>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QPixmap>
 
@@ -37,7 +37,7 @@ QStringList HTMLWriter::static_List = QStringList();
 
 /**
  * Exports a aollection to HTML.
- * Returns 'TRUE' if successful, otherwise 'FALSE'.
+ * Returns 'true' if successful, otherwise 'false'.
  */
 // -------------------------------------------------------------------------------
 bool HTMLWriter::writeCollectionToHTMLFile( CInformationCollection& collection,
@@ -48,15 +48,15 @@ bool HTMLWriter::writeCollectionToHTMLFile( CInformationCollection& collection,
 
    bool bSuccess = createSubDir( dir );
    if ( !bSuccess )
-      return FALSE;
+      return false;
 
    bSuccess = createImages( dir );
    if ( !bSuccess )
-      return FALSE;
+      return false;
 
    static_List.clear();
 
-   // TODO: Check if files could be opened, also. If not -> return 'FALSE'.
+   // TODO: Check if files could be opened, also. If not -> return 'false'.
    createTopFrame( dir );
 
    CInformationElement* pRootElem = collection.getRootElement();
@@ -67,7 +67,7 @@ bool HTMLWriter::writeCollectionToHTMLFile( CInformationCollection& collection,
    }
 
    static_List.clear();
-   return TRUE;
+   return true;
 }
 
 
@@ -76,10 +76,10 @@ bool HTMLWriter::createSubDir( const QDir& dir )
 // -------------------------------------------------------------------------------
 {
    bool bSuccess = dir.mkdir( TUX_HTMLEXPORT_SUBDIR );
-   if ( FALSE == bSuccess )
-      return FALSE;
+   if ( false == bSuccess )
+      return false;
 
-   return TRUE;
+   return true;
 }
 
 // -------------------------------------------------------------------------------
@@ -88,10 +88,10 @@ bool HTMLWriter::createImages( const QDir& dir )
 {
    // create dot and space and write them to disk
    QPixmap dot( dot_xpm );
-   bool bRetVal = dot.save( dir.absPath() + "/" + TUX_DOT, "PNG" );
+   bool bRetVal = dot.save( dir.absolutePath() + "/" + TUX_DOT, "PNG" );
 
    QPixmap space( space15_xpm );
-   bRetVal = bRetVal | space.save( dir.absPath() + "/" + TUX_SPACER, "PNG" );
+   bRetVal = bRetVal | space.save( dir.absolutePath() + "/" + TUX_SPACER, "PNG" );
 
    return bRetVal;
 }
@@ -112,15 +112,15 @@ void HTMLWriter::createIndexFile( const QDir& dir, const QString& sRootDescripti
    index+="    </frameset>\n";
    index+="<noframes>\n";
    index+="    <body bgcolor=\"#F0F0E1\">\n";
-   index+="    Sie benötigen einen Framefähigen Browser.<br>\n";
+   index+="    Sie benï¿½tigen einen Framefï¿½higen Browser.<br>\n";
    index+="		You do need a browser that supports frames.\n";
    index+="    </body>\n";
    index+="</noframes>\n";
    index+="</frameset>\n";
    index+="</html>";
-   QFile f2( dir.absPath() + "/index.html" );
+   QFile f2( dir.absolutePath() + "/index.html" );
    if ( f2.open(QIODevice::WriteOnly) ) {        // file opened successfully
-      Q3TextStream t( &f2 );               // use a text stream
+      QTextStream t( &f2 );               // use a text stream
       t<<index;
       f2.close();
    }
@@ -144,11 +144,11 @@ void HTMLWriter::createTreeFrame( CInformationCollection& collection, const QDir
 
    sTreeHTML.append("\n</body></html>");
 
-   QFile f( dir.absPath()+"/"+"treeHTML.html" );
+   QFile f( dir.absolutePath()+"/"+"treeHTML.html" );
    if ( f.open(QIODevice::WriteOnly) )                        // file opened successfully
    {
-      Q3TextStream t( &f );                            // use a text stream
-//      t.setEncoding(QTextStream::UnicodeUTF8);
+      QTextStream t( &f );                            // use a text stream
+//      t.setEncoding(QTextStream::Q_UNUSED(QTextStream::Locale));
       t<<sTreeHTML;
       f.close();
    }
@@ -175,18 +175,18 @@ void HTMLWriter::convertInformationElementToHTML( CInformationElement& element,
    static_List.append( sFileName );
 
    // create file
-   QFile f( dir.absPath() + "/" + TUX_HTMLEXPORT_SUBDIR + "/"
+   QFile f( dir.absolutePath() + "/" + TUX_HTMLEXPORT_SUBDIR + "/"
             + sFileName + ".html" );
    if ( f.open(QIODevice::WriteOnly) )                     // file opened successfully
    {
-      Q3TextStream t( &f );                         // use a text stream
-//      t.setEncoding(QTextStream::UnicodeUTF8);
+      QTextStream t( &f );                         // use a text stream
+//      t.setEncoding(QTextStream::Q_UNUSED(QTextStream::Locale));
 
       if ( element.getInformationFormat() == &InformationFormat::ASCII )
       {
          t<<"<html>\n<head> <title>"+element.getDescription()+"</title> </head>\n<body>";
          QString text = element.getInformation();
-         t<< text.replace(QRegExp("\n"),"<br>\n");
+         t<< text.replace(QChar('\n'), QString("<br>\n"));
          t<<"\n</body></html>";
       }
       else
@@ -207,11 +207,8 @@ void HTMLWriter::convertInformationElementToHTML( CInformationElement& element,
                     + element.getDescription()+"</a><br>\n");
 
 
-   Q3PtrListIterator<CInformationElement> it(*element.getChildren());
-   CInformationElement* x;
-   while( (x = it.current()) != 0 )
+   for (CInformationElement* x : *element.getChildren())
    {
-      ++it;
       convertInformationElementToHTML( *x, dir, sTreeHTML, iTabCount );
    }
 }
@@ -231,10 +228,10 @@ void HTMLWriter::createTopFrame( const QDir& dir )
    top += " - written by Alexander Theel</i></font>\n";
    top +="</body></html>";
 
-   QFile f( dir.absPath()+"/top.html" );
+   QFile f( dir.absolutePath()+"/top.html" );
    if ( f.open(QIODevice::WriteOnly) )                         // file opened successfully
    {
-      Q3TextStream t( &f );                             // use a text stream
+      QTextStream t( &f );                             // use a text stream
       t<<top;
       f.close();
   }

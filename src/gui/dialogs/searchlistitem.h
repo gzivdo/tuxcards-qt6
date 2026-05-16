@@ -18,16 +18,17 @@
 #ifndef SEARCHLISTITEM_H
 #define SEARCHLISTITEM_H
 
-#include <q3listview.h>
-#include <qstring.h>
+#include <QTreeWidget>
+#include <QHeaderView>
+#include <QString>
 #include "searchposition.h"
 
 #define MAX_SEARCHLIST_STRLEN	80
 
-class SearchListItem : public Q3ListViewItem{
+class SearchListItem : public QTreeWidgetItem{
 public:
 
-  SearchListItem(Q3ListView *parent, Path* path, int location,
+  SearchListItem(QTreeWidget *parent, Path* path, int location,
                  int line, int pos, int len, QString s);
 
   SearchPosition* getSearchPosition();
@@ -36,8 +37,6 @@ public:
 
 protected:
 
-  virtual void paintCell( QPainter *p, const QColorGroup &cg,
-                           int column, int width, int alignment );
   QString toString();
 
   SearchPosition* searchPosition;

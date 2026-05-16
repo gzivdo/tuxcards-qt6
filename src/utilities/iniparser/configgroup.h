@@ -18,25 +18,26 @@
 #ifndef CONFIGGROUP_H
 #define CONFIGGROUP_H
 
-#include <qstring.h>
-#include <q3ptrlist.h>
+#include <QString>
+#include <QList>
+#include <QPair>
 
 class ConfigGroup {
-public: 
+public:
 	ConfigGroup(QString name);
 	~ConfigGroup();
-	
+
 	QString getName();
-	
+
 	void addEntry(QString, QString);
-	void changeEntry(QString, QString);	
+	void changeEntry(QString, QString);
 	QString getValue(QString);
-	
+
 	QString toString();
-	
+
 protected:
 	QString name;
-	Q3PtrList<QString>* entries;
+	QList<QPair<QString, QString>> entries;
 };
 
 #endif
