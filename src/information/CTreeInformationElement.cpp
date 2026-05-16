@@ -43,7 +43,7 @@ void CTreeInformationElement::addChild( CTreeInformationElement* pElement )
    if ( nullptr == pElement )
       return;
 
-   mpChildObjects->append( pElement );
+   mChildObjects.append( pElement );
    pElement->setParent( this );
 
    emit childAdded( pElement );
@@ -191,7 +191,7 @@ void CTreeInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 
 
    // add children
-   for (CInformationElement* x : *(mpChildObjects)) {
+   for (CInformationElement* x : mChildObjects) {
       x->toXML(xmlDocument, thisElement);
    }
 
@@ -226,14 +226,14 @@ void CTreeInformationElement::moveOneUp( void )
 void CTreeInformationElement::moveChildOneUp( CTreeInformationElement* pChild )
 // -------------------------------------------------------------------------------
 {
-   int pos = mpChildObjects->indexOf( pChild );
+   int pos = mChildObjects.indexOf( pChild );
    if ( (pos == -1) || (pos == 0) )
    {
       return;
    }
 
-   mpChildObjects->removeAt( pos );
-   mpChildObjects->insert( pos-1, pChild );
+   mChildObjects.removeAt( pos );
+   mChildObjects.insert( pos-1, pChild );
 
    if (!mbBatched) emit childMoved(pos, pos-1);
 }
@@ -264,14 +264,14 @@ void CTreeInformationElement::moveOneDown( void )
 void CTreeInformationElement::moveChildOneDown( CTreeInformationElement* pChild )
 // -------------------------------------------------------------------------------
 {
-   int pos = mpChildObjects->indexOf( pChild );
+   int pos = mChildObjects.indexOf( pChild );
    if ( (pos == -1) || (pos == childCount()-1) )
    {
       return;
    }
 
-   mpChildObjects->removeAt( pos );
-   mpChildObjects->insert( pos+1, pChild );
+   mChildObjects.removeAt( pos );
+   mChildObjects.insert( pos+1, pChild );
 
    if (!mbBatched) emit childMoved(pos, pos+1);
 }

@@ -42,7 +42,7 @@ CInformationElement::CInformationElement( IParent* pParent,
  , mInformation( sInformation )
  , mIcon()
  , mIconFilename( sIconFileName )
- , mpChildObjects( nullptr )
+ , mChildObjects()
  , miInformationYPos( 0 )
  , mbIsEncryptionEnabled( false )
  , msTmpPasswd( "" )
@@ -53,8 +53,6 @@ CInformationElement::CInformationElement( IParent* pParent,
  , msubtreeTextColor (Qt::black)
 // -------------------------------------------------------------------------------
 {
-   mpChildObjects = new QList<CInformationElement*>();
-
    if (!mbBatched) emit propertyChanged();
 }
 
@@ -64,17 +62,13 @@ CInformationElement::~CInformationElement( void )
 {
    //std::cout<<"\t~CIE: "<<getDescription()<<std::endl;
 
-   if ( nullptr != mpChildObjects )
-   {
-      // The legacy Q3PtrList used setAutoDelete(true) to own its
-      // elements; QList<T*> does not. We replicate the same ownership
-      // semantics with an explicit qDeleteAll here, plus removeAll()
-      // + delete in removeChild() — see below.
-      qDeleteAll(*mpChildObjects);
-      mpChildObjects->clear();
-   }
+   // The legacy Q3PtrList used setAutoDelete(true) to own its elements;
+   // QList<T*> does not. We replicate the same ownership semantics with
+   // an explicit qDeleteAll here, plus removeAll() + delete in
+   // removeChild() — see below.
+   qDeleteAll(mChildObjects);
+   mChildObjects.clear();
 
-   DELETE( mpChildObjects );
    mpInformationFormat = nullptr;
 
    if ( nullptr != mpParent )
@@ -105,10 +99,7 @@ IParent* CInformationElement::getParent( void )
 void CInformationElement::removeChild( CInformationElement* pChild )
 // -------------------------------------------------------------------------------
 {
-   if ( nullptr == mpChildObjects )
-      return;
-
-   mpChildObjects->removeAll( pChild );
+   mChildObjects.removeAll( pChild );
    delete pChild;
 }
 
@@ -160,10 +151,10 @@ bool CInformationElement::isBatched( void ) const
 void CInformationElement::addChild( CInformationElement* pElement )
 // -------------------------------------------------------------------------------
 {
-   if ( (nullptr == pElement) || (nullptr == mpChildObjects) )
+   if ( nullptr == pElement )
       return;
 
-   mpChildObjects->append( pElement );
+   mChildObjects.append( pElement );
    // If subtree color is set, set it for this node too
    if(msubtreeTextColor != Qt::black)
 	   pElement->setSubTreeTextColor(msubtreeTextColor);
@@ -174,16 +165,13 @@ void CInformationElement::addChild( CInformationElement* pElement )
 QList<CInformationElement*>* CInformationElement::getChildren( void )
 // -------------------------------------------------------------------------------
 {
-  return mpChildObjects;
+  return &mChildObjects;
 }
 // -------------------------------------------------------------------------------
 int CInformationElement::childCount( void ) const
 // -------------------------------------------------------------------------------
 {
-   if ( nullptr == mpChildObjects )
-      return 0;
-
-   return mpChildObjects->count();
+   return mChildObjects.count();
 }
 
 
@@ -272,10 +260,7 @@ QString CInformationElement::getTreeString( int tab ) const
   QString result = Strings::spaces(tab)+mDescription+"\n";
   tab++;
 
-  if ( nullptr == mpChildObjects )
-    return result;
-
-  for (CInformationElement* x : *mpChildObjects) {
+  for (CInformationElement* x : mChildObjects) {
     result += x->getTreeString(tab);
   }
 
@@ -304,7 +289,7 @@ void CInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 
 
   // add children
-  for (CInformationElement* x : *mpChildObjects) {
+  for (CInformationElement* x : mChildObjects) {
     x->toXML(xmlDocument, thisElement);
   }
 
@@ -316,7 +301,7 @@ void CInformationElement::toXML( QDomDocument xmlDocument, QDomNode parent )
 CInformationElement* CInformationElement::findChildWithDescription( QString desc )
 // -------------------------------------------------------------------------------
 {
-  for (CInformationElement* x : *mpChildObjects) {
+  for (CInformationElement* x : mChildObjects) {
     if (x->getDescription() == desc)
       return x;
   }
@@ -351,7 +336,7 @@ void CInformationElement::search( QString pattern, bool recursive, bool caseSens
   // if recursive -> do so
   if (recursive)
   {
-    for (CInformationElement* x : *mpChildObjects) {
+    for (CInformationElement* x : mChildObjects) {
       x->search( pattern, true, caseSensitive, SearchOnlyTitles, list,
                  nSkippedEncrypted );
     }
@@ -580,7 +565,7 @@ void CInformationElement::enableEncryptionForElementTree(QString& password)
 	enableEncryption(true, password);
 
 	// Go through all children and call the same function for them.
-	for (CInformationElement* x : *mpChildObjects) {
+	for (CInformationElement* x : mChildObjects) {
     	x->enableEncryptionForElementTree(password);
 	}
 }
@@ -593,7 +578,7 @@ void CInformationElement::disableEncryptionForElementTree()
 	enableEncryption(false, QString(""));
 
 	// Go through all children and call the same function for them.
-	for (CInformationElement* x : *mpChildObjects) {
+	for (CInformationElement* x : mChildObjects) {
     	x->disableEncryptionForElementTree();
 	}
 }
@@ -606,7 +591,7 @@ bool CInformationElement::checkEncryptionForElementTree()
 		return true;
 
 	// Go through all children and call the same function for them.
-	for (CInformationElement* x : *mpChildObjects) {
+	for (CInformationElement* x : mChildObjects) {
     	if (x->checkEncryptionForElementTree())
     		return true;
 	}
@@ -620,7 +605,7 @@ bool CInformationElement::firstEncryptedBlob(QByteArray& out) const
       out = mEncryptedData;
       return true;
    }
-   for ( const CInformationElement* x : *mpChildObjects ) {
+   for ( const CInformationElement* x : mChildObjects ) {
       if ( x->firstEncryptedBlob(out) )
          return true;
    }
@@ -642,7 +627,7 @@ bool CInformationElement::decryptTree(QString password)
 	}
 
 	// Go through all children and call the same function for them.
-	for (CInformationElement* x : *mpChildObjects) {
+	for (CInformationElement* x : mChildObjects) {
 		if (x->isCurrentlyEncrypted()) {
 	    	bCorrectPasswd = x->decryptTree(password);
 			if (!bCorrectPasswd)
@@ -671,7 +656,7 @@ void CInformationElement::setSubTreeTextColor(QColor& c)
 	msubtreeTextColor = mtextColor = c;
 
 	// Go through all children and call the same function for them.
-	for (CInformationElement* x : *mpChildObjects) {
+	for (CInformationElement* x : mChildObjects) {
     	x->setSubTreeTextColor(c);
 	}
 }

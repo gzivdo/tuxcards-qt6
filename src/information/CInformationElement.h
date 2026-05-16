@@ -162,7 +162,10 @@ protected:
   QPixmap             mIcon;
   QString             mIconFilename;
 
-  QList<CInformationElement*>* mpChildObjects;
+  // Owns its children: qDeleteAll(mChildObjects) in dtor and explicit
+  // delete in removeChild() — QList<T*> stores raw pointers and does
+  // not own them.
+  QList<CInformationElement*> mChildObjects;
 
   int                 miInformationYPos;
 
