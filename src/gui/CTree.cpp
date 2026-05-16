@@ -140,6 +140,8 @@ void CTree::settingUpContextMenu( void )
   mContextMenu.addSeparator();
   mContextMenu.addAction( getIcon("upArrow"),        "Move Entry Upwards",   this, SLOT(moveElementUp()) );
   mContextMenu.addAction( getIcon("downArrow"),      "Move Entry Downwards", this, SLOT(moveElementDown()) );
+  mContextMenu.addSeparator();
+  mContextMenu.addAction( "Add to &Bookmarks",                                this, SLOT(addEntryToBookmarks()) );
 }
 
 void CTree::currentItemChangedSlot( QTreeWidgetItem* pItem, QTreeWidgetItem* /*previous*/ )

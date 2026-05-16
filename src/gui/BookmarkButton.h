@@ -30,6 +30,8 @@ public:
   BookmarkButton(QPixmap pixmap, QString text, QWidget* parent, Path aPath);
   ~BookmarkButton();
 
+  const Path& getPath() const { return *path; }
+
 private slots:
   void sendActivateSignal();
 

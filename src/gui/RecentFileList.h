@@ -3,6 +3,7 @@
                              -------------------
     begin                : Sun Feb 09 2003
     copyright            : (C) 2003 by Alexander Theel
+                           (Qt6 port adapted from TuxCards 2.2.1)
     email                : alex.theel@gmx.net
  ***************************************************************************/
 
@@ -18,42 +19,64 @@
 #ifndef RECENTFILELIST_H
 #define RECENTFILELIST_H
 
-#include <QMenu>
-#include <QAction>
-//Added by qt3to4:
-#include <QActionGroup>
+#include <QObject>
+#include <QStringList>
+#include <QList>
 
+class QMenu;
+class QComboBox;
+class QAction;
+class QWidget;
+
+
+/**
+ * Recent file list — keeps a small history of recently opened files
+ * and exposes them as a "Recently Used Files" sub-menu (and optionally
+ * as a QComboBox).
+ *
+ * Adapted from TuxCards 2.2.1: the menu items are pre-created as hidden
+ * QActions and merely made visible when a file is added — same QAction
+ * objects are reused, no live churn while the menu is open.
+ */
 class RecentFileList : public QObject {
-  Q_OBJECT
+   Q_OBJECT
 public:
-  RecentFileList(QWidget* parent, QMenu* menu, QString files="");
-  
-  void setOnTop(QString absPath);
+   RecentFileList( QWidget* pParent, QMenu* pParentMenu, const QString& sFiles = "" );
 
-  QString toString();
+   void    setOnTop( const QString& sAbsPath );
+
+   void    createComboBox( QWidget& parentWidget );
+
+   QString toString() const;
 
 private:
-  QWidget* parent;
-  QMenu* menu;
-  QStringList fileList;
-  QActionGroup * recentFileGroup;
-  QMenu* recentlyFilesMenu;
+   QMenu*       mpParentMenu;
+   QStringList  mFileList;
 
-  static /*const*/ QString separator;
-  static /*const*/ uint MAX_ELEMENT_COUNT;
+   QMenu*       mpRecentlyFilesMenu;
+   QComboBox*   mpComboBox;
 
-  void setList(QString files);
-  void checkSize();
-  void update();
-  void updateMenu();
-  
-  void remove(QString absPath);
+   static const QString SEPARATOR;
+   static const int     MAX_ELEMENT_COUNT;
+
+   QList<QAction*> mRecentFileActs;
+
+   void createActions( QWidget* pParent );
+
+   void setList( const QString& sFiles );
+   void checkSize();
+   void update();
+   void updateMenu();
+   void updateComboBox();
+
+   void remove( const QString& sAbsPath );
 
 private slots:
-  void slotRecenlyOpenedFilesActivated( QAction* action );
-  
+   void slotOpenRecentFile();
+   void slotComboActivated( int idx );
+
 signals:
-  void openFile(QString fileName);
+   void openFile( QString sFileName );
 };
 
 #endif

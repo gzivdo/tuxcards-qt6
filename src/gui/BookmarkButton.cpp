@@ -23,7 +23,7 @@
 // -------------------------------------------------------------------------------
 BookmarkButton::BookmarkButton(QPixmap pixmap, QString text, QWidget* parent,
                                Path aPath)
- :QPushButton(pixmap, text, parent)
+ :QPushButton(QIcon(pixmap), text, parent)
 // -------------------------------------------------------------------------------
 {
   this->path = new Path(aPath.toString());

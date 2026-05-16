@@ -140,7 +140,7 @@ MainWindow::MainWindow(QString arg)
    settingUpMenu();
    settingUpToolBar();
    settingUpStatusBar();
-//  settingUpQuickLoader();
+   settingUpQuickLoader();
 
    // create optionsDialog
    mpOptionsDialog = new OptionsDialog( this, mConfiguration );
@@ -618,41 +618,74 @@ void MainWindow::settingUpToolBar( void )
 
 // -------------------------------------------------------------------------------
 void MainWindow::settingUpQuickLoader( void )
-// -------------------------------------------------------------------------------
 {
-   mpQuickLoader = new QToolBar(this);
+   mpQuickLoader = addToolBar(tr("Bookmarks"));
+   mpQuickLoader->setIconSize(QSize(16,16));
+   mpQuickLoader->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+   addToolBar(Qt::BottomToolBarArea, mpQuickLoader);
    checkPointer( mpQuickLoader );
+
+   // Reload persisted bookmarks (comma-separated string of paths)
+   QString sStored = mConfiguration.getStringValue( CTuxCardsConfiguration::S_BOOKMARKS );
+   if ( !sStored.isEmpty() ) {
+      for ( const QString& sPath : sStored.split('\n', Qt::SkipEmptyParts) ) {
+         Path p( sPath );
+         QString label = p.getPathList().isEmpty() ? sPath : p.getPathList().last();
+         BookmarkButton* b = new BookmarkButton(
+                  QPixmap(), label,
+                  mpQuickLoader, p );
+         mpQuickLoader->addWidget( b );
+         connect( b, SIGNAL(activatedSignal(Path*)), this, SLOT(quicklyLoad(Path*)) );
+      }
+   }
+}
+
+
+// Persist the current bookmark bar buttons to config.
+static QString collectBookmarkPaths( QToolBar* tb )
+{
+   QStringList paths;
+   if ( !tb ) return QString();
+   const auto children = tb->findChildren<BookmarkButton*>();
+   for ( BookmarkButton* b : children ) {
+      Path p = b->getPath();
+      paths << p.toString();
+   }
+   return paths.join('\n');
 }
 
 
 /**
  * Adds the currently active element to the bookmark list.
  */
-// -------------------------------------------------------------------------------
 void MainWindow::addElementToBookmarksEvent( void )
-// -------------------------------------------------------------------------------
 {
-   if ( NULLPTR == mpCollection )
+   if ( NULLPTR == mpCollection || NULLPTR == mpQuickLoader )
       return;
 
    CInformationElement* pElement = mpCollection->getActiveElement();
    if ( NULLPTR == pElement )
       return;
 
-   BookmarkButton* b = new BookmarkButton( QPixmap( pElement->getIconFileName() ),
-                                           pElement->getDescription(), mpQuickLoader,
-                                           Path( pElement ) );
+   BookmarkButton* b = new BookmarkButton(
+            QPixmap( pElement->getIconFileName() ),
+            pElement->getDescription(), mpQuickLoader,
+            Path( pElement ) );
+   mpQuickLoader->addWidget( b );
    connect( b, SIGNAL(activatedSignal(Path*)), this, SLOT(quicklyLoad(Path*)) );
+
+   mConfiguration.setStringValue( CTuxCardsConfiguration::S_BOOKMARKS,
+                                  collectBookmarkPaths(mpQuickLoader) );
+   if (mbStartupDone)
+      mConfiguration.saveToFile();
 }
 
 
-// -------------------------------------------------------------------------------
 void MainWindow::quicklyLoad(Path* path)
-// -------------------------------------------------------------------------------
 {
-   std::cout<<"load quickly "<<path->toString().toStdString() <<std::endl;
-//  save();
-//  open();
+   if ( !path || !mpCollection )
+      return;
+   mpCollection->setActiveElement( *path );
 }
 
 

@@ -83,6 +83,8 @@ void CTuxCardsConfiguration::readConfigurationFile()
    mStringMap[S_VERTICAL_TEXT]      = parser.readEntry   ("Vertical_Text",      "");
    mBoolMap  [B_ALIGN_VTEXT]        = parser.readNumEntry("Align_Vertical_Text", 0);
 
+   mStringMap[S_BOOKMARKS]          = parser.readEntry("Bookmarks", "");
+
    mStringMap[S_ICON_DIR]           = parser.readEntry("Icon_Dir", "/usr/local/tuxcards/icons");
 
    QString FONT_family              = parser.readEntry("Font_Family",  "Helvetica");
@@ -157,6 +159,8 @@ void CTuxCardsConfiguration::saveToFile()
   p.changeEntry("Enable_V_Text",       (int)mBoolMap  [B_IS_VTEXT_ENABLED]);
   p.changeEntry("Vertical_Text",            mStringMap [S_VERTICAL_TEXT]);
   p.changeEntry("Align_Vertical_Text", (int)mBoolMap  [B_ALIGN_VTEXT]);
+
+  p.changeEntry("Bookmarks",                mStringMap [S_BOOKMARKS]);
 
   p.changeEntry("Icon_Dir",                 mStringMap[S_ICON_DIR]          );
 

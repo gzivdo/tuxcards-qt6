@@ -61,7 +61,9 @@ public:
 
     S_TEXT_ONE,
     S_TEXT_TWO,
-    S_VERTICAL_TEXT
+    S_VERTICAL_TEXT,
+
+    S_BOOKMARKS
   };
   QString getStringValue( eStringValue eKey ) const;
   void    setStringValue( eStringValue eKey, const QString& sValue );
