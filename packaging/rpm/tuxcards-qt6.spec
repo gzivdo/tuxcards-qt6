@@ -1,3 +1,9 @@
+# GUI app — debug symbols are not useful enough to ship a separate
+# 3 MB -debuginfo (plus the empty -debugsource) sub-package. Users
+# who want a debug build should just configure with -DCMAKE_BUILD_TYPE=
+# Debug from source.
+%global debug_package %{nil}
+
 Name:           tuxcards-qt6
 Version:        3.1.0
 Release:        1%{?dist}
