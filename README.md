@@ -1,5 +1,9 @@
 # TuxCards (Qt6 port)
 
+[![Build](https://github.com/gzivdo/tuxcards-qt6/actions/workflows/build.yml/badge.svg)](https://github.com/gzivdo/tuxcards-qt6/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/gzivdo/tuxcards-qt6)](https://github.com/gzivdo/tuxcards-qt6/releases)
+[![License](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](COPYING)
+
 Hierarchical note-taking application for Linux, Windows and macOS.
 A tree-based journal / personal wiki with rich-text editing, optional
 Blowfish file encryption, HTML export and sub-tree color tags.

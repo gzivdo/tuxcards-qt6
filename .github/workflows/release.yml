@@ -1,0 +1,139 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  linux:
+    name: Linux ${{ matrix.kind }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [tarball, deb]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt6-base-dev qt6-base-dev-tools qmake6 \
+                                  libqt6core5compat6-dev qt6-tools-dev \
+                                  build-essential libssl-dev cmake \
+                                  devscripts debhelper
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Package — tarball (portable)
+        if: matrix.kind == 'tarball'
+        run: |
+          VER=${GITHUB_REF#refs/tags/v}
+          mkdir -p out/tuxcards-qt6-${VER}-linux-x86_64
+          cp build/tuxcards   out/tuxcards-qt6-${VER}-linux-x86_64/
+          cp README.md INSTALL.md COPYING CHANGES \
+             out/tuxcards-qt6-${VER}-linux-x86_64/
+          tar -C out -cJf tuxcards-qt6-${VER}-linux-x86_64.tar.xz \
+              tuxcards-qt6-${VER}-linux-x86_64
+
+      - name: Package — .deb
+        if: matrix.kind == 'deb'
+        run: |
+          cp -r packaging/debian ./debian
+          dpkg-buildpackage -us -uc -b
+          mv ../tuxcards-qt6_*.deb .
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            tuxcards-qt6-*-linux-x86_64.tar.xz
+            tuxcards-qt6_*.deb
+          fail_on_unmatched_files: false
+
+  rpm:
+    name: Linux .rpm (Fedora)
+    runs-on: ubuntu-24.04
+    container: fedora:40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          dnf install -y rpmdevtools qt6-qtbase-devel qt6-qt5compat-devel \
+                         qt6-qttools-devel gcc-c++ make cmake openssl-devel \
+                         git tar
+      - name: Build RPM
+        run: |
+          VER=${GITHUB_REF#refs/tags/v}
+          rpmdev-setuptree
+          sed -i "s/^Version:.*/Version:        ${VER}/" packaging/rpm/tuxcards-qt6.spec
+          tar czf ~/rpmbuild/SOURCES/tuxcards-qt6-${VER}.tar.gz \
+                  --transform "s,^,tuxcards-qt6-${VER}/," \
+                  --exclude='.git*' --exclude='build*' .
+          cp packaging/rpm/tuxcards-qt6.spec ~/rpmbuild/SPECS/
+          rpmbuild -ba ~/rpmbuild/SPECS/tuxcards-qt6.spec
+          mkdir -p out && cp ~/rpmbuild/RPMS/x86_64/tuxcards-qt6-*.rpm out/
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.rpm
+          fail_on_unmatched_files: false
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'
+          modules: 'qt5compat'
+          cache: true
+      - name: Install OpenSSL
+        run: choco install -y openssl
+      - name: Configure
+        shell: cmd
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        shell: cmd
+        run: cmake --build build --config Release --parallel
+      - name: windeployqt + zip
+        shell: cmd
+        run: |
+          set VER=%GITHUB_REF:refs/tags/v=%
+          mkdir dist\tuxcards-qt6-%VER%-windows-x64
+          copy build\Release\tuxcards.exe dist\tuxcards-qt6-%VER%-windows-x64\
+          windeployqt dist\tuxcards-qt6-%VER%-windows-x64\tuxcards.exe
+          powershell -Command "Compress-Archive -Path dist\tuxcards-qt6-%VER%-windows-x64 -DestinationPath tuxcards-qt6-%VER%-windows-x64.zip"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: tuxcards-qt6-*-windows-x64.zip
+          fail_on_unmatched_files: false
+
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'
+          modules: 'qt5compat'
+          cache: true
+      - name: Install OpenSSL
+        run: brew install openssl@3
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --parallel
+      - name: macdeployqt + DMG
+        run: |
+          VER=${GITHUB_REF#refs/tags/v}
+          macdeployqt build/tuxcards.app -dmg
+          mv build/tuxcards.dmg tuxcards-qt6-${VER}-macos.dmg
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: tuxcards-qt6-*-macos.dmg
+          fail_on_unmatched_files: false
