@@ -81,6 +81,7 @@ SearchDialog::SearchDialog( QWidget* pParent )
    list->setColumnWidth(1, 400);
    list->setSortingEnabled(false);
    list->setRootIsDecorated(false);
+   list->setItemDelegateForColumn(0, new SearchHighlightDelegate(list));
    list->setItemDelegateForColumn(1, new SearchHighlightDelegate(list));
    root->addWidget(list, 1);
 

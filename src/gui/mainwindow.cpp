@@ -104,6 +104,7 @@ MainWindow::MainWindow(QString arg)
  , miMainToolBarID( 0 )
  , miEntryToolBarID( 0 )
  , miEditorToolBarID( 0 )
+ , mbStartupDone( false )
 // -------------------------------------------------------------------------------
 {
    checkFirstTime();
@@ -176,6 +177,10 @@ MainWindow::MainWindow(QString arg)
    	// For empty datafile entry in the .tuxcards config file
    	clearAll();
    }
+
+  // After this point any setX*ToolbarVisible() call is treated as
+  // a user action and persists the change.
+  mbStartupDone = true;
 
   // show the completed window
   show();
@@ -1751,19 +1756,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 }
 
 
-// -------------------------------------------------------------------------------
-void MainWindow::toggleMainToolbarVisability()
-// -------------------------------------------------------------------------------
-{
-   bool bValue = mConfiguration.getBoolValue( CTuxCardsConfiguration::B_SHOW_MAIN_TOOLBAR );
-   bValue = !bValue;
-
-   setMainToolbarVisible( bValue );
-   mConfiguration.saveToFile();
-}
-// -------------------------------------------------------------------------------
 void MainWindow::setMainToolbarVisible( bool bVisible )
-// -------------------------------------------------------------------------------
 {
    mConfiguration.setBoolValue( CTuxCardsConfiguration::B_SHOW_MAIN_TOOLBAR, bVisible );
 
@@ -1772,22 +1765,12 @@ void MainWindow::setMainToolbarVisible( bool bVisible )
       if (bVisible) mpMainTools->show();
       else mpMainTools->hide();
    }
+   if (mbStartupDone)
+      mConfiguration.saveToFile();
 }
 
 
-// -------------------------------------------------------------------------------
-void MainWindow::toggleEntryToolbarVisability()
-// -------------------------------------------------------------------------------
-{
-   bool bValue = mConfiguration.getBoolValue( CTuxCardsConfiguration::B_SHOW_ENTRY_TOOLBAR );
-   bValue = !bValue;
-
-   setEntryToolbarVisible( bValue );
-   mConfiguration.saveToFile();
-}
-// -------------------------------------------------------------------------------
 void MainWindow::setEntryToolbarVisible( bool bVisible )
-// -------------------------------------------------------------------------------
 {
    mConfiguration.setBoolValue( CTuxCardsConfiguration::B_SHOW_ENTRY_TOOLBAR, bVisible );
 
@@ -1796,21 +1779,12 @@ void MainWindow::setEntryToolbarVisible( bool bVisible )
       if (bVisible) mpEntryTools->show();
       else mpEntryTools->hide();
    }
+   if (mbStartupDone)
+      mConfiguration.saveToFile();
 }
 
-// -------------------------------------------------------------------------------
-void MainWindow::toggleEditorToolbarVisability()
-// -------------------------------------------------------------------------------
-{
-   bool bValue = mConfiguration.getBoolValue( CTuxCardsConfiguration::B_SHOW_EDITOR_TOOLBAR );
-   bValue = !bValue;
 
-   setEditorToolbarVisible( bValue );
-   mConfiguration.saveToFile();
-}
-// -------------------------------------------------------------------------------
 void MainWindow::setEditorToolbarVisible( bool bVisible )
-// -------------------------------------------------------------------------------
 {
    mConfiguration.setBoolValue( CTuxCardsConfiguration::B_SHOW_EDITOR_TOOLBAR, bVisible );
 
@@ -1819,6 +1793,8 @@ void MainWindow::setEditorToolbarVisible( bool bVisible )
       if (bVisible) mpEditorTools->show();
       else mpEditorTools->hide();
    }
+   if (mbStartupDone)
+      mConfiguration.saveToFile();
 }
 
 // -------------------------------------------------------------------------------

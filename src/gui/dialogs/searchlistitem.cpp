@@ -27,11 +27,11 @@ SearchListItem::SearchListItem(QTreeWidget *parent, Path* path, int location,
     QString content = (location == SearchPosition::SP_NAME) ? QString("") : s;
     setText(1, content);
 
-    // Carry match position so SearchHighlightDelegate can render it bold.
-    if (location != SearchPosition::SP_NAME) {
-        setData(1, Qt::UserRole + 1, pos);
-        setData(1, Qt::UserRole + 2, len);
-    }
+    // Carry match position so SearchHighlightDelegate can render it bold
+    // in whichever column the match actually is.
+    int col = (location == SearchPosition::SP_NAME) ? 0 : 1;
+    setData(col, Qt::UserRole + 1, pos);
+    setData(col, Qt::UserRole + 2, len);
 
     searchPosition = new SearchPosition(path, location, line, pos, len, s);
 }

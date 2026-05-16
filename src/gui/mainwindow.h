@@ -92,6 +92,7 @@ private:
                                 //     whenever we want to
 
   bool    CHANGES;              // states whether or not -> changes are done (for saving)
+  bool    mbStartupDone;        // true after applyConfiguration() — guards init-time writes to disk
 
   int     TIMER_ID;
 
@@ -204,10 +205,6 @@ private slots:
 
   void activeInformationElementChanged(CInformationElement*);
 
-
-  void toggleMainToolbarVisability();
-  void toggleEntryToolbarVisability();
-  void toggleEditorToolbarVisability();
 
   void setMainToolbarVisible( bool bVisible );
   void setEntryToolbarVisible( bool bVisible );
