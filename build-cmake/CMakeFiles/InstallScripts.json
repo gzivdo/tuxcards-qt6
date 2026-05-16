@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/root/tuxcards/tuxcards/build-cmake/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

@@ -1,9 +1,0 @@
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/tuxcards.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/edit_cache.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/rebuild_cache.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/list_install_components.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/install.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/install/local.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/install/strip.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/tuxcards_autogen_timestamp_deps.dir
-/root/tuxcards/tuxcards/build-cmake/CMakeFiles/tuxcards_autogen.dir
