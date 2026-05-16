@@ -527,707 +527,722 @@ Do you want to change this?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="329"/>
-        <location filename="../src/gui/mainwindow.cpp" line="352"/>
+        <location filename="../src/gui/mainwindow.cpp" line="330"/>
+        <location filename="../src/gui/mainwindow.cpp" line="353"/>
         <source>Not saved</source>
         <translation>Nicht gespeichert</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="347"/>
+        <location filename="../src/gui/mainwindow.cpp" line="348"/>
         <source>Unsaved changes</source>
         <translation>Ungespeicherte Änderungen</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="358"/>
+        <location filename="../src/gui/mainwindow.cpp" line="359"/>
         <source>Saved just now</source>
         <translation>Gerade gespeichert</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="359"/>
+        <location filename="../src/gui/mainwindow.cpp" line="360"/>
         <source>Saved %1s ago</source>
         <translation>Gespeichert vor %1 s</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="360"/>
+        <location filename="../src/gui/mainwindow.cpp" line="361"/>
         <source>Saved %1m ago</source>
         <translation>Gespeichert vor %1 min</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="361"/>
+        <location filename="../src/gui/mainwindow.cpp" line="362"/>
         <source>Saved %1h ago</source>
         <translation>Gespeichert vor %1 h</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="368"/>
+        <location filename="../src/gui/mainwindow.cpp" line="369"/>
         <source>Toggle file &amp;encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="373"/>
+        <location filename="../src/gui/mainwindow.cpp" line="374"/>
         <source>&amp;Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="378"/>
+        <location filename="../src/gui/mainwindow.cpp" line="379"/>
         <source>&amp;Redo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="383"/>
+        <location filename="../src/gui/mainwindow.cpp" line="384"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="388"/>
+        <location filename="../src/gui/mainwindow.cpp" line="389"/>
         <source>Set &amp;Entry Color...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="392"/>
+        <location filename="../src/gui/mainwindow.cpp" line="393"/>
         <source>Set Entry &amp;Sub-Tree Color...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="401"/>
+        <location filename="../src/gui/mainwindow.cpp" line="402"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="402"/>
+        <location filename="../src/gui/mainwindow.cpp" line="403"/>
         <source>&amp;New File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="403"/>
+        <location filename="../src/gui/mainwindow.cpp" line="404"/>
         <source>&amp;Open File...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="404"/>
+        <location filename="../src/gui/mainwindow.cpp" line="405"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="405"/>
+        <location filename="../src/gui/mainwindow.cpp" line="406"/>
         <source>Save &amp;As...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="406"/>
+        <location filename="../src/gui/mainwindow.cpp" line="407"/>
         <source>&amp;Print current entry...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="418"/>
+        <location filename="../src/gui/mainwindow.cpp" line="419"/>
         <source>Export to &amp;HTML...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="419"/>
+        <location filename="../src/gui/mainwindow.cpp" line="420"/>
         <source>Export current entry to &amp;Markdown...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="420"/>
+        <location filename="../src/gui/mainwindow.cpp" line="421"/>
         <source>Import &amp;Markdown into current entry...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="422"/>
+        <location filename="../src/gui/mainwindow.cpp" line="423"/>
         <source>&amp;Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="425"/>
+        <location filename="../src/gui/mainwindow.cpp" line="426"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="432"/>
+        <location filename="../src/gui/mainwindow.cpp" line="433"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="434"/>
+        <location filename="../src/gui/mainwindow.cpp" line="435"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="436"/>
+        <location filename="../src/gui/mainwindow.cpp" line="437"/>
         <source>Select &amp;All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="439"/>
-        <source>&amp;Bold</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/mainwindow.cpp" line="440"/>
-        <source>&amp;Italic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/gui/mainwindow.cpp" line="441"/>
-        <source>&amp;Underline</source>
+        <source>&amp;Find...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="442"/>
-        <source>&amp;Color...</source>
+        <location filename="../src/gui/mainwindow.cpp" line="445"/>
+        <source>R&amp;eplace...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/mainwindow.cpp" line="449"/>
+        <source>Search in &amp;Tree...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="461"/>
+        <source>&amp;Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="462"/>
+        <source>&amp;Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="463"/>
+        <source>&amp;Underline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="464"/>
+        <source>&amp;Color...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="471"/>
         <source>Insert &amp;Image...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="450"/>
+        <location filename="../src/gui/mainwindow.cpp" line="472"/>
         <source>Insert Current &amp;Date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="451"/>
+        <location filename="../src/gui/mainwindow.cpp" line="473"/>
         <source>Insert Current T&amp;ime</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="453"/>
+        <location filename="../src/gui/mainwindow.cpp" line="475"/>
         <source>&amp;Options...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="456"/>
+        <location filename="../src/gui/mainwindow.cpp" line="478"/>
         <source>Toolbars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="457"/>
+        <location filename="../src/gui/mainwindow.cpp" line="479"/>
         <source>Show Main Toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="458"/>
+        <location filename="../src/gui/mainwindow.cpp" line="480"/>
         <source>Show Entry Manipulation Toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="459"/>
+        <location filename="../src/gui/mainwindow.cpp" line="481"/>
         <source>Show Editor Toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="470"/>
+        <location filename="../src/gui/mainwindow.cpp" line="492"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="472"/>
+        <location filename="../src/gui/mainwindow.cpp" line="494"/>
         <source>&amp;Word Count</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="474"/>
+        <location filename="../src/gui/mainwindow.cpp" line="496"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="475"/>
+        <location filename="../src/gui/mainwindow.cpp" line="497"/>
         <source>&amp;Keyboard Shortcuts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="477"/>
+        <location filename="../src/gui/mainwindow.cpp" line="499"/>
         <source>About TuxCards</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="493"/>
+        <location filename="../src/gui/mainwindow.cpp" line="515"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="497"/>
+        <location filename="../src/gui/mainwindow.cpp" line="519"/>
         <source>Create a new file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="499"/>
+        <location filename="../src/gui/mainwindow.cpp" line="521"/>
         <source>Open a new file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="500"/>
+        <location filename="../src/gui/mainwindow.cpp" line="522"/>
         <source>Save current file (Ctrl+S)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="501"/>
+        <location filename="../src/gui/mainwindow.cpp" line="523"/>
         <source>Print current entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="509"/>
+        <location filename="../src/gui/mainwindow.cpp" line="531"/>
         <source>Cut (Ctrl+X)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="511"/>
+        <location filename="../src/gui/mainwindow.cpp" line="533"/>
         <source>Paste (Ctrl+V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="521"/>
+        <location filename="../src/gui/mainwindow.cpp" line="543"/>
         <source>&lt;b&gt;Clear whole Tree&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="522"/>
+        <location filename="../src/gui/mainwindow.cpp" line="544"/>
         <source>&lt;b&gt;Open a new File&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="523"/>
+        <location filename="../src/gui/mainwindow.cpp" line="545"/>
         <source>&lt;b&gt;Save Data to File&lt;/b&gt; (Ctrl+S)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="524"/>
+        <location filename="../src/gui/mainwindow.cpp" line="546"/>
         <source>&lt;b&gt;Print current Entry&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="525"/>
+        <location filename="../src/gui/mainwindow.cpp" line="547"/>
         <source>&lt;b&gt;Undo&lt;/b&gt; (Ctrl+Z)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="526"/>
+        <location filename="../src/gui/mainwindow.cpp" line="548"/>
         <source>&lt;b&gt;Redo&lt;/b&gt; (Ctrl+Y)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="527"/>
+        <location filename="../src/gui/mainwindow.cpp" line="549"/>
         <source>&lt;b&gt;Cut&lt;/b&gt; (Ctrl+X)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="528"/>
+        <location filename="../src/gui/mainwindow.cpp" line="550"/>
         <source>&lt;b&gt;Copy&lt;/b&gt; (Ctrl+C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="529"/>
+        <location filename="../src/gui/mainwindow.cpp" line="551"/>
         <source>&lt;b&gt;Paste&lt;/b&gt; (Ctrl+V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="534"/>
+        <location filename="../src/gui/mainwindow.cpp" line="556"/>
         <source>Entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="538"/>
+        <location filename="../src/gui/mainwindow.cpp" line="560"/>
         <source>Converts the Text Format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="541"/>
+        <location filename="../src/gui/mainwindow.cpp" line="563"/>
         <source>Add Entry (INSERT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="542"/>
+        <location filename="../src/gui/mainwindow.cpp" line="564"/>
         <source>Change Properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="543"/>
+        <location filename="../src/gui/mainwindow.cpp" line="565"/>
         <source>Remove active Entry (DELETE)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="546"/>
+        <location filename="../src/gui/mainwindow.cpp" line="568"/>
         <source>Move Current Entry Upwards</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="547"/>
+        <location filename="../src/gui/mainwindow.cpp" line="569"/>
         <source>Move Current Entry Downwards</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="550"/>
+        <location filename="../src/gui/mainwindow.cpp" line="572"/>
         <source>Last Entry accessed in History (Alt+Left)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="552"/>
+        <location filename="../src/gui/mainwindow.cpp" line="574"/>
         <source>Next Entry in History (Alt+Right)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="555"/>
+        <location filename="../src/gui/mainwindow.cpp" line="577"/>
         <source>Text format toggle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="556"/>
+        <location filename="../src/gui/mainwindow.cpp" line="578"/>
         <source>&lt;b&gt;Add Entry&lt;/b&gt; (INSERT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="557"/>
+        <location filename="../src/gui/mainwindow.cpp" line="579"/>
         <source>&lt;b&gt;Change Property&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="558"/>
+        <location filename="../src/gui/mainwindow.cpp" line="580"/>
         <source>&lt;b&gt;Remove active Entry&lt;/b&gt; (DELETE)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="559"/>
+        <location filename="../src/gui/mainwindow.cpp" line="581"/>
         <source>&lt;b&gt;Move Up&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="560"/>
+        <location filename="../src/gui/mainwindow.cpp" line="582"/>
         <source>&lt;b&gt;Move Down&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="561"/>
+        <location filename="../src/gui/mainwindow.cpp" line="583"/>
         <source>&lt;b&gt;History, Back&lt;/b&gt; (Alt+Left)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="562"/>
+        <location filename="../src/gui/mainwindow.cpp" line="584"/>
         <source>&lt;b&gt;History, Forward&lt;/b&gt; (Alt+Right)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="566"/>
+        <location filename="../src/gui/mainwindow.cpp" line="588"/>
         <source>Editor</source>
         <translation type="unfinished">Editor</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="571"/>
+        <location filename="../src/gui/mainwindow.cpp" line="593"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="572"/>
+        <location filename="../src/gui/mainwindow.cpp" line="594"/>
         <source>Bullet List (Disc)</source>
         <translation>Aufzählung (Punkt)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="573"/>
+        <location filename="../src/gui/mainwindow.cpp" line="595"/>
         <source>Bullet List (Circle)</source>
         <translation>Aufzählung (Kreis)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="574"/>
+        <location filename="../src/gui/mainwindow.cpp" line="596"/>
         <source>Bullet List (Square)</source>
         <translation>Aufzählung (Quadrat)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="575"/>
+        <location filename="../src/gui/mainwindow.cpp" line="597"/>
         <source>Ordered List (Decimal)</source>
         <translation>Nummeriert (1, 2, 3)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="576"/>
+        <location filename="../src/gui/mainwindow.cpp" line="598"/>
         <source>Ordered List (Alpha lower)</source>
         <translation>Nummeriert (a, b, c)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="577"/>
+        <location filename="../src/gui/mainwindow.cpp" line="599"/>
         <source>Ordered List (Alpha upper)</source>
         <translation>Nummeriert (A, B, C)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="600"/>
+        <location filename="../src/gui/mainwindow.cpp" line="622"/>
         <source>Bold (Ctrl+B)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="603"/>
+        <location filename="../src/gui/mainwindow.cpp" line="625"/>
         <source>Italic (Ctrl+I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="606"/>
+        <location filename="../src/gui/mainwindow.cpp" line="628"/>
         <source>Underline (Ctrl+U)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="610"/>
+        <location filename="../src/gui/mainwindow.cpp" line="632"/>
         <source>Color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="614"/>
+        <location filename="../src/gui/mainwindow.cpp" line="636"/>
         <source>Align Left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="617"/>
+        <location filename="../src/gui/mainwindow.cpp" line="639"/>
         <source>Center</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="620"/>
+        <location filename="../src/gui/mainwindow.cpp" line="642"/>
         <source>Align Right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="623"/>
+        <location filename="../src/gui/mainwindow.cpp" line="645"/>
         <source>Text Block</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="626"/>
+        <location filename="../src/gui/mainwindow.cpp" line="648"/>
         <source>&lt;b&gt;Bold&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="627"/>
+        <location filename="../src/gui/mainwindow.cpp" line="649"/>
         <source>&lt;b&gt;Italic&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="628"/>
+        <location filename="../src/gui/mainwindow.cpp" line="650"/>
         <source>&lt;b&gt;Underline&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="629"/>
+        <location filename="../src/gui/mainwindow.cpp" line="651"/>
         <source>&lt;b&gt;Text Color&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="630"/>
+        <location filename="../src/gui/mainwindow.cpp" line="652"/>
         <source>&lt;b&gt;Align Left&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="631"/>
+        <location filename="../src/gui/mainwindow.cpp" line="653"/>
         <source>&lt;b&gt;Center&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="632"/>
+        <location filename="../src/gui/mainwindow.cpp" line="654"/>
         <source>&lt;b&gt;Align Right&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="633"/>
+        <location filename="../src/gui/mainwindow.cpp" line="655"/>
         <source>&lt;b&gt;Text Block&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="662"/>
+        <location filename="../src/gui/mainwindow.cpp" line="684"/>
         <source>Bookmarks</source>
         <translation>Lesezeichen</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="742"/>
-        <location filename="../src/gui/mainwindow.cpp" line="749"/>
+        <location filename="../src/gui/mainwindow.cpp" line="764"/>
+        <location filename="../src/gui/mainwindow.cpp" line="771"/>
         <source>Converter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="742"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1815"/>
+        <location filename="../src/gui/mainwindow.cpp" line="764"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1837"/>
         <source>There is no active entry.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="749"/>
+        <location filename="../src/gui/mainwindow.cpp" line="771"/>
         <source>Sorry, but converting RTF to ASCII is not implemented yet.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="755"/>
+        <location filename="../src/gui/mainwindow.cpp" line="777"/>
         <source>Converting Information Format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="756"/>
+        <location filename="../src/gui/mainwindow.cpp" line="778"/>
         <source>Are you sure to change the information format.
 Some of the text layout will be lost.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1101"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1460"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1123"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1482"/>
         <source>Would you like to save the current file?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1103"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1125"/>
         <source>New File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1103"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1125"/>
         <source>Create New File, closing current one?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1117"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1139"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1206"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1228"/>
         <source>Too many password attempts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1250"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1585"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1272"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1607"/>
         <source>TuxCards (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1292"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1314"/>
         <source>Do you want to save the current file before opening another?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1298"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1520"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1320"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1542"/>
         <source>No Filename specified.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1327"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1349"/>
         <source>Opening a data file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1328"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1350"/>
         <source>Could not open file &apos;%1&apos;&lt;br&gt; or did not recognize the dataformat.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1330"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1352"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1395"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1417"/>
         <source>ERROR could not open &apos;%1&apos; for reading.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1444"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1466"/>
         <source>TuxCards - XML I/O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1445"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1467"/>
         <source>ERROR could not open &apos;%1&apos; for reading or parse error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1545"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1567"/>
         <source>Saving</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1545"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1567"/>
         <source>File not saved.
 Please do not use &quot;%1&quot; as file name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1594"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1616"/>
         <source>Saved to &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1623"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1645"/>
         <source>Tuxcards File Encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1624"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1646"/>
         <source>About to remove encryption for current file.
  Would you like to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1648"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1670"/>
         <source>Current file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1667"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1689"/>
         <source>Export entry as Markdown</source>
         <translation>Eintrag als Markdown exportieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1669"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1691"/>
         <source>Markdown (*.md);;All files (*)</source>
         <translation>Markdown (*.md);;Alle Dateien (*)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1677"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1699"/>
         <source>Export</source>
         <translation>Exportieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1677"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1699"/>
         <source>Could not open %1 for writing.</source>
         <translation>Konnte %1 nicht zum Schreiben öffnen.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1682"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1704"/>
         <source>Exported to &apos;%1&apos;.</source>
         <translation>Exportiert nach „%1“.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1690"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1712"/>
         <source>Import Markdown into current entry</source>
         <translation>Markdown in aktuellen Eintrag importieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1692"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1714"/>
         <source>Markdown (*.md *.markdown);;All files (*)</source>
         <translation>Markdown (*.md *.markdown);;Alle Dateien (*)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1697"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1719"/>
         <source>Import</source>
         <translation>Importieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1697"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1719"/>
         <source>Could not open %1 for reading.</source>
         <translation>Konnte %1 nicht zum Lesen öffnen.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1707"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1729"/>
         <source>Imported from &apos;%1&apos;.</source>
         <translation>Importiert aus „%1“.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1723"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1745"/>
         <source>Choose a directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1734"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1741"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1756"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1763"/>
         <source>HTML-Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1734"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1756"/>
         <source>HTML&lt;em&gt;Export&lt;/em&gt; &lt;font size=-1&gt;(%1)&lt;/font&gt; finished, successfully.
 
 The data are stored in
@@ -1235,7 +1250,7 @@ The data are stored in
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1741"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1763"/>
         <source>HTML&lt;em&gt;Export&lt;/em&gt; &lt;font size=-1&gt;(%1)&lt;/font&gt; not successfully.
 
 Please check write permission and disk space
@@ -1243,22 +1258,22 @@ Please check write permission and disk space
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1745"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1767"/>
         <source>Abort</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1815"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1837"/>
         <source>WordCount</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1827"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1849"/>
         <source>&lt;center&gt;Current Entry contains&lt;br&gt;&lt;br&gt;%1 characters&lt;br&gt;%2 words&lt;br&gt;%3 lines&lt;br&gt;%4 paragraphs.&lt;/center&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1853"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1875"/>
         <source>TuxCards Keyboard shortcuts
 
 Common shortcuts:
@@ -1288,7 +1303,7 @@ Ctrl+B: Bold, Ctrl+I: Italic, Ctrl+U: Underline, Ctrl+A: Select all
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1886"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1908"/>
         <source>TuxCards - The Notebook for Linux
 %1
 
@@ -1305,78 +1320,78 @@ SideBar and PNG icons backported from TuxCards 2.2.1.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1933"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1955"/>
         <source>Save before exiting.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1934"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1956"/>
         <source>Do you want to save before leaving TuxCards?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1935"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1957"/>
         <source>Yes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1935"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1957"/>
         <source>No</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1169"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1191"/>
         <source>Unsupported encryption format</source>
         <translation>Nicht unterstütztes Verschlüsselungsformat</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="115"/>
-        <location filename="../src/gui/mainwindow.cpp" line="209"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1206"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1826"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1852"/>
-        <location filename="../src/gui/mainwindow.cpp" line="1885"/>
+        <location filename="../src/gui/mainwindow.cpp" line="116"/>
+        <location filename="../src/gui/mainwindow.cpp" line="210"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1228"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1848"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1874"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1907"/>
         <source>TuxCards</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="158"/>
+        <location filename="../src/gui/mainwindow.cpp" line="159"/>
         <source>Saving ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="209"/>
+        <location filename="../src/gui/mainwindow.cpp" line="210"/>
         <source>Not enough memory to run application.
 The program will be quit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="518"/>
+        <location filename="../src/gui/mainwindow.cpp" line="540"/>
         <source>Search across tree (Ctrl+Shift+F)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="530"/>
+        <location filename="../src/gui/mainwindow.cpp" line="552"/>
         <source>&lt;b&gt;Search across the entire tree&lt;/b&gt; (Ctrl+Shift+F).&lt;br/&gt;For an in-entry find/replace use Ctrl+F / Ctrl+H.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1159"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1181"/>
         <source>AES-256-GCM (OpenSSL backend)</source>
         <translation>AES-256-GCM (OpenSSL-Backend)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1162"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1184"/>
         <source>XChaCha20-Poly1305 (monocypher backend)</source>
         <translation>XChaCha20-Poly1305 (monocypher-Backend)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1165"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1187"/>
         <source>an unknown crypto backend</source>
         <translation>ein unbekanntes Crypto-Backend</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1170"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1192"/>
         <source>This file is encrypted with %1, but this build of TuxCards was compiled without that backend.
 
 Please download the full build (with both crypto backends) from the project releases page, or rebuild TuxCards with the matching backend enabled.</source>

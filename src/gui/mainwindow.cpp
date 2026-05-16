@@ -437,6 +437,27 @@ void MainWindow::settingUpMenu( void )
       edit->addAction(                       tr("Select &All"), mpEditor, SLOT(selectAll()), QKeySequence(Qt::CTRL | Qt::Key_A) );
 
       edit->addSeparator();
+      {
+         QAction* a = edit->addAction( tr("&Find..."), this, SLOT(editorFind()),
+                                       QKeySequence(Qt::CTRL | Qt::Key_F) );
+         a->setShortcutContext( Qt::WindowShortcut );
+
+         a = edit->addAction( tr("R&eplace..."), this, SLOT(editorReplace()),
+                              QKeySequence(Qt::CTRL | Qt::Key_H) );
+         a->setShortcutContext( Qt::WindowShortcut );
+
+         a = edit->addAction( getIcon("find"), tr("Search in &Tree..."),
+                              this, SLOT(search()) );
+         // Ctrl+Shift+F is the primary, F7 is the fallback for systems
+         // where Ctrl+Shift is already a global hotkey (e.g. the Linux
+         // keyboard-layout switcher) and the WM eats the combo before
+         // it reaches Qt.
+         a->setShortcuts({ QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F),
+                           QKeySequence(Qt::Key_F7) });
+         a->setShortcutContext( Qt::WindowShortcut );
+      }
+
+      edit->addSeparator();
       edit->addAction( tr("&Bold"),      this, SLOT(textBold()),   QKeySequence(Qt::CTRL | Qt::Key_B) );
       edit->addAction( tr("&Italic"),    this, SLOT(textItalic()), QKeySequence(Qt::CTRL | Qt::Key_I) );
       edit->addAction( tr("&Underline"), this, SLOT(textUnder()),  QKeySequence(Qt::CTRL | Qt::Key_U) );
