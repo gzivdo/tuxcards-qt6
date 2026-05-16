@@ -36,6 +36,8 @@
 #include <QScrollBar>
 #include <QFileDialog>
 #include <QPagedPaintDevice>
+#include <QTimer>
+#include <QDateTime>
 #include <QPrintDialog>
 #include <QTextBlock>
 #include <QTextCursor>
@@ -323,6 +325,41 @@ void MainWindow::settingUpStatusBar( void )
    mstatusBar_EncryptedLabel = new QLabel(" ", mpStatusBar );
    mstatusBar_EncryptedLabel->setFixedWidth(30);
    mpStatusBar->addPermanentWidget(mstatusBar_EncryptedLabel, 0);
+
+   mstatusBar_SaveIndicator = new QLabel( tr("Not saved"), mpStatusBar );
+   mstatusBar_SaveIndicator->setMinimumWidth(140);
+   mpStatusBar->addPermanentWidget(mstatusBar_SaveIndicator, 0);
+
+   mLastSaveEpochMs = 0;
+   mpSaveIndicatorTimer = new QTimer(this);
+   connect( mpSaveIndicatorTimer, &QTimer::timeout, this, &MainWindow::refreshSaveIndicator );
+   mpSaveIndicatorTimer->start( 1000 );
+}
+
+
+void MainWindow::refreshSaveIndicator( void )
+{
+   if ( !mstatusBar_SaveIndicator )
+      return;
+
+   if ( CHANGES )
+   {
+      mstatusBar_SaveIndicator->setText( tr("Unsaved changes") );
+      return;
+   }
+   if ( mLastSaveEpochMs == 0 )
+   {
+      mstatusBar_SaveIndicator->setText( tr("Not saved") );
+      return;
+   }
+
+   const qint64 dt = (QDateTime::currentMSecsSinceEpoch() - mLastSaveEpochMs) / 1000;
+   QString human;
+   if ( dt < 5 )       human = tr("Saved just now");
+   else if ( dt < 60 ) human = tr("Saved %1s ago").arg(dt);
+   else if ( dt < 3600 ) human = tr("Saved %1m ago").arg(dt/60);
+   else                human = tr("Saved %1h ago").arg(dt/3600);
+   mstatusBar_SaveIndicator->setText(human);
 }
 
 
@@ -378,7 +415,9 @@ void MainWindow::settingUpMenu( void )
    connect( mpRecentFiles, SIGNAL(openFile(QString)), this, SLOT(slotSaveAndLoadNewFile(QString)) );
 
    file->addSeparator();
-   file->addAction(                      "Export to &HTML...", this, SLOT(exportHTML()) );
+   file->addAction(                      "Export to &HTML...",     this, SLOT(exportHTML()) );
+   file->addAction(                      "Export current entry to &Markdown...", this, SLOT(exportEntryMarkdown()) );
+   file->addAction(                      "Import &Markdown into current entry...", this, SLOT(importEntryMarkdown()) );
    file->addSeparator();
    file->addAction( getIcon("exit"),     "&Exit", this, SLOT(exit()), QKeySequence(Qt::CTRL | Qt::Key_Q) );
 
@@ -1491,6 +1530,8 @@ void MainWindow::save(QString fileName)
 
    statusBar_ChangeLabel->setText(" ");
    CHANGES=false;
+   mLastSaveEpochMs = QDateTime::currentMSecsSinceEpoch();
+   refreshSaveIndicator();
    showMessage("Saved to '" + fileName + "'.", 5);
 
    callingExecutionStatement();
@@ -1559,6 +1600,54 @@ void MainWindow::toggleFileEncryption()
 	recognizeChanges();
 
 }
+
+void MainWindow::exportEntryMarkdown()
+{
+   if ( !mpCollection || !mpEditor || !mpCollection->getActiveElement() )
+      return;
+   QString fn = QFileDialog::getSaveFileName(this, tr("Export entry as Markdown"),
+                  QString(),
+                  tr("Markdown (*.md);;All files (*)"));
+   if ( fn.isEmpty() ) return;
+
+   mpEditor->writeCurrentTextToActiveInformationElement();
+   QString md = mpEditor->document()->toMarkdown();
+
+   QFile f(fn);
+   if ( !f.open(QIODevice::WriteOnly | QIODevice::Truncate) ) {
+      QMessageBox::warning(this, tr("Export"), tr("Could not open %1 for writing.").arg(fn));
+      return;
+   }
+   f.write(md.toUtf8());
+   f.close();
+   showMessage(tr("Exported to '%1'.").arg(fn), 5);
+}
+
+
+void MainWindow::importEntryMarkdown()
+{
+   if ( !mpCollection || !mpEditor || !mpCollection->getActiveElement() )
+      return;
+   QString fn = QFileDialog::getOpenFileName(this, tr("Import Markdown into current entry"),
+                  QString(),
+                  tr("Markdown (*.md *.markdown);;All files (*)"));
+   if ( fn.isEmpty() ) return;
+
+   QFile f(fn);
+   if ( !f.open(QIODevice::ReadOnly) ) {
+      QMessageBox::warning(this, tr("Import"), tr("Could not open %1 for reading.").arg(fn));
+      return;
+   }
+   QString md = QString::fromUtf8(f.readAll());
+   f.close();
+
+   mpEditor->setAcceptRichText(true);
+   mpEditor->document()->setMarkdown(md);
+   mpEditor->writeCurrentTextToActiveInformationElement();
+   recognizeChanges();
+   showMessage(tr("Imported from '%1'.").arg(fn), 5);
+}
+
 
 /**
  * opens the current file from disk and exports it to

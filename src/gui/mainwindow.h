@@ -87,6 +87,9 @@ private:
   QLabel*     statusBar_ChangeLabel;
   QLabel*     mstatusBar_EncryptedLabel;
   QLabel*     mstatusBar_NumElements;
+  QLabel*     mstatusBar_SaveIndicator;   // "Saved Xs ago" / "Unsaved"
+  class QTimer* mpSaveIndicatorTimer;
+  qint64      mLastSaveEpochMs;           // 0 means never saved this session
   QDialog*    showDialog;       // a dialog
   QLabel*     showLabel;        // the label of the 'show'-dialog, to change it
                                 //     whenever we want to
@@ -229,6 +232,8 @@ public slots:
   void saveAs();
   void toggleFileEncryption();
   void exportHTML();
+  void exportEntryMarkdown();
+  void importEntryMarkdown();
   void exit();
 
   void showKBShortcuts();
@@ -252,6 +257,7 @@ protected:
 
 protected slots:
   void recognizeChanges( void );                  // to keep track of changes
+  void refreshSaveIndicator( void );
 };
 
 #endif
