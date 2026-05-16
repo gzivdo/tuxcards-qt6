@@ -1,5 +1,5 @@
 /* XPM */
-static char * format_rtf_xpm[] = {
+static const char * format_rtf_xpm[] = {
 "22 22 284 2",
 "  	c None",
 ". 	c #938775",
