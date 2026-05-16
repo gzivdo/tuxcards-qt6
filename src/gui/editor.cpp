@@ -23,6 +23,8 @@
 #include <QScrollBar>
 #include <QMimeData>
 #include <QApplication>
+#include <QFileDialog>
+#include <QImage>
 #include "../CTuxCardsConfiguration.h"
 #include "../utilities/strings.h"
 
@@ -249,6 +251,22 @@ void Editor::paste()
    adaptClipboardText( QClipboard::Clipboard );
 
    QTextEdit::paste();
+}
+
+
+void Editor::insertImage()
+{
+   if ( !acceptRichText() )
+      return;
+   QString fn = QFileDialog::getOpenFileName( this, "Insert Image",
+                  QString(),
+                  "Images (*.png *.jpg *.jpeg *.gif *.bmp *.xpm);;All files (*)" );
+   if ( fn.isEmpty() )
+      return;
+   QImage img( fn );
+   if ( img.isNull() )
+      return;
+   textCursor().insertImage( img );
 }
 
 

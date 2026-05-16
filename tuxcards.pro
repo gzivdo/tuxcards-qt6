@@ -21,6 +21,7 @@ SOURCES += src/persister.cpp \
     src/gui/dialogs/searchposition.cpp \
     src/gui/dialogs/searchlistitem.cpp \
     src/gui/dialogs/searchdialog.cpp \
+    src/gui/dialogs/searchhighlightdelegate.cpp \
     src/gui/dialogs/optionsdialog.cpp \
     src/gui/dialogs/iconselectordialog.cpp \
     src/gui/dialogs/iconselector.cpp \
@@ -47,6 +48,7 @@ SOURCES += src/persister.cpp \
 
 HEADERS += src/gui/dialogs/searchlistitem.h \
     src/gui/dialogs/searchdialog.h \
+    src/gui/dialogs/searchhighlightdelegate.h \
     src/gui/dialogs/optionsdialog.h \
     src/gui/dialogs/iconselectordialog.h \
     src/gui/dialogs/iconselector.h \

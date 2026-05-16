@@ -392,12 +392,19 @@ void MainWindow::settingUpMenu( void )
       edit->addAction(                       "Select &All", mpEditor, SLOT(selectAll()), QKeySequence(Qt::CTRL | Qt::Key_A) );
 
       edit->addSeparator();
+      edit->addAction( "&Bold",      this, SLOT(textBold()),   QKeySequence(Qt::CTRL | Qt::Key_B) );
+      edit->addAction( "&Italic",    this, SLOT(textItalic()), QKeySequence(Qt::CTRL | Qt::Key_I) );
+      edit->addAction( "&Underline", this, SLOT(textUnder()),  QKeySequence(Qt::CTRL | Qt::Key_U) );
+      edit->addAction( "&Color...",  this, SLOT(textColor()),  QKeySequence(Qt::CTRL | Qt::Key_M) );
+
+      edit->addSeparator();
       edit->addAction(editSetEntryColor);
       edit->addAction(editSetEntrySubTreeColor);
 
       edit->addSeparator();
-      edit->addAction( "Insert Current &Date", this, SLOT(insertCurrentDate()), QKeySequence(Qt::CTRL | Qt::Key_D) );
-      edit->addAction( "Insert Current T&ime", this, SLOT(insertCurrentTime()), QKeySequence(Qt::CTRL | Qt::Key_T) );
+      edit->addAction( "Insert &Image...",      mpEditor, SLOT(insertImage()),       QKeySequence(Qt::CTRL | Qt::Key_P) );
+      edit->addAction( "Insert Current &Date",  this,     SLOT(insertCurrentDate()), QKeySequence(Qt::CTRL | Qt::Key_D) );
+      edit->addAction( "Insert Current T&ime",  this,     SLOT(insertCurrentTime()), QKeySequence(Qt::CTRL | Qt::Key_T) );
       edit->addSeparator();
       edit->addAction( "&Options...", this, SLOT(editConfiguration()) );
    }
@@ -828,34 +835,27 @@ void MainWindow::textAlignmentChanged(int a)
 
 // -------------------------------------------------------------------------------
 void MainWindow::textBold()
-// -------------------------------------------------------------------------------
 {
    if ( NULLPTR == mpEditor )
       return;
-
-   mpEditor->setFontWeight(textBoldTool->isChecked() ? QFont::Bold : QFont::Normal);
+   bool nowBold = (mpEditor->fontWeight() == QFont::Bold);
+   mpEditor->setFontWeight(nowBold ? QFont::Normal : QFont::Bold);
 }
 
 
-// -------------------------------------------------------------------------------
 void MainWindow::textItalic()
-// -------------------------------------------------------------------------------
 {
    if ( NULLPTR == mpEditor )
       return;
-
-   mpEditor->setFontItalic(textItalicTool->isChecked());
+   mpEditor->setFontItalic( !mpEditor->fontItalic() );
 }
 
 
-// -------------------------------------------------------------------------------
 void MainWindow::textUnder()
-// -------------------------------------------------------------------------------
 {
    if ( NULLPTR == mpEditor )
       return;
-
-   mpEditor->setFontUnderline(textUnderTool->isChecked());
+   mpEditor->setFontUnderline( !mpEditor->fontUnderline() );
 }
 
 

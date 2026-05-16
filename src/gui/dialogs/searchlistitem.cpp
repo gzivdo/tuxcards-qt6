@@ -24,7 +24,14 @@ SearchListItem::SearchListItem(QTreeWidget *parent, Path* path, int location,
     : QTreeWidgetItem(parent)
 {
     setText(0, path->getPathList().last());
-    setText(1, location == SearchPosition::SP_NAME ? QString("") : s);
+    QString content = (location == SearchPosition::SP_NAME) ? QString("") : s;
+    setText(1, content);
+
+    // Carry match position so SearchHighlightDelegate can render it bold.
+    if (location != SearchPosition::SP_NAME) {
+        setData(1, Qt::UserRole + 1, pos);
+        setData(1, Qt::UserRole + 2, len);
+    }
 
     searchPosition = new SearchPosition(path, location, line, pos, len, s);
 }

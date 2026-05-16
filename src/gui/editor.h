@@ -57,6 +57,7 @@ public slots:
    //void        setBold(bool);
    void          activeInformationElementChanged( CInformationElement* );
    virtual void  paste();
+   void          insertImage();
 
    void          writeCurrentTextToActiveInformationElement( void );
 

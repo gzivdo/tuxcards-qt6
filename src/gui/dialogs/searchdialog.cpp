@@ -17,6 +17,7 @@
 
 #include "../../global.h"
 #include "searchdialog.h"
+#include "searchhighlightdelegate.h"
 #include <iostream>
 
 #include <QVBoxLayout>
@@ -80,6 +81,7 @@ SearchDialog::SearchDialog( QWidget* pParent )
    list->setColumnWidth(1, 400);
    list->setSortingEnabled(false);
    list->setRootIsDecorated(false);
+   list->setItemDelegateForColumn(1, new SearchHighlightDelegate(list));
    root->addWidget(list, 1);
 
    // -- status line --
