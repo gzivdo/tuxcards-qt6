@@ -1,3 +1,20 @@
+tuxcards-qt6 (3.3.0-1) unstable; urgency=medium
+
+  * Editor: in-entry find / replace bar (Ctrl+F / Ctrl+H), embedded
+    at the bottom of the editor. Tree-wide search moved to
+    Ctrl+Shift+F to free Ctrl+F for the editor (standard convention).
+    Case-sensitive + whole-word options, wrap-around, F3 / Shift+F3
+    for next/previous match, browser-style behaviour for Replace.
+  * Encryption: optional lazy-decrypt mode (Options → Encryption →
+    "Decrypt entries only when viewed"). When enabled, opening an
+    encrypted file only verifies the password against one entry —
+    the rest stay in ciphertext until you click on them. Useful for
+    large encrypted trees where decrypting everything on open is
+    perceptibly slow. The cross-tree Search dialog now reports how
+    many entries it had to skip in this mode.
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 18:00:00 +0000
+
 tuxcards-qt6 (3.2.0-1) unstable; urgency=medium
 
   * Crypto:

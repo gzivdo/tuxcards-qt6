@@ -1,5 +1,30 @@
 Changelog
 
+3.3.0  2026-05-16  In-editor find/replace + optional lazy-decrypt (gzivdo + Claude Opus 4.7)
+
+	Editor — in-entry find & replace
+	-New embedded find/replace bar at the bottom of the editor
+	 (Ctrl+F = Find, Ctrl+H = Find + Replace). Case-sensitive and
+	 whole-word toggles, wrap-around, status messages ("not found",
+	 "(wrapped)", "N replacement(s)"), Esc to close, F3 / Shift+F3
+	 for next/previous. Replace works browser-style: first click
+	 selects the next match, second click substitutes — so an
+	 unexpected match never gets quietly overwritten.
+	-Tree-wide Search dialog moved to Ctrl+Shift+F (was Ctrl+F).
+	 Standard IDE convention frees Ctrl+F for in-entry search.
+
+	Encryption — optional lazy decrypt
+	-New Options → Encryption checkbox "Decrypt entries only when
+	 viewed (faster open of large files)". When enabled, opening an
+	 encrypted file only verifies the password against one entry and
+	 leaves the rest as ciphertext; entries get decrypted on the
+	 first navigation. Saves untouched entries by emitting the
+	 on-disk ciphertext byte-for-byte (already supported by the 3.2
+	 mOriginalBlob/mbDirty path).
+	-The Search dialog notices entries that are still encrypted and
+	 reports them as "(N encrypted entry not scanned — open it once
+	 to include it)".
+
 3.2.0  2026-05-16  Multi-backend crypto, save-freeze fix, full Russian UI (gzivdo + Claude Opus 4.7)
 
 	Crypto — save/load performance
