@@ -161,7 +161,10 @@ void Editor::keyPressEvent( QKeyEvent* pKeyEv )
    if( ( (mods & Qt::ControlModifier)  &&  (key == Qt::Key_S) ) ||
        ( (mods & Qt::AltModifier)      &&  (key == Qt::Key_Left) ) ||
        ( (mods & Qt::AltModifier)      &&  (key == Qt::Key_Right) ) ||
-       ( (mods & Qt::ControlModifier)  &&  (key == Qt::Key_F) ) )
+       ( (mods & Qt::ControlModifier)  &&  (key == Qt::Key_F) ) ||
+       // Ctrl+H is bound to "delete previous char" by QTextEdit on some
+       // platforms — intercept so MainWindow can open the Replace bar.
+       ( (mods & Qt::ControlModifier)  &&  (key == Qt::Key_H) ) )
    {
       pKeyEv->ignore();
    }

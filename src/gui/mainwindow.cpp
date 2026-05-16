@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "mainwindow.h"
+#include "editorfindbar.h"
 
 //#define DEBUGGING
 
@@ -514,7 +515,7 @@ void MainWindow::settingUpToolBar( void )
   mpMainTools->addAction(editSetEntrySubTreeColor);
 
   mpMainTools->addSeparator();
-  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search (Ctrl+F)"), this, SLOT(search()));
+  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search across tree (Ctrl+Shift+F)"), this, SLOT(search()));
   mpMainTools->addSeparator();
 
   clearTool->setWhatsThis(tr("<b>Clear whole Tree</b>"));
@@ -526,7 +527,8 @@ void MainWindow::settingUpToolBar( void )
   editCutTool->setWhatsThis(tr("<b>Cut</b> (Ctrl+X)"));
   editCopyAction->setWhatsThis(tr("<b>Copy</b> (Ctrl+C)"));
   editPasteTool->setWhatsThis(tr("<b>Paste</b> (Ctrl+V)"));
-  findTool->setWhatsThis(tr("<b>Search</b> (Ctrl+F)"));
+  findTool->setWhatsThis(tr("<b>Search across the entire tree</b> (Ctrl+Shift+F).<br/>"
+                            "For an in-entry find/replace use Ctrl+F / Ctrl+H."));
 
 
   mpEntryTools = addToolBar(tr("Entry"));
@@ -1192,7 +1194,12 @@ bool MainWindow::initializingCollection( QString collectionName )
 	   			return false;
 	   		}
 
-		   bCorrectPasswd = mpCollection->decryptTree(fileEncryptionPasswordDialog.getPasswd());
+		   {
+		      const bool bLazy = CTuxCardsConfiguration::getInstance()
+		                            .getBoolValue(CTuxCardsConfiguration::B_LAZY_DECRYPT);
+		      bCorrectPasswd = mpCollection->decryptTree(
+		            fileEncryptionPasswordDialog.getPasswd(), bLazy);
+		   }
            if (!bCorrectPasswd) {
                wrongPassCount++;
                if (wrongPassCount >= WRONG_PASS_MAX_COUNT) {
@@ -1753,7 +1760,14 @@ void MainWindow::keyPressEvent(QKeyEvent* k)
       //cout<<"CTL + "<<k->key()<<"\ttext="<<k->text()<<"\tkey="<<k->key()<<endl;
       if (k->key() == Qt::Key_S)
          save();
-      else if ( (Qt::ControlModifier == k->modifiers())  &&  (Qt::Key_F == k->key()) )
+      else if ( Qt::Key_F == k->key() )
+         editorFind();
+      else if ( Qt::Key_H == k->key() )
+         editorReplace();
+      break;
+
+   case (Qt::ControlModifier | Qt::ShiftModifier):
+      if ( Qt::Key_F == k->key() )
          search();
       break;
 
@@ -1843,7 +1857,9 @@ void MainWindow::showKBShortcuts()
 					"Ctrl+O: Open File\n"
 					"Ctrl+S: Save current file\n"
 					"Ctrl+E: Encrypt current file\n"
-					"Ctrl+F: Search\n"
+					"Ctrl+F: Find in current entry\n"
+					"Ctrl+H: Find and replace in current entry\n"
+					"Ctrl+Shift+F: Search across the whole tree\n"
 					"F5: Switch between tree(left pane) and editor window(right pane)\n"
 					"Alt+Left or Right arrow: Navigate items accessed earlier(history)\n"
 					"MENU (Left of right Ctrl key): Show current context menu\n"
@@ -2063,6 +2079,24 @@ void MainWindow::search()
 
    mpEditor->writeCurrentTextToActiveInformationElement();
    mpTree->search();
+}
+
+// -------------------------------------------------------------------------------
+void MainWindow::editorFind()
+// -------------------------------------------------------------------------------
+{
+   if ( !mpSingleEntryView ) return;
+   if ( EditorFindBar* bar = mpSingleEntryView->getFindBar() )
+      bar->showFind( false );
+}
+
+// -------------------------------------------------------------------------------
+void MainWindow::editorReplace()
+// -------------------------------------------------------------------------------
+{
+   if ( !mpSingleEntryView ) return;
+   if ( EditorFindBar* bar = mpSingleEntryView->getFindBar() )
+      bar->showFind( true );
 }
 
 // -------------------------------------------------------------------------------

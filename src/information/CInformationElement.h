@@ -80,8 +80,12 @@ public:
   QString getTreeString(int tab=0) const;
   virtual void toXML( QDomDocument xmlDocument, QDomNode parent );
 
+  // search() walks the (sub)tree and appends matches to `list`. In
+  // lazy-decrypt mode, encrypted entries that have not yet been viewed
+  // are still ciphertext — we skip them and bump `nSkippedEncrypted`
+  // so the caller can show "N entries not scanned" to the user.
   void search( QString pattern, bool recursive, bool caseSensitive, bool SearchOnlyTitles,
-  						QTreeWidget& list );
+  						QTreeWidget& list, int& nSkippedEncrypted );
 
   CInformationElement* findChildWithDescription( QString desc );
 

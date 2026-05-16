@@ -115,6 +115,11 @@ void CInformationCollection::setActiveElement( CInformationElement* pElement )
    if (!pElement)
       return;
 
+   // In lazy-decrypt mode the element may still be ciphertext-only at
+   // this point. Decrypt it before notifying views so the editor sees
+   // plaintext, not encrypted blob.
+   ensureDecrypted( pElement );
+
    mpActiveElement = pElement;
    emit activeInformationElementChanged( pElement );
 }
@@ -350,14 +355,52 @@ bool CInformationCollection::firstEncryptedBlob(QByteArray& out) const
    return mpRootElement->firstEncryptedBlob(out);
 }
 
-// -------------------------------------------------------------------------------
-bool  CInformationCollection::decryptTree(QString password)
+namespace {
+// Walk the subtree depth-first and return the first element whose
+// ciphertext blob is non-empty. Used to pick a single element to feed
+// through decrypt() in lazy mode just to verify the password.
+CInformationElement* findFirstEncryptedElement(CInformationElement* pElem)
 {
-	bool retval = mpRootElement->decryptTree(password);
+   if ( !pElem ) return nullptr;
+   if ( pElem->isCurrentlyEncrypted() && pElem->getEncryptedData().size() > 0 )
+      return pElem;
+   for ( CInformationElement* child : *pElem->getChildren() ) {
+      if ( CInformationElement* r = findFirstEncryptedElement(child) )
+         return r;
+   }
+   return nullptr;
+}
+}
+
+// -------------------------------------------------------------------------------
+bool  CInformationCollection::decryptTree(QString password, bool lazy)
+{
+	bool retval;
+	if ( lazy ) {
+		// Verify the password against one encrypted element only; leave
+		// the rest as ciphertext. ensureDecrypted() will decrypt entries
+		// on demand when the user navigates to them.
+		CInformationElement* first = findFirstEncryptedElement(mpRootElement);
+		// No encrypted blob found — file claims to be encrypted but is
+		// empty; treat the password as accepted.
+		retval = first ? first->decrypt(password) : true;
+	} else {
+		retval = mpRootElement->decryptTree(password);
+	}
 
 	// If successful, save the password
 	if(retval)
 		mstrFilePassword = password;
 
 	return retval;
+}
+
+// -------------------------------------------------------------------------------
+void CInformationCollection::ensureDecrypted(CInformationElement* pElem)
+// -------------------------------------------------------------------------------
+{
+   if ( !pElem || !mbEncrypted || mstrFilePassword.isEmpty() )
+      return;
+   if ( pElem->isCurrentlyEncrypted() )
+      pElem->decrypt( mstrFilePassword );
 }

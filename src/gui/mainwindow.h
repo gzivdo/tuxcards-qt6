@@ -195,6 +195,8 @@ private slots:
   void quicklyLoad(Path*);
 
   void search();
+  void editorFind();
+  void editorReplace();
   void print();
 
   void moveElementUp();

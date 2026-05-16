@@ -332,19 +332,28 @@ CInformationElement* CInformationElement::findChildWithDescription( QString desc
  */
 // -------------------------------------------------------------------------------
 void CInformationElement::search( QString pattern, bool recursive, bool caseSensitive,
-                                  bool SearchOnlyTitles, QTreeWidget& list)
+                                  bool SearchOnlyTitles, QTreeWidget& list,
+                                  int& nSkippedEncrypted )
 // -------------------------------------------------------------------------------
 {
+  // Description (title) is always plaintext on disk, so we can scan it
+  // even for an entry that is still encrypted in memory.
   searchDescription(pattern, caseSensitive, list);
-  if (!SearchOnlyTitles)
-	  searchInformation(pattern, caseSensitive, list);
 
+  if ( !SearchOnlyTitles )
+  {
+    if ( isCurrentlyEncrypted() )
+      ++nSkippedEncrypted;        // lazy mode — body still ciphertext
+    else
+      searchInformation(pattern, caseSensitive, list);
+  }
 
   // if recursive -> do so
   if (recursive)
   {
     for (CInformationElement* x : *mpChildObjects) {
-      x->search( pattern, true, caseSensitive, SearchOnlyTitles, list );
+      x->search( pattern, true, caseSensitive, SearchOnlyTitles, list,
+                 nSkippedEncrypted );
     }
   }
 }

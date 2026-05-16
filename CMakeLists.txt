@@ -69,6 +69,7 @@ set(TUXCARDS_SOURCES
    src/gui/CTreeElement.cpp
    src/gui/CSingleEntryView.cpp
    src/gui/editor.cpp
+   src/gui/editorfindbar.cpp
    src/gui/BookmarkButton.cpp
    src/gui/RecentFileList.cpp
    src/gui/colorbar/CColorBar.cpp
@@ -118,6 +119,7 @@ set(TUXCARDS_HEADERS
    src/gui/CTreeElement.h
    src/gui/CSingleEntryView.h
    src/gui/editor.h
+   src/gui/editorfindbar.h
    src/gui/BookmarkButton.h
    src/gui/RecentFileList.h
    src/gui/colorbar/CColorBar.h

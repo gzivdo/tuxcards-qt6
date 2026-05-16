@@ -63,7 +63,11 @@ public:
   bool isEncrypted();
   void toggleEncryption(QString& password);
   bool checkEncryptionForElementTree();
-  bool decryptTree(QString password);
+  bool decryptTree(QString password, bool lazy = false);
+  // Decrypts a single element with the cached file password if it is
+  // still in ciphertext form. Used in lazy-decrypt mode when the user
+  // navigates to an entry that was not eagerly decrypted on open.
+  void ensureDecrypted(CInformationElement* pElem);
   bool firstEncryptedBlob(QByteArray& out) const;
 
   void addView( IView* pView );

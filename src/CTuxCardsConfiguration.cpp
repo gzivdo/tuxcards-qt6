@@ -102,6 +102,7 @@ void CTuxCardsConfiguration::readConfigurationFile()
    mStringMap[S_ENCRYPTION_FORMAT]  = parser.readEntry("Encryption_Format", defaultEncFormat);
    mBoolMap  [B_REENCRYPT_ON_FORMAT_CHANGE]
                                     = parser.readNumEntry("Reencrypt_On_Format_Change", 0);
+   mBoolMap  [B_LAZY_DECRYPT]       = parser.readNumEntry("Lazy_Decrypt",                0);
 
    mStringMap[S_ICON_DIR]           = parser.readEntry("Icon_Dir", "/usr/local/tuxcards/icons");
 
@@ -182,6 +183,7 @@ void CTuxCardsConfiguration::saveToFile()
 
   p.changeEntry("Encryption_Format",            mStringMap[S_ENCRYPTION_FORMAT]);
   p.changeEntry("Reencrypt_On_Format_Change",   (int)mBoolMap[B_REENCRYPT_ON_FORMAT_CHANGE]);
+  p.changeEntry("Lazy_Decrypt",                 (int)mBoolMap[B_LAZY_DECRYPT]);
 
   p.changeEntry("Icon_Dir",                 mStringMap[S_ICON_DIR]          );
 

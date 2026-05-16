@@ -17,12 +17,14 @@
 #ifndef CSINGLE_ENTRY_VIEW_H
 #define CSINGLE_ENTRY_VIEW_H
 
-#include <QStackedWidget>
+#include <QWidget>
 #include "../information/IView.h"
 #include "editor.h"
 
+class EditorFindBar;
 
-class CSingleEntryView : public QStackedWidget,
+
+class CSingleEntryView : public QWidget,
                          public IView
 {
    Q_OBJECT
@@ -30,7 +32,8 @@ public:
    CSingleEntryView( QWidget* pParent );
    ~CSingleEntryView( void );
 
-   Editor*       getEditor( void );
+   Editor*        getEditor( void );
+   EditorFindBar* getFindBar( void );
 
    // methods added because of editor
    QString       getText( void );
@@ -55,8 +58,7 @@ protected:
 private:
    CInformationElement* mpActiveElement;
    Editor*              mpEditor;
-
-   enum { EDITOR, PASSWD };
+   EditorFindBar*       mpFindBar;
 
 private slots:
    void entryDecrypted( void );

@@ -100,6 +100,7 @@ private:
   // Encryption tab
   QComboBox*    mpEncFormat;
   QCheckBox*    mpReencryptAll;
+  QCheckBox*    mpLazyDecrypt;
   void          buildEncryptionTab();
   void          loadEncryptionFromConfig();
   void          saveEncryptionToConfig();

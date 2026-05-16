@@ -42,7 +42,8 @@ public:
   bool         isChildOrSelfSelected( void );
 
   void         search( QString pattern, bool recursive, bool caseSensitive,
-                       bool SearchOnlyTitles, QTreeWidget& list );
+                       bool SearchOnlyTitles, QTreeWidget& list,
+                       int& nSkippedEncrypted );
 
   CTreeElement* findChildWithName( QString name );
 

@@ -4,12 +4,12 @@
 <context>
     <name>CFileEncryptionPasswordDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/CFileEncryptionPasswordDialog.cpp" line="79" />
+        <location filename="../src/gui/dialogs/CFileEncryptionPasswordDialog.cpp" line="81"/>
         <source>TuxCards</source>
         <translation>TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/CFileEncryptionPasswordDialog.cpp" line="80" />
+        <location filename="../src/gui/dialogs/CFileEncryptionPasswordDialog.cpp" line="82"/>
         <source>Password field is empty. Please specify a valid password</source>
         <translation>Поле пароля пустое. Введите корректный пароль.</translation>
     </message>
@@ -17,18 +17,18 @@
 <context>
     <name>CPasswdDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="80" />
-        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="88" />
+        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="81"/>
+        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="89"/>
         <source>TuxCards</source>
         <translation>TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="81" />
+        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="82"/>
         <source>Password field is empty. Please specify a valid password</source>
         <translation>Поле пароля пустое. Введите корректный пароль.</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="89" />
+        <location filename="../src/gui/dialogs/CPasswdDialog.cpp" line="90"/>
         <source>Passwords did not match. Please try again</source>
         <translation>Пароли не совпадают. Попробуйте ещё раз.</translation>
     </message>
@@ -36,22 +36,22 @@
 <context>
     <name>CPropertyDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="73" />
+        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="73"/>
         <source>Change Properties of existing Entry</source>
         <translation>Изменение свойств записи</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="79" />
+        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="79"/>
         <source>Add new Entry</source>
         <translation>Новая запись</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="174" />
+        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="174"/>
         <source>TuxCards</source>
         <translation>TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="174" />
+        <location filename="../src/gui/dialogs/CPropertyDialog.cpp" line="174"/>
         <source>The name of your note is empty.
 Do you want to change this?</source>
         <translation>Имя записи пустое.
@@ -61,74 +61,156 @@ Do you want to change this?</source>
 <context>
     <name>CTree</name>
     <message>
-        <location filename="../src/gui/CTree.cpp" line="340" />
+        <location filename="../src/gui/CTree.cpp" line="340"/>
         <source>Dragging</source>
         <translation>Перетаскивание</translation>
     </message>
     <message>
-        <location filename="../src/gui/CTree.cpp" line="340" />
+        <location filename="../src/gui/CTree.cpp" line="340"/>
         <source>An Entry cannot be moved onto itself or a child.</source>
         <translation>Запись нельзя переместить в саму себя или в свой подузел.</translation>
     </message>
     <message>
-        <location filename="../src/gui/CTree.cpp" line="341" />
+        <location filename="../src/gui/CTree.cpp" line="341"/>
         <source>Move not possible.</source>
         <translation>Перемещение невозможно.</translation>
     </message>
     <message>
-        <location filename="../src/gui/CTree.cpp" line="522" />
-        <location filename="../src/gui/CTree.cpp" line="527" />
+        <location filename="../src/gui/CTree.cpp" line="522"/>
+        <location filename="../src/gui/CTree.cpp" line="527"/>
         <source>Delete the active Entry</source>
         <translation>Удаление текущей записи</translation>
     </message>
     <message>
-        <location filename="../src/gui/CTree.cpp" line="523" />
+        <location filename="../src/gui/CTree.cpp" line="523"/>
         <source>The root entry cannot be deleted.</source>
         <translation>Корневую запись удалить нельзя.</translation>
     </message>
     <message>
-        <location filename="../src/gui/CTree.cpp" line="528" />
-        <source>Do you really want to delete '%1'?</source>
+        <location filename="../src/gui/CTree.cpp" line="528"/>
+        <source>Do you really want to delete &apos;%1&apos;?</source>
         <translation>Точно удалить «%1»?</translation>
     </message>
 </context>
 <context>
     <name>Editor</name>
     <message>
-        <location filename="../src/gui/editor.cpp" line="261" />
+        <location filename="../src/gui/editor.cpp" line="264"/>
         <source>Insert Image</source>
         <translation>Вставить изображение</translation>
     </message>
     <message>
-        <location filename="../src/gui/editor.cpp" line="263" />
+        <location filename="../src/gui/editor.cpp" line="266"/>
         <source>Images (*.png *.jpg *.jpeg *.gif *.bmp *.xpm);;All files (*)</source>
         <translation>Изображения (*.png *.jpg *.jpeg *.gif *.bmp *.xpm);;Все файлы (*)</translation>
     </message>
 </context>
 <context>
+    <name>EditorFindBar</name>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="42"/>
+        <source>Find:</source>
+        <translation>Найти:</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="48"/>
+        <source>◀</source>
+        <translation>◀</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="49"/>
+        <source>Find previous (Shift+F3)</source>
+        <translation>Найти предыдущее (Shift+F3)</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="53"/>
+        <source>▶</source>
+        <translation>▶</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="54"/>
+        <source>Find next (F3)</source>
+        <translation>Найти следующее (F3)</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="57"/>
+        <source>&amp;Case sensitive</source>
+        <translation>С учётом &amp;регистра</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="60"/>
+        <source>&amp;Whole words</source>
+        <translation>Целые &amp;слова</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="67"/>
+        <source>✕</source>
+        <translation>✕</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="68"/>
+        <source>Close (Esc)</source>
+        <translation>Закрыть (Esc)</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="78"/>
+        <source>Replace:</source>
+        <translation>Заменить на:</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="84"/>
+        <source>Replace</source>
+        <translation>Заменить</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="88"/>
+        <source>Replace All</source>
+        <translation>Заменить все</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="178"/>
+        <source>(wrapped)</source>
+        <translation>(по кругу)</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/editorfindbar.cpp" line="182"/>
+        <source>&lt;i&gt;not found&lt;/i&gt;</source>
+        <translation>&lt;i&gt;не найдено&lt;/i&gt;</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/gui/editorfindbar.cpp" line="241"/>
+        <source>&lt;i&gt;%n replacement(s)&lt;/i&gt;</source>
+        <translation>
+            <numerusform>&lt;i&gt;%n замена&lt;/i&gt;</numerusform>
+            <numerusform>&lt;i&gt;%n замены&lt;/i&gt;</numerusform>
+            <numerusform>&lt;i&gt;%n замен&lt;/i&gt;</numerusform>
+        </translation>
+    </message>
+</context>
+<context>
     <name>IFileEncryptionPasswordDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="6" />
+        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="6"/>
         <source>File Encryption Password</source>
         <translation>Пароль шифрования файла</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="26" />
+        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="26"/>
         <source>Please enter password for:</source>
         <translation>Введите пароль для:</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="65" />
+        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="65"/>
         <source>&amp;OK</source>
         <translation>&amp;ОК</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="78" />
+        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="78"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="33" />
+        <location filename="../src/gui/dialogs/IFileEncryptionPasswordDialog.ui" line="33"/>
         <source>filepath</source>
         <translation>путь к файлу</translation>
     </message>
@@ -136,141 +218,141 @@ Do you want to change this?</source>
 <context>
     <name>IOptionsDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="13" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="13"/>
         <source>TuxCards Options</source>
         <translation>Настройки TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="38" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="38"/>
         <source>General</source>
         <translation>Общие</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="44" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="44"/>
         <source>&lt;b&gt;Saving&lt;/b&gt;</source>
         <translation>&lt;b&gt;Сохранение&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="71" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="71"/>
         <source>Autosave all</source>
         <translation>Автосохранение каждые</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="87" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="87"/>
         <source>15</source>
         <translation>15</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="94" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="94"/>
         <source>Minutes</source>
         <translation>минут</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="122" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="122"/>
         <source>Save Data when leaving TuxCards</source>
         <translation>Сохранять при выходе из TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="132" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="132"/>
         <source>Create Backupfile</source>
         <translation>Создавать резервную копию</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="139" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="139"/>
         <source>Execute Command after Saving</source>
         <translation>Выполнить команду после сохранения</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="164" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="164"/>
         <source>&lt;b&gt;Look &amp; Feel&lt;/b&gt;</source>
         <translation>&lt;b&gt;Внешний вид&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="174" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="174"/>
         <source>Icon Directory</source>
         <translation>Папка иконок</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="203" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="203"/>
         <source>Tree</source>
         <translation>Дерево</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="230" />
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="347" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="230"/>
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="347"/>
         <source>Font</source>
         <translation>Шрифт</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="260" />
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="377" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="260"/>
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="377"/>
         <source>Change current Font</source>
         <translation>Изменить текущий шрифт</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="273" />
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="390" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="273"/>
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="390"/>
         <source>current Font:</source>
         <translation>Текущий шрифт:</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="289" />
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="406" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="289"/>
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="406"/>
         <source>Font-Text</source>
         <translation>Образец</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="335" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="335"/>
         <source>Editor</source>
         <translation>Редактор</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="425" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="425"/>
         <source>Tab Spacing</source>
         <translation>Табуляция</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="452" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="452"/>
         <source>Set Tabsize to</source>
         <translation>Размер табуляции</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="509" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="509"/>
         <source>WordWrap</source>
         <translation>Перенос строк</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="536" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="536"/>
         <source>no WordWrap</source>
         <translation>без переноса</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="552" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="552"/>
         <source>wrap at Window-width</source>
         <translation>перенос по ширине окна</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="582" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="582"/>
         <source>wrap at column</source>
         <translation>перенос по колонке</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="616" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="616"/>
         <source>45</source>
         <translation>45</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="687" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="687"/>
         <source>&amp;Ok</source>
         <translation>&amp;ОК</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="690" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="690"/>
         <source>Alt+O</source>
         <translation>Alt+O</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="697" />
+        <location filename="../src/gui/dialogs/IOptionsDialog.ui" line="697"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
@@ -278,47 +360,47 @@ Do you want to change this?</source>
 <context>
     <name>IPasswdDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="17" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="17"/>
         <source>TuxCards Encryption</source>
         <translation>Шифрование TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="28" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="28"/>
         <source>Please enter a password to encrypt</source>
         <translation>Введите пароль для шифрования</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="38" />
-        <source>'entry name'</source>
-        <translation>'имя записи'</translation>
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="38"/>
+        <source>&apos;entry name&apos;</source>
+        <translation>&apos;имя записи&apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="60" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="60"/>
         <source>Retype</source>
         <translation>Повторите</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="77" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="77"/>
         <source>Password</source>
         <translation>Пароль</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="107" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="107"/>
         <source>&amp;Ok</source>
         <translation>&amp;ОК</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="110" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="110"/>
         <source>Alt+O</source>
         <translation>Alt+O</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="120" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="120"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="123" />
+        <location filename="../src/gui/dialogs/IPasswdDialog.ui" line="123"/>
         <source>Alt+C</source>
         <translation>Alt+C</translation>
     </message>
@@ -326,102 +408,102 @@ Do you want to change this?</source>
 <context>
     <name>IPropertyDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="23" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="23"/>
         <source>Property Dialog</source>
         <translation>Свойства записи</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="39" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="39"/>
         <source>Properties</source>
         <translation>Свойства</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="45" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="45"/>
         <source>&lt;b&gt;Entry Name&lt;/b&gt;</source>
         <translation>&lt;b&gt;Имя записи&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="73" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="73"/>
         <source>Chose the Text Format</source>
         <translation>Выбор формата текста</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="77" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="77"/>
         <source>ASCII</source>
         <translation>Текст (ASCII)</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="85" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="85"/>
         <source>RTF</source>
         <translation>RTF</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="103" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="103"/>
         <source>Icon</source>
         <translation>Иконка</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="116" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="116"/>
         <source>No icon</source>
         <translation>Без иконки</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="147" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="147"/>
         <source>Specify an icon</source>
         <translation>Выберите иконку</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="177" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="177"/>
         <source>Choose a file for the icon</source>
         <translation>Выберите файл иконки</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="194" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="194"/>
         <source>Icon Location</source>
         <translation>Расположение иконки</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="218" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="218"/>
         <source>/Icon/Location</source>
-        <translation type="unfinished" />
+        <translation>/путь/к/иконке</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="242" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="242"/>
         <source>Encryption</source>
         <translation>Шифрование</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="255" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="255"/>
         <source>Encrypt Entry</source>
         <translation>Зашифровать запись</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="290" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="290"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="323" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="323"/>
         <source>Retype:</source>
         <translation>Повторите:</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="344" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="344"/>
         <source>Enter Password for Encryption</source>
         <translation>Введите пароль для шифрования</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="384" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="384"/>
         <source>&amp;Apply</source>
         <translation>&amp;Применить</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="387" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="387"/>
         <source>Alt+A</source>
         <translation>Alt+A</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="400" />
+        <location filename="../src/gui/dialogs/IPropertyDialog.ui" line="400"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
@@ -429,17 +511,17 @@ Do you want to change this?</source>
 <context>
     <name>IconSelectorDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/iconselectordialog.cpp" line="65" />
+        <location filename="../src/gui/dialogs/iconselectordialog.cpp" line="65"/>
         <source> Path: </source>
         <translation> Путь: </translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/iconselectordialog.cpp" line="96" />
+        <location filename="../src/gui/dialogs/iconselectordialog.cpp" line="96"/>
         <source>Ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/iconselectordialog.cpp" line="99" />
+        <location filename="../src/gui/dialogs/iconselectordialog.cpp" line="99"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -447,720 +529,710 @@ Do you want to change this?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="328" />
-        <location filename="../src/gui/mainwindow.cpp" line="351" />
+        <location filename="../src/gui/mainwindow.cpp" line="329"/>
+        <location filename="../src/gui/mainwindow.cpp" line="352"/>
         <source>Not saved</source>
         <translation>Не сохранено</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="346" />
+        <location filename="../src/gui/mainwindow.cpp" line="347"/>
         <source>Unsaved changes</source>
         <translation>Несохранённые изменения</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="357" />
+        <location filename="../src/gui/mainwindow.cpp" line="358"/>
         <source>Saved just now</source>
         <translation>Сохранено только что</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="358" />
+        <location filename="../src/gui/mainwindow.cpp" line="359"/>
         <source>Saved %1s ago</source>
         <translation>Сохранено %1 сек назад</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="359" />
+        <location filename="../src/gui/mainwindow.cpp" line="360"/>
         <source>Saved %1m ago</source>
         <translation>Сохранено %1 мин назад</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="360" />
+        <location filename="../src/gui/mainwindow.cpp" line="361"/>
         <source>Saved %1h ago</source>
         <translation>Сохранено %1 ч назад</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="367" />
+        <location filename="../src/gui/mainwindow.cpp" line="368"/>
         <source>Toggle file &amp;encryption</source>
         <translation>Шифрование файла</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="372" />
+        <location filename="../src/gui/mainwindow.cpp" line="373"/>
         <source>&amp;Undo</source>
         <translation>О&amp;тменить</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="377" />
+        <location filename="../src/gui/mainwindow.cpp" line="378"/>
         <source>&amp;Redo</source>
         <translation>&amp;Вернуть</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="382" />
+        <location filename="../src/gui/mainwindow.cpp" line="383"/>
         <source>&amp;Copy</source>
         <translation>&amp;Копировать</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="387" />
+        <location filename="../src/gui/mainwindow.cpp" line="388"/>
         <source>Set &amp;Entry Color...</source>
         <translation>Цвет &amp;записи...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="391" />
+        <location filename="../src/gui/mainwindow.cpp" line="392"/>
         <source>Set Entry &amp;Sub-Tree Color...</source>
         <translation>Цвет &amp;подветки записи...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="400" />
+        <location filename="../src/gui/mainwindow.cpp" line="401"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="401" />
+        <location filename="../src/gui/mainwindow.cpp" line="402"/>
         <source>&amp;New File</source>
         <translation>&amp;Новый файл</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="402" />
+        <location filename="../src/gui/mainwindow.cpp" line="403"/>
         <source>&amp;Open File...</source>
         <translation>&amp;Открыть файл...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="403" />
+        <location filename="../src/gui/mainwindow.cpp" line="404"/>
         <source>&amp;Save</source>
         <translation>&amp;Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="404" />
+        <location filename="../src/gui/mainwindow.cpp" line="405"/>
         <source>Save &amp;As...</source>
         <translation>Сохранить &amp;как...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="405" />
+        <location filename="../src/gui/mainwindow.cpp" line="406"/>
         <source>&amp;Print current entry...</source>
         <translation>&amp;Печать текущей записи...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="417" />
+        <location filename="../src/gui/mainwindow.cpp" line="418"/>
         <source>Export to &amp;HTML...</source>
         <translation>Экспорт в &amp;HTML...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="418" />
+        <location filename="../src/gui/mainwindow.cpp" line="419"/>
         <source>Export current entry to &amp;Markdown...</source>
         <translation>Экспорт записи в &amp;Markdown...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="419" />
+        <location filename="../src/gui/mainwindow.cpp" line="420"/>
         <source>Import &amp;Markdown into current entry...</source>
         <translation>Импорт &amp;Markdown в текущую запись...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="421" />
+        <location filename="../src/gui/mainwindow.cpp" line="422"/>
         <source>&amp;Exit</source>
         <translation>В&amp;ыход</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="424" />
+        <location filename="../src/gui/mainwindow.cpp" line="425"/>
         <source>&amp;Edit</source>
         <translation>&amp;Правка</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="431" />
+        <location filename="../src/gui/mainwindow.cpp" line="432"/>
         <source>Cu&amp;t</source>
         <translation>&amp;Вырезать</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="433" />
+        <location filename="../src/gui/mainwindow.cpp" line="434"/>
         <source>&amp;Paste</source>
         <translation>В&amp;ставить</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="435" />
+        <location filename="../src/gui/mainwindow.cpp" line="436"/>
         <source>Select &amp;All</source>
         <translation>Выделить &amp;всё</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="438" />
+        <location filename="../src/gui/mainwindow.cpp" line="439"/>
         <source>&amp;Bold</source>
         <translation>Жи&amp;рный</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="439" />
+        <location filename="../src/gui/mainwindow.cpp" line="440"/>
         <source>&amp;Italic</source>
         <translation>&amp;Курсив</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="440" />
+        <location filename="../src/gui/mainwindow.cpp" line="441"/>
         <source>&amp;Underline</source>
         <translation>По&amp;дчёркнутый</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="441" />
+        <location filename="../src/gui/mainwindow.cpp" line="442"/>
         <source>&amp;Color...</source>
         <translation>&amp;Цвет...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="448" />
+        <location filename="../src/gui/mainwindow.cpp" line="449"/>
         <source>Insert &amp;Image...</source>
         <translation>Вставить &amp;изображение...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="449" />
+        <location filename="../src/gui/mainwindow.cpp" line="450"/>
         <source>Insert Current &amp;Date</source>
         <translation>Вставить текущую &amp;дату</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="450" />
+        <location filename="../src/gui/mainwindow.cpp" line="451"/>
         <source>Insert Current T&amp;ime</source>
         <translation>Вставить текущее &amp;время</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="452" />
+        <location filename="../src/gui/mainwindow.cpp" line="453"/>
         <source>&amp;Options...</source>
         <translation>&amp;Настройки...</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="455" />
+        <location filename="../src/gui/mainwindow.cpp" line="456"/>
         <source>Toolbars</source>
         <translation>Панели инструментов</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="456" />
+        <location filename="../src/gui/mainwindow.cpp" line="457"/>
         <source>Show Main Toolbar</source>
         <translation>Главная панель</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="457" />
+        <location filename="../src/gui/mainwindow.cpp" line="458"/>
         <source>Show Entry Manipulation Toolbar</source>
         <translation>Панель работы с записями</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="458" />
+        <location filename="../src/gui/mainwindow.cpp" line="459"/>
         <source>Show Editor Toolbar</source>
         <translation>Панель редактора</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="469" />
+        <location filename="../src/gui/mainwindow.cpp" line="470"/>
         <source>&amp;View</source>
         <translation>&amp;Вид</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="471" />
+        <location filename="../src/gui/mainwindow.cpp" line="472"/>
         <source>&amp;Word Count</source>
         <translation>&amp;Количество слов</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="473" />
+        <location filename="../src/gui/mainwindow.cpp" line="474"/>
         <source>&amp;About</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="474" />
+        <location filename="../src/gui/mainwindow.cpp" line="475"/>
         <source>&amp;Keyboard Shortcuts</source>
         <translation>&amp;Горячие клавиши</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="476" />
+        <location filename="../src/gui/mainwindow.cpp" line="477"/>
         <source>About TuxCards</source>
         <translation>О TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="492" />
+        <location filename="../src/gui/mainwindow.cpp" line="493"/>
         <source>Main</source>
         <translation>Основная</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="496" />
+        <location filename="../src/gui/mainwindow.cpp" line="497"/>
         <source>Create a new file</source>
         <translation>Создать файл</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="498" />
+        <location filename="../src/gui/mainwindow.cpp" line="499"/>
         <source>Open a new file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="499" />
+        <location filename="../src/gui/mainwindow.cpp" line="500"/>
         <source>Save current file (Ctrl+S)</source>
         <translation>Сохранить файл (Ctrl+S)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="500" />
+        <location filename="../src/gui/mainwindow.cpp" line="501"/>
         <source>Print current entry</source>
         <translation>Печать записи</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="508" />
+        <location filename="../src/gui/mainwindow.cpp" line="509"/>
         <source>Cut (Ctrl+X)</source>
         <translation>Вырезать (Ctrl+X)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="510" />
+        <location filename="../src/gui/mainwindow.cpp" line="511"/>
         <source>Paste (Ctrl+V)</source>
         <translation>Вставить (Ctrl+V)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="517" />
-        <source>Search (Ctrl+F)</source>
-        <translation>Поиск (Ctrl+F)</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/mainwindow.cpp" line="520" />
+        <location filename="../src/gui/mainwindow.cpp" line="521"/>
         <source>&lt;b&gt;Clear whole Tree&lt;/b&gt;</source>
         <translation>&lt;b&gt;Очистить дерево&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="521" />
+        <location filename="../src/gui/mainwindow.cpp" line="522"/>
         <source>&lt;b&gt;Open a new File&lt;/b&gt;</source>
         <translation>&lt;b&gt;Открыть файл&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="522" />
+        <location filename="../src/gui/mainwindow.cpp" line="523"/>
         <source>&lt;b&gt;Save Data to File&lt;/b&gt; (Ctrl+S)</source>
         <translation>&lt;b&gt;Сохранить в файл&lt;/b&gt; (Ctrl+S)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="523" />
+        <location filename="../src/gui/mainwindow.cpp" line="524"/>
         <source>&lt;b&gt;Print current Entry&lt;/b&gt;</source>
         <translation>&lt;b&gt;Печать текущей записи&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="524" />
+        <location filename="../src/gui/mainwindow.cpp" line="525"/>
         <source>&lt;b&gt;Undo&lt;/b&gt; (Ctrl+Z)</source>
         <translation>&lt;b&gt;Отменить&lt;/b&gt; (Ctrl+Z)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="525" />
+        <location filename="../src/gui/mainwindow.cpp" line="526"/>
         <source>&lt;b&gt;Redo&lt;/b&gt; (Ctrl+Y)</source>
         <translation>&lt;b&gt;Вернуть&lt;/b&gt; (Ctrl+Y)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="526" />
+        <location filename="../src/gui/mainwindow.cpp" line="527"/>
         <source>&lt;b&gt;Cut&lt;/b&gt; (Ctrl+X)</source>
         <translation>&lt;b&gt;Вырезать&lt;/b&gt; (Ctrl+X)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="527" />
+        <location filename="../src/gui/mainwindow.cpp" line="528"/>
         <source>&lt;b&gt;Copy&lt;/b&gt; (Ctrl+C)</source>
         <translation>&lt;b&gt;Копировать&lt;/b&gt; (Ctrl+C)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="528" />
+        <location filename="../src/gui/mainwindow.cpp" line="529"/>
         <source>&lt;b&gt;Paste&lt;/b&gt; (Ctrl+V)</source>
         <translation>&lt;b&gt;Вставить&lt;/b&gt; (Ctrl+V)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="529" />
-        <source>&lt;b&gt;Search&lt;/b&gt; (Ctrl+F)</source>
-        <translation>&lt;b&gt;Поиск&lt;/b&gt; (Ctrl+F)</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/mainwindow.cpp" line="532" />
+        <location filename="../src/gui/mainwindow.cpp" line="534"/>
         <source>Entry</source>
         <translation>Запись</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="536" />
+        <location filename="../src/gui/mainwindow.cpp" line="538"/>
         <source>Converts the Text Format</source>
         <translation>Сменить формат текста</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="539" />
+        <location filename="../src/gui/mainwindow.cpp" line="541"/>
         <source>Add Entry (INSERT)</source>
         <translation>Добавить запись (INSERT)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="540" />
+        <location filename="../src/gui/mainwindow.cpp" line="542"/>
         <source>Change Properties</source>
         <translation>Изменить свойства</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="541" />
+        <location filename="../src/gui/mainwindow.cpp" line="543"/>
         <source>Remove active Entry (DELETE)</source>
         <translation>Удалить запись (DELETE)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="544" />
+        <location filename="../src/gui/mainwindow.cpp" line="546"/>
         <source>Move Current Entry Upwards</source>
         <translation>Переместить запись вверх</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="545" />
+        <location filename="../src/gui/mainwindow.cpp" line="547"/>
         <source>Move Current Entry Downwards</source>
         <translation>Переместить запись вниз</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="548" />
+        <location filename="../src/gui/mainwindow.cpp" line="550"/>
         <source>Last Entry accessed in History (Alt+Left)</source>
         <translation>Предыдущая запись (Alt+Left)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="550" />
+        <location filename="../src/gui/mainwindow.cpp" line="552"/>
         <source>Next Entry in History (Alt+Right)</source>
         <translation>Следующая запись (Alt+Right)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="553" />
+        <location filename="../src/gui/mainwindow.cpp" line="555"/>
         <source>Text format toggle</source>
         <translation>Сменить формат текста</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="554" />
+        <location filename="../src/gui/mainwindow.cpp" line="556"/>
         <source>&lt;b&gt;Add Entry&lt;/b&gt; (INSERT)</source>
         <translation>&lt;b&gt;Добавить запись&lt;/b&gt; (INSERT)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="555" />
+        <location filename="../src/gui/mainwindow.cpp" line="557"/>
         <source>&lt;b&gt;Change Property&lt;/b&gt;</source>
         <translation>&lt;b&gt;Изменить свойства&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="556" />
+        <location filename="../src/gui/mainwindow.cpp" line="558"/>
         <source>&lt;b&gt;Remove active Entry&lt;/b&gt; (DELETE)</source>
         <translation>&lt;b&gt;Удалить запись&lt;/b&gt; (DELETE)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="557" />
+        <location filename="../src/gui/mainwindow.cpp" line="559"/>
         <source>&lt;b&gt;Move Up&lt;/b&gt;</source>
         <translation>&lt;b&gt;Вверх&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="558" />
+        <location filename="../src/gui/mainwindow.cpp" line="560"/>
         <source>&lt;b&gt;Move Down&lt;/b&gt;</source>
         <translation>&lt;b&gt;Вниз&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="559" />
+        <location filename="../src/gui/mainwindow.cpp" line="561"/>
         <source>&lt;b&gt;History, Back&lt;/b&gt; (Alt+Left)</source>
         <translation>&lt;b&gt;История: назад&lt;/b&gt; (Alt+Left)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="560" />
+        <location filename="../src/gui/mainwindow.cpp" line="562"/>
         <source>&lt;b&gt;History, Forward&lt;/b&gt; (Alt+Right)</source>
         <translation>&lt;b&gt;История: вперёд&lt;/b&gt; (Alt+Right)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="564" />
+        <location filename="../src/gui/mainwindow.cpp" line="566"/>
         <source>Editor</source>
         <translation>Редактор</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="569" />
+        <location filename="../src/gui/mainwindow.cpp" line="571"/>
         <source>Standard</source>
         <translation>Обычный</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="570" />
+        <location filename="../src/gui/mainwindow.cpp" line="572"/>
         <source>Bullet List (Disc)</source>
         <translation>Маркированный (круг)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="571" />
+        <location filename="../src/gui/mainwindow.cpp" line="573"/>
         <source>Bullet List (Circle)</source>
         <translation>Маркированный (кольцо)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="572" />
+        <location filename="../src/gui/mainwindow.cpp" line="574"/>
         <source>Bullet List (Square)</source>
         <translation>Маркированный (квадрат)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="573" />
+        <location filename="../src/gui/mainwindow.cpp" line="575"/>
         <source>Ordered List (Decimal)</source>
         <translation>Нумерованный (1, 2, 3)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="574" />
+        <location filename="../src/gui/mainwindow.cpp" line="576"/>
         <source>Ordered List (Alpha lower)</source>
         <translation>Нумерованный (a, b, c)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="575" />
+        <location filename="../src/gui/mainwindow.cpp" line="577"/>
         <source>Ordered List (Alpha upper)</source>
         <translation>Нумерованный (A, B, C)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="598" />
+        <location filename="../src/gui/mainwindow.cpp" line="600"/>
         <source>Bold (Ctrl+B)</source>
         <translation>Жирный (Ctrl+B)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="601" />
+        <location filename="../src/gui/mainwindow.cpp" line="603"/>
         <source>Italic (Ctrl+I)</source>
         <translation>Курсив (Ctrl+I)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="604" />
+        <location filename="../src/gui/mainwindow.cpp" line="606"/>
         <source>Underline (Ctrl+U)</source>
         <translation>Подчёркнутый (Ctrl+U)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="608" />
+        <location filename="../src/gui/mainwindow.cpp" line="610"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="612" />
+        <location filename="../src/gui/mainwindow.cpp" line="614"/>
         <source>Align Left</source>
         <translation>По левому краю</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="615" />
+        <location filename="../src/gui/mainwindow.cpp" line="617"/>
         <source>Center</source>
         <translation>По центру</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="618" />
+        <location filename="../src/gui/mainwindow.cpp" line="620"/>
         <source>Align Right</source>
         <translation>По правому краю</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="621" />
+        <location filename="../src/gui/mainwindow.cpp" line="623"/>
         <source>Text Block</source>
         <translation>По ширине</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="624" />
+        <location filename="../src/gui/mainwindow.cpp" line="626"/>
         <source>&lt;b&gt;Bold&lt;/b&gt;</source>
         <translation>&lt;b&gt;Жирный&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="625" />
+        <location filename="../src/gui/mainwindow.cpp" line="627"/>
         <source>&lt;b&gt;Italic&lt;/b&gt;</source>
         <translation>&lt;b&gt;Курсив&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="626" />
+        <location filename="../src/gui/mainwindow.cpp" line="628"/>
         <source>&lt;b&gt;Underline&lt;/b&gt;</source>
         <translation>&lt;b&gt;Подчёркнутый&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="627" />
+        <location filename="../src/gui/mainwindow.cpp" line="629"/>
         <source>&lt;b&gt;Text Color&lt;/b&gt;</source>
         <translation>&lt;b&gt;Цвет текста&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="628" />
+        <location filename="../src/gui/mainwindow.cpp" line="630"/>
         <source>&lt;b&gt;Align Left&lt;/b&gt;</source>
         <translation>&lt;b&gt;По левому краю&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="629" />
+        <location filename="../src/gui/mainwindow.cpp" line="631"/>
         <source>&lt;b&gt;Center&lt;/b&gt;</source>
         <translation>&lt;b&gt;По центру&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="630" />
+        <location filename="../src/gui/mainwindow.cpp" line="632"/>
         <source>&lt;b&gt;Align Right&lt;/b&gt;</source>
         <translation>&lt;b&gt;По правому краю&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="631" />
+        <location filename="../src/gui/mainwindow.cpp" line="633"/>
         <source>&lt;b&gt;Text Block&lt;/b&gt;</source>
         <translation>&lt;b&gt;По ширине&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="660" />
+        <location filename="../src/gui/mainwindow.cpp" line="662"/>
         <source>Bookmarks</source>
         <translation>Закладки</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="740" />
-        <location filename="../src/gui/mainwindow.cpp" line="747" />
+        <location filename="../src/gui/mainwindow.cpp" line="742"/>
+        <location filename="../src/gui/mainwindow.cpp" line="749"/>
         <source>Converter</source>
         <translation>Конвертер</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="740" />
-        <location filename="../src/gui/mainwindow.cpp" line="1801" />
+        <location filename="../src/gui/mainwindow.cpp" line="742"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1815"/>
         <source>There is no active entry.</source>
         <translation>Нет активной записи.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="747" />
+        <location filename="../src/gui/mainwindow.cpp" line="749"/>
         <source>Sorry, but converting RTF to ASCII is not implemented yet.</source>
         <translation>Конвертация RTF → ASCII пока не реализована.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="753" />
+        <location filename="../src/gui/mainwindow.cpp" line="755"/>
         <source>Converting Information Format</source>
         <translation>Смена формата текста</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="754" />
+        <location filename="../src/gui/mainwindow.cpp" line="756"/>
         <source>Are you sure to change the information format.
 Some of the text layout will be lost.</source>
         <translation>Точно сменить формат текста?
 Часть оформления будет потеряна.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1099" />
-        <location filename="../src/gui/mainwindow.cpp" line="1453" />
+        <location filename="../src/gui/mainwindow.cpp" line="1101"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1460"/>
         <source>Would you like to save the current file?</source>
         <translation>Сохранить текущий файл?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1101" />
+        <location filename="../src/gui/mainwindow.cpp" line="1103"/>
         <source>New File</source>
         <translation>Новый файл</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1101" />
+        <location filename="../src/gui/mainwindow.cpp" line="1103"/>
         <source>Create New File, closing current one?</source>
         <translation>Создать новый файл, закрыв текущий?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1115" />
+        <location filename="../src/gui/mainwindow.cpp" line="1117"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1199" />
+        <location filename="../src/gui/mainwindow.cpp" line="1206"/>
         <source>Too many password attempts</source>
         <translation>Слишком много попыток ввода пароля</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1243" />
-        <location filename="../src/gui/mainwindow.cpp" line="1578" />
+        <location filename="../src/gui/mainwindow.cpp" line="1250"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1585"/>
         <source>TuxCards (%1)</source>
         <translation>TuxCards (%1)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1285" />
+        <location filename="../src/gui/mainwindow.cpp" line="1292"/>
         <source>Do you want to save the current file before opening another?</source>
         <translation>Сохранить текущий файл перед открытием другого?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1291" />
-        <location filename="../src/gui/mainwindow.cpp" line="1513" />
+        <location filename="../src/gui/mainwindow.cpp" line="1298"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1520"/>
         <source>No Filename specified.</source>
         <translation>Имя файла не задано.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1320" />
+        <location filename="../src/gui/mainwindow.cpp" line="1327"/>
         <source>Opening a data file</source>
         <translation>Открытие файла данных</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1321" />
-        <source>Could not open file '%1'&lt;br&gt; or did not recognize the dataformat.</source>
+        <location filename="../src/gui/mainwindow.cpp" line="1328"/>
+        <source>Could not open file &apos;%1&apos;&lt;br&gt; or did not recognize the dataformat.</source>
         <translation>Не удалось открыть файл «%1»&lt;br&gt; или не распознан формат данных.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1323" />
+        <location filename="../src/gui/mainwindow.cpp" line="1330"/>
         <source>Ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1388" />
-        <source>ERROR could not open '%1' for reading.</source>
+        <location filename="../src/gui/mainwindow.cpp" line="1395"/>
+        <source>ERROR could not open &apos;%1&apos; for reading.</source>
         <translation>ОШИБКА: не удалось открыть «%1» для чтения.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1437" />
+        <location filename="../src/gui/mainwindow.cpp" line="1444"/>
         <source>TuxCards - XML I/O</source>
         <translation>TuxCards — XML I/O</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1438" />
-        <source>ERROR could not open '%1' for reading or parse error.</source>
+        <location filename="../src/gui/mainwindow.cpp" line="1445"/>
+        <source>ERROR could not open &apos;%1&apos; for reading or parse error.</source>
         <translation>ОШИБКА: не удалось открыть «%1» или ошибка разбора.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1538" />
+        <location filename="../src/gui/mainwindow.cpp" line="1545"/>
         <source>Saving</source>
         <translation>Сохранение</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1538" />
+        <location filename="../src/gui/mainwindow.cpp" line="1545"/>
         <source>File not saved.
-Please do not use "%1" as file name.</source>
+Please do not use &quot;%1&quot; as file name.</source>
         <translation>Файл не сохранён.
 Не используйте «%1» в качестве имени файла.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1587" />
-        <source>Saved to '%1'.</source>
+        <location filename="../src/gui/mainwindow.cpp" line="1594"/>
+        <source>Saved to &apos;%1&apos;.</source>
         <translation>Сохранено в «%1».</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1616" />
+        <location filename="../src/gui/mainwindow.cpp" line="1623"/>
         <source>Tuxcards File Encryption</source>
         <translation>Шифрование файла Tuxcards</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1617" />
+        <location filename="../src/gui/mainwindow.cpp" line="1624"/>
         <source>About to remove encryption for current file.
  Would you like to continue?</source>
         <translation>Сейчас шифрование текущего файла будет снято.
  Продолжить?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1641" />
+        <location filename="../src/gui/mainwindow.cpp" line="1648"/>
         <source>Current file</source>
         <translation>Текущий файл</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1660" />
+        <location filename="../src/gui/mainwindow.cpp" line="1667"/>
         <source>Export entry as Markdown</source>
         <translation>Экспорт записи в Markdown</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1662" />
+        <location filename="../src/gui/mainwindow.cpp" line="1669"/>
         <source>Markdown (*.md);;All files (*)</source>
         <translation>Markdown (*.md);;Все файлы (*)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1670" />
+        <location filename="../src/gui/mainwindow.cpp" line="1677"/>
         <source>Export</source>
         <translation>Экспорт</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1670" />
+        <location filename="../src/gui/mainwindow.cpp" line="1677"/>
         <source>Could not open %1 for writing.</source>
         <translation>Не удалось открыть %1 для записи.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1675" />
-        <source>Exported to '%1'.</source>
-        <translation>Экспортировано в '%1'.</translation>
+        <location filename="../src/gui/mainwindow.cpp" line="1682"/>
+        <source>Exported to &apos;%1&apos;.</source>
+        <translation>Экспортировано в &apos;%1&apos;.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1683" />
+        <location filename="../src/gui/mainwindow.cpp" line="1690"/>
         <source>Import Markdown into current entry</source>
         <translation>Импорт Markdown в текущую запись</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1685" />
+        <location filename="../src/gui/mainwindow.cpp" line="1692"/>
         <source>Markdown (*.md *.markdown);;All files (*)</source>
         <translation>Markdown (*.md *.markdown);;Все файлы (*)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1690" />
+        <location filename="../src/gui/mainwindow.cpp" line="1697"/>
         <source>Import</source>
         <translation>Импорт</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1690" />
+        <location filename="../src/gui/mainwindow.cpp" line="1697"/>
         <source>Could not open %1 for reading.</source>
         <translation>Не удалось открыть %1 для чтения.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1700" />
-        <source>Imported from '%1'.</source>
-        <translation>Импортировано из '%1'.</translation>
+        <location filename="../src/gui/mainwindow.cpp" line="1707"/>
+        <source>Imported from &apos;%1&apos;.</source>
+        <translation>Импортировано из &apos;%1&apos;.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1716" />
+        <location filename="../src/gui/mainwindow.cpp" line="1723"/>
         <source>Choose a directory</source>
         <translation>Выберите папку</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1727" />
-        <location filename="../src/gui/mainwindow.cpp" line="1734" />
+        <location filename="../src/gui/mainwindow.cpp" line="1734"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1741"/>
         <source>HTML-Export</source>
         <translation>Экспорт HTML</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1727" />
+        <location filename="../src/gui/mainwindow.cpp" line="1734"/>
         <source>HTML&lt;em&gt;Export&lt;/em&gt; &lt;font size=-1&gt;(%1)&lt;/font&gt; finished, successfully.
 
 The data are stored in
@@ -1171,7 +1243,7 @@ The data are stored in
 %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1734" />
+        <location filename="../src/gui/mainwindow.cpp" line="1741"/>
         <source>HTML&lt;em&gt;Export&lt;/em&gt; &lt;font size=-1&gt;(%1)&lt;/font&gt; not successfully.
 
 Please check write permission and disk space
@@ -1182,22 +1254,22 @@ Please check write permission and disk space
 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1738" />
+        <location filename="../src/gui/mainwindow.cpp" line="1745"/>
         <source>Abort</source>
         <translation>Прервать</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1801" />
+        <location filename="../src/gui/mainwindow.cpp" line="1815"/>
         <source>WordCount</source>
         <translation>Количество слов</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1813" />
+        <location filename="../src/gui/mainwindow.cpp" line="1827"/>
         <source>&lt;center&gt;Current Entry contains&lt;br&gt;&lt;br&gt;%1 characters&lt;br&gt;%2 words&lt;br&gt;%3 lines&lt;br&gt;%4 paragraphs.&lt;/center&gt;</source>
         <translation>&lt;center&gt;Текущая запись содержит:&lt;br&gt;&lt;br&gt;%1 символов&lt;br&gt;%2 слов&lt;br&gt;%3 строк&lt;br&gt;%4 абзацев.&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1839" />
+        <location filename="../src/gui/mainwindow.cpp" line="1853"/>
         <source>TuxCards Keyboard shortcuts
 
 Common shortcuts:
@@ -1205,7 +1277,9 @@ Ctrl+N: New File
 Ctrl+O: Open File
 Ctrl+S: Save current file
 Ctrl+E: Encrypt current file
-Ctrl+F: Search
+Ctrl+F: Find in current entry
+Ctrl+H: Find and replace in current entry
+Ctrl+Shift+F: Search across the whole tree
 F5: Switch between tree(left pane) and editor window(right pane)
 Alt+Left or Right arrow: Navigate items accessed earlier(history)
 MENU (Left of right Ctrl key): Show current context menu
@@ -1225,30 +1299,32 @@ Ctrl+B: Bold, Ctrl+I: Italic, Ctrl+U: Underline, Ctrl+A: Select all
         <translation>Горячие клавиши TuxCards
 
 Общие:
-Ctrl+N: новый файл
-Ctrl+O: открыть файл
-Ctrl+S: сохранить текущий файл
-Ctrl+E: зашифровать текущий файл
-Ctrl+F: поиск
-F5: переключение между деревом (слева) и редактором (справа)
-Alt+влево/вправо: навигация по истории записей
-MENU (слева от правого Ctrl): контекстное меню
-Ctrl+W: количество слов, Ctrl+D: вставить дату, Ctrl+T: вставить время
+Ctrl+N: Новый файл
+Ctrl+O: Открыть файл
+Ctrl+S: Сохранить текущий файл
+Ctrl+E: Зашифровать текущий файл
+Ctrl+F: Найти в текущей записи
+Ctrl+H: Найти и заменить в текущей записи
+Ctrl+Shift+F: Поиск по всему дереву
+F5: Переключение между деревом (слева) и редактором (справа)
+Alt+стрелка влево/вправо: Переход по истории просмотренных записей
+MENU (слева от правой клавиши Ctrl): Контекстное меню
+Ctrl+W: Количество слов, Ctrl+D: Вставить дату, Ctrl+T: Вставить время
 
 Дерево (левая панель):
-F2: переименовать запись
-INS: добавить запись
-DEL: удалить запись
+F2: Изменить заголовок текущей записи
+INS: Добавить новую запись
+DEL: Удалить текущую запись
 
 Редактор (правая панель):
-Ctrl+X: вырезать, Ctrl+C: копировать, Ctrl+V: вставить
-Ctrl+Z: отменить, Ctrl+Y: вернуть
-Ctrl+K: удалить до конца строки
-Ctrl+B: жирный, Ctrl+I: курсив, Ctrl+U: подчёркнутый, Ctrl+A: выделить всё
+Ctrl+X: Вырезать, Ctrl+C: Копировать, Ctrl+V: Вставить
+Ctrl+Z: Отменить, Ctrl+Y: Повторить
+Ctrl+K: Удалить до конца текущей строки
+Ctrl+B: Полужирный, Ctrl+I: Курсив, Ctrl+U: Подчёркнутый, Ctrl+A: Выделить всё
 </translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1870" />
+        <location filename="../src/gui/mainwindow.cpp" line="1886"/>
         <source>TuxCards - The Notebook for Linux
 %1
 
@@ -1277,69 +1353,79 @@ SideBar и PNG-иконки портированы из TuxCards 2.2.1.
 </translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1917" />
+        <location filename="../src/gui/mainwindow.cpp" line="1933"/>
         <source>Save before exiting.</source>
         <translation>Сохранить перед выходом</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1918" />
+        <location filename="../src/gui/mainwindow.cpp" line="1934"/>
         <source>Do you want to save before leaving TuxCards?</source>
         <translation>Сохранить файл перед выходом из TuxCards?</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1919" />
+        <location filename="../src/gui/mainwindow.cpp" line="1935"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1919" />
+        <location filename="../src/gui/mainwindow.cpp" line="1935"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1167" />
+        <location filename="../src/gui/mainwindow.cpp" line="1169"/>
         <source>Unsupported encryption format</source>
         <translation>Неподдерживаемый формат шифрования</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="114" />
-        <location filename="../src/gui/mainwindow.cpp" line="208" />
-        <location filename="../src/gui/mainwindow.cpp" line="1199" />
-        <location filename="../src/gui/mainwindow.cpp" line="1812" />
-        <location filename="../src/gui/mainwindow.cpp" line="1838" />
-        <location filename="../src/gui/mainwindow.cpp" line="1869" />
+        <location filename="../src/gui/mainwindow.cpp" line="115"/>
+        <location filename="../src/gui/mainwindow.cpp" line="209"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1206"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1826"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1852"/>
+        <location filename="../src/gui/mainwindow.cpp" line="1885"/>
         <source>TuxCards</source>
         <translation>TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="157" />
+        <location filename="../src/gui/mainwindow.cpp" line="158"/>
         <source>Saving ...</source>
         <translation>Сохранение…</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="208" />
+        <location filename="../src/gui/mainwindow.cpp" line="209"/>
         <source>Not enough memory to run application.
 The program will be quit.</source>
         <translation>Недостаточно памяти для запуска.
 Программа будет закрыта.</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1157" />
+        <location filename="../src/gui/mainwindow.cpp" line="518"/>
+        <source>Search across tree (Ctrl+Shift+F)</source>
+        <translation>Поиск по дереву (Ctrl+Shift+F)</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="530"/>
+        <source>&lt;b&gt;Search across the entire tree&lt;/b&gt; (Ctrl+Shift+F).&lt;br/&gt;For an in-entry find/replace use Ctrl+F / Ctrl+H.</source>
+        <translation>&lt;b&gt;Поиск по всему дереву&lt;/b&gt; (Ctrl+Shift+F).&lt;br/&gt;Поиск и замена внутри записи — Ctrl+F / Ctrl+H.</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/mainwindow.cpp" line="1159"/>
         <source>AES-256-GCM (OpenSSL backend)</source>
         <translation>AES-256-GCM (бэкенд OpenSSL)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1160" />
+        <location filename="../src/gui/mainwindow.cpp" line="1162"/>
         <source>XChaCha20-Poly1305 (monocypher backend)</source>
         <translation>XChaCha20-Poly1305 (бэкенд monocypher)</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1163" />
+        <location filename="../src/gui/mainwindow.cpp" line="1165"/>
         <source>an unknown crypto backend</source>
         <translation>неизвестный криптобэкенд</translation>
     </message>
     <message>
-        <location filename="../src/gui/mainwindow.cpp" line="1168" />
+        <location filename="../src/gui/mainwindow.cpp" line="1170"/>
         <source>This file is encrypted with %1, but this build of TuxCards was compiled without that backend.
 
 Please download the full build (with both crypto backends) from the project releases page, or rebuild TuxCards with the matching backend enabled.</source>
@@ -1351,103 +1437,113 @@ Please download the full build (with both crypto backends) from the project rele
 <context>
     <name>OptionsDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="51" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="51"/>
         <source>Encryption format for new entries</source>
         <translation>Формат шифрования для новых записей</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="57" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="57"/>
         <source>AES-256-GCM + PBKDF2 (OpenSSL)</source>
         <translation>AES-256-GCM + PBKDF2 (OpenSSL)</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="60" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="60"/>
         <source>XChaCha20-Poly1305 + Argon2i (monocypher)</source>
         <translation>XChaCha20-Poly1305 + Argon2i (monocypher)</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="65" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="65"/>
         <source>This format applies to entries written from now on. Existing entries keep their format unless you tick the option below.</source>
         <translation>Этот формат применяется к записям, создаваемым с этого момента. Существующие записи сохраняют свой формат, если не включена опция ниже.</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="74" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="74"/>
         <source>Re-encrypt all entries when the algorithm changes</source>
         <translation>Перешифровать все записи при смене алгоритма</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="78" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="78"/>
         <source>If unchecked (default), only entries you have edited get re-encrypted, so the file may contain mixed formats.</source>
         <translation>Если не отмечено (по умолчанию), перешифровываются только изменённые записи, файл может содержать разные форматы вперемешку.</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="86" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="85"/>
+        <source>Decrypt entries only when viewed (faster open of large files)</source>
+        <translation>Расшифровывать записи только при просмотре (быстрее открывает большие файлы)</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="89"/>
+        <source>If checked, opening a file only verifies the password against one entry; the rest stays encrypted until you click on it. Search will skip entries that have not been opened yet.</source>
+        <translation>Если включено, при открытии файла пароль проверяется только на одной записи; остальные остаются зашифрованными, пока вы их не откроете. Поиск пропустит ещё не открытые записи.</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="98"/>
         <source>Encryption</source>
         <translation>Шифрование</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="141" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="157"/>
         <source>Choose Colors</source>
         <translation>Цвета</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="143" />
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="144" />
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="255" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="159"/>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="160"/>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="271"/>
         <source>Top Color</source>
         <translation>Верхний цвет</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="146" />
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="147" />
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="265" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="162"/>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="163"/>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="281"/>
         <source>Bottom Color</source>
         <translation>Нижний цвет</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="149" />
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="150" />
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="275" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="165"/>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="166"/>
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="291"/>
         <source>Text Color</source>
         <translation>Цвет текста</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="158" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="174"/>
         <source>Show Horizontal Text</source>
         <translation>Показывать горизонтальный текст</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="162" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="178"/>
         <source>First Text Line</source>
         <translation>Первая строка</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="165" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="181"/>
         <source>Second Text Line</source>
         <translation>Вторая строка</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="171" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="187"/>
         <source>Show Vertical Text</source>
         <translation>Показывать вертикальный текст</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="178" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="194"/>
         <source>Text Position</source>
         <translation>Позиция текста</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="179" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="195"/>
         <source>Top</source>
         <translation>Сверху</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="180" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="196"/>
         <source>Bottom</source>
         <translation>Снизу</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="191" />
+        <location filename="../src/gui/dialogs/optionsdialog.cpp" line="207"/>
         <source>SideBar</source>
         <translation>Боковая панель</translation>
     </message>
@@ -1455,12 +1551,12 @@ Please download the full build (with both crypto backends) from the project rele
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/CTuxCardsConfiguration.cpp" line="305" />
+        <location filename="../src/CTuxCardsConfiguration.cpp" line="307"/>
         <source>TuxCards</source>
         <translation>TuxCards</translation>
     </message>
     <message>
-        <location filename="../src/CTuxCardsConfiguration.cpp" line="306" />
+        <location filename="../src/CTuxCardsConfiguration.cpp" line="308"/>
         <source>You are about to use encryption for the first time.&lt;p&gt;It is recommended that you use encryption on a uncritical file for a few days.&lt;p&gt;The encryption algorithm was written with the best intents nevertheless err is human.&lt;p&gt;Therefore, you are solely responsible for using this feature. This includes possible errors within the algorithm, loss of data, hacked data or forgotten passwords, etc.&lt;p&gt;Are you sure that you want to use the encryption feature?</source>
         <translation>Вы собираетесь впервые использовать шифрование.&lt;p&gt;Рекомендуется протестировать шифрование на некритичных данных в течение нескольких дней.&lt;p&gt;Алгоритм шифрования написан с наилучшими намерениями, но ошибки возможны.&lt;p&gt;Вы полностью берёте на себя ответственность за использование этой возможности, включая возможные ошибки в алгоритме, потерю данных, утечки данных или забытые пароли.&lt;p&gt;Точно использовать шифрование?</translation>
     </message>
@@ -1468,89 +1564,118 @@ Please download the full build (with both crypto backends) from the project rele
 <context>
     <name>RecentFileList</name>
     <message>
-        <location filename="../src/gui/RecentFileList.cpp" line="25" />
+        <location filename="../src/gui/RecentFileList.cpp" line="25"/>
         <source>Recently Used Files</source>
         <translation>Недавние файлы</translation>
     </message>
     <message>
-        <location filename="../src/gui/RecentFileList.cpp" line="108" />
+        <location filename="../src/gui/RecentFileList.cpp" line="108"/>
         <source>File not found</source>
         <translation>Файл не найден</translation>
     </message>
     <message>
-        <location filename="../src/gui/RecentFileList.cpp" line="109" />
-        <source>The file '</source>
-        <translation>Файл '</translation>
+        <location filename="../src/gui/RecentFileList.cpp" line="109"/>
+        <source>The file &apos;</source>
+        <translation>Файл &apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/RecentFileList.cpp" line="109" />
-        <source>' does not exist.
+        <location filename="../src/gui/RecentFileList.cpp" line="109"/>
+        <source>&apos; does not exist.
 Do you want to remove it from the recent file menu?</source>
-        <translation>' не существует.
+        <translation>&apos; не существует.
 Удалить из списка недавних файлов?</translation>
     </message>
 </context>
 <context>
     <name>SearchDialog</name>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="33" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="33"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="41" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="41"/>
         <source>Search for ...</source>
         <translation>Искать ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="45" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="45"/>
         <source>Go</source>
         <translation>Найти</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="52" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="52"/>
         <source>Case &amp;Sensitive</source>
         <translation>&amp;Учитывать регистр</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="53" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="53"/>
         <source>Search Only &amp;Titles</source>
         <translation>Искать только в &amp;заголовках</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="57" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="57"/>
         <source>More &gt;&gt;&gt;</source>
         <translation>Подробнее &gt;&gt;&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="63" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="63"/>
         <source>Search in ...</source>
         <translation>Где искать ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="65" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="65"/>
         <source>.. &amp;Whole tree</source>
         <translation>.. во &amp;всём дереве</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="66" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="66"/>
         <source>.. active Entry and &amp;Children</source>
         <translation>.. в текущей записи и её &amp;потомках</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="67" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="67"/>
         <source>.. active &amp;Entry only</source>
         <translation>.. только в текущей &amp;записи</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="78" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="78"/>
         <source>Entry Name</source>
         <translation>Имя записи</translation>
     </message>
     <message>
-        <location filename="../src/gui/dialogs/searchdialog.cpp" line="78" />
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="78"/>
         <source>Entry Content</source>
         <translation>Содержимое записи</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="130"/>
+        <source>Searching ...</source>
+        <translation>Поиск ...</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="151"/>
+        <source>&lt;b&gt;No match found.&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Совпадений не найдено.&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="153"/>
+        <source>&lt;b&gt;One match found.&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Найдено одно совпадение.&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="155"/>
+        <source>&lt;b&gt;%1 matches found.&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Найдено совпадений: %1.&lt;/b&gt;</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/gui/dialogs/searchdialog.cpp" line="158"/>
+        <source>(%n encrypted entry not scanned — open it once to include it)</source>
+        <translation>
+            <numerusform>(%n зашифрованная запись пропущена — откройте её, чтобы включить в поиск)</numerusform>
+            <numerusform>(%n зашифрованные записи пропущены — откройте их, чтобы включить в поиск)</numerusform>
+            <numerusform>(%n зашифрованных записей пропущено — откройте их, чтобы включить в поиск)</numerusform>
+        </translation>
     </message>
 </context>
 </TS>

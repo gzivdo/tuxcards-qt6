@@ -17,13 +17,16 @@
 
 
 #include "CSingleEntryView.h"
+#include "editorfindbar.h"
+#include <QVBoxLayout>
 #include <iostream>
 
 // -------------------------------------------------------------------------------
 CSingleEntryView::CSingleEntryView( QWidget* pParent )
-  : QStackedWidget( pParent )
+  : QWidget( pParent )
   , mpActiveElement( nullptr )
   , mpEditor( nullptr )
+  , mpFindBar( nullptr )
 // -------------------------------------------------------------------------------
 {
    mpEditor = new Editor( this );
@@ -35,7 +38,13 @@ CSingleEntryView::CSingleEntryView( QWidget* pParent )
       return;
    }
 
-   (void)addWidget( mpEditor );
+   mpFindBar = new EditorFindBar( mpEditor, this );
+
+   QVBoxLayout* lay = new QVBoxLayout( this );
+   lay->setContentsMargins( 0, 0, 0, 0 );
+   lay->setSpacing( 0 );
+   lay->addWidget( mpEditor, 1 );
+   lay->addWidget( mpFindBar );
 }
 
 
@@ -65,6 +74,14 @@ Editor* CSingleEntryView::getEditor( void )
 // -------------------------------------------------------------------------------
 {
    return mpEditor;
+}
+
+
+// -------------------------------------------------------------------------------
+EditorFindBar* CSingleEntryView::getFindBar( void )
+// -------------------------------------------------------------------------------
+{
+   return mpFindBar;
 }
 
 
@@ -120,6 +137,5 @@ void CSingleEntryView::activeInformationElementChanged( CInformationElement* pIE
    mpActiveElement = pIE;
 
    mpEditor->activeInformationElementChanged( mpActiveElement );
-   setCurrentWidget( mpEditor );
 //   signalEntryDecrypted();
 }

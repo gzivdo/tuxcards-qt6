@@ -155,13 +155,14 @@ bool CTreeElement::isChildOrSelfSelected( void )
 }
 
 void CTreeElement::search( QString pattern, bool recursive, bool caseSensitive,
-                          bool SearchOnlyTitles, QTreeWidget& list )
+                          bool SearchOnlyTitles, QTreeWidget& list,
+                          int& nSkippedEncrypted )
 {
    if ( nullptr == mpInformationElement )
       return;
 
    mpInformationElement->search(pattern, recursive, caseSensitive,
-                                SearchOnlyTitles, list);
+                                SearchOnlyTitles, list, nSkippedEncrypted);
 }
 
 CTreeElement* CTreeElement::findChildWithName( QString name )

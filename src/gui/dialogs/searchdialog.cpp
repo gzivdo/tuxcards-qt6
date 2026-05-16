@@ -127,30 +127,38 @@ int SearchDialog::setUp( CTreeElement* rootTreeElement_,
 
 void SearchDialog::startSearching( void )
 {
-  status->setText("Searching ...");
+  status->setText(tr("Searching ..."));
   list->clear();
 
   QString text = edit->text();
   if (text.length() == 0) return;
   int mode = whatMode();
+  int nSkippedEncrypted = 0;
 
   if (mode == 0)
     rootTreeElement->search(edit->text(), true, caseSensitive->isChecked(),
-                            searchTitles->isChecked(), *list);
+                            searchTitles->isChecked(), *list, nSkippedEncrypted);
   else if (mode == 1)
     activeTreeElement->search(edit->text(), true, caseSensitive->isChecked(),
-                              searchTitles->isChecked(), *list);
+                              searchTitles->isChecked(), *list, nSkippedEncrypted);
   else if (mode == 2)
     activeTreeElement->search(edit->text(), false, caseSensitive->isChecked(),
-                              searchTitles->isChecked(), *list);
+                              searchTitles->isChecked(), *list, nSkippedEncrypted);
 
   int n = list->topLevelItemCount();
+  QString s;
   if (n == 0)
-    status->setText("<b>No match found.</b>");
+    s = tr("<b>No match found.</b>");
   else if (n == 1)
-    status->setText("<b>One match found.</b>");
+    s = tr("<b>One match found.</b>");
   else
-    status->setText("<b>" + QString::number(n) + " matches found.</b>");
+    s = tr("<b>%1 matches found.</b>").arg(n);
+
+  if (nSkippedEncrypted > 0)
+    s += " " + tr("(%n encrypted entry not scanned — open it once to include it)",
+                  "", nSkippedEncrypted);
+
+  status->setText(s);
 }
 
 

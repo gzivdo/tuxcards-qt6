@@ -81,6 +81,18 @@ void OptionsDialog::buildEncryptionTab()
    hint2->setWordWrap(true);
    lay->addWidget(hint2);
 
+   mpLazyDecrypt = new QCheckBox(
+      tr("Decrypt entries only when viewed (faster open of large files)"), tab);
+   lay->addWidget(mpLazyDecrypt);
+
+   QLabel* hint3 = new QLabel(
+      tr("If checked, opening a file only verifies the password against "
+         "one entry; the rest stays encrypted until you click on it. "
+         "Search will skip entries that have not been opened yet."),
+      tab);
+   hint3->setWordWrap(true);
+   lay->addWidget(hint3);
+
    lay->addStretch(1);
 
    TabWidget2->addTab(tab, tr("Encryption"));
@@ -97,6 +109,8 @@ void OptionsDialog::loadEncryptionFromConfig()
 
    mpReencryptAll->setChecked(
       mrefConfig.getBoolValue( CTuxCardsConfiguration::B_REENCRYPT_ON_FORMAT_CHANGE ) );
+   mpLazyDecrypt->setChecked(
+      mrefConfig.getBoolValue( CTuxCardsConfiguration::B_LAZY_DECRYPT ) );
 }
 
 
@@ -111,6 +125,8 @@ void OptionsDialog::saveEncryptionToConfig()
    }
    mrefConfig.setBoolValue( CTuxCardsConfiguration::B_REENCRYPT_ON_FORMAT_CHANGE,
                             mpReencryptAll->isChecked() );
+   mrefConfig.setBoolValue( CTuxCardsConfiguration::B_LAZY_DECRYPT,
+                            mpLazyDecrypt->isChecked() );
 }
 
 
