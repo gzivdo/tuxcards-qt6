@@ -2,7 +2,13 @@
 # 3 MB -debuginfo (plus the empty -debugsource) sub-package. Users
 # who want a debug build should just configure with -DCMAKE_BUILD_TYPE=
 # Debug from source.
+# All three knobs are required on modern Fedora; debug_package alone
+# is silently overridden by the dist macros, _enable_debug_packages
+# disables the subpackage emission, __debug_install_post stops the
+# install-post brp-script from extracting symbols in the first place.
+%global _enable_debug_packages 0
 %global debug_package %{nil}
+%global __debug_install_post %{nil}
 
 Name:           tuxcards-qt6
 Version:        3.1.0
