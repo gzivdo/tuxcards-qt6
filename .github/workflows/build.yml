@@ -18,7 +18,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-latest, macos-latest]
+        # Native runners. ubuntu-26.04 is the 2026 LTS — GitHub may not
+        # have the image yet, in that case the matrix entry just fails
+        # in isolation and the rest of the build still goes through
+        # thanks to fail-fast: false.
+        os: [ubuntu-24.04, ubuntu-26.04, windows-latest, macos-latest]
         qt: ['6.7.3']
 
     steps:
@@ -68,3 +72,42 @@ jobs:
         run: |
           sudo apt-get install -y xvfb
           xvfb-run -a timeout 5 ./build/tuxcards || true
+
+
+  # Debian images don't exist as native GitHub runners, so we drive
+  # them via a container. Same CMake build as on the native Ubuntu
+  # runners, but using each distro's own Qt6 packages — this catches
+  # regressions where we accidentally rely on a newer Qt feature than
+  # what's shipped in stable Debian.
+  debian:
+    name: ${{ matrix.image }}
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ['debian:12', 'debian:13']
+
+    steps:
+      - name: Install distro deps
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+              git ca-certificates cmake build-essential libssl-dev libcups2-dev \
+              qt6-base-dev qt6-base-dev-tools \
+              libqt6core5compat6-dev qt6-tools-dev
+
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Unit tests
+        run: |
+          cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build tests/build --parallel
+          ctest --test-dir tests/build --output-on-failure
