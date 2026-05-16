@@ -34,9 +34,9 @@ OptionsDialog::OptionsDialog( QWidget* parent, CTuxCardsConfiguration& config )
    setObjectName("OptionsDialog");
    setModal(true);
    setupUi(this);
-   connect( mpOkButton, SIGNAL(clicked()), this, SLOT(changeProperties()) );
-   connect( treeFontButton, SIGNAL(clicked()), this, SLOT(changeTreeFont()) );
-   connect( editorFontButton, SIGNAL(clicked()), this, SLOT(changeEditFont()) );
+   connect( mpOkButton,       &QAbstractButton::clicked, this, &OptionsDialog::changeProperties );
+   connect( treeFontButton,   &QAbstractButton::clicked, this, &OptionsDialog::changeTreeFont );
+   connect( editorFontButton, &QAbstractButton::clicked, this, &OptionsDialog::changeEditFont );
 
    buildSidebarTab();
    buildEncryptionTab();
@@ -166,9 +166,9 @@ void OptionsDialog::buildSidebarTab()
    mpTextColorBtn = new QPushButton(tr("Text Color"));
    colorGrid->addWidget(mpTextColorBtn, 2, 1);
    form->addWidget(colorBox);
-   connect(mpTopColorBtn,    SIGNAL(clicked()), this, SLOT(chooseTopColor()));
-   connect(mpBottomColorBtn, SIGNAL(clicked()), this, SLOT(chooseBottomColor()));
-   connect(mpTextColorBtn,   SIGNAL(clicked()), this, SLOT(chooseTextColor()));
+   connect(mpTopColorBtn,    &QAbstractButton::clicked, this, &OptionsDialog::chooseTopColor);
+   connect(mpBottomColorBtn, &QAbstractButton::clicked, this, &OptionsDialog::chooseBottomColor);
+   connect(mpTextColorBtn,   &QAbstractButton::clicked, this, &OptionsDialog::chooseTextColor);
 
    // horizontal text
    mpShowHText = new QCheckBox(tr("Show Horizontal Text"), tab);
@@ -207,12 +207,12 @@ void OptionsDialog::buildSidebarTab()
    TabWidget2->addTab(tab, tr("SideBar"));
 
    // live preview when fields change
-   connect(mpShowHText, SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
-   connect(mpShowVText, SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
-   connect(mpTextOne,   SIGNAL(textChanged(QString)), this, SLOT(refreshPreviewSlot()));
-   connect(mpTextTwo,   SIGNAL(textChanged(QString)), this, SLOT(refreshPreviewSlot()));
-   connect(mpVText,     SIGNAL(textChanged(QString)), this, SLOT(refreshPreviewSlot()));
-   connect(mpVTextTop,  SIGNAL(toggled(bool)), this, SLOT(refreshPreviewSlot()));
+   connect(mpShowHText, &QAbstractButton::toggled, this, &OptionsDialog::refreshPreviewSlot);
+   connect(mpShowVText, &QAbstractButton::toggled, this, &OptionsDialog::refreshPreviewSlot);
+   connect(mpTextOne,   &QLineEdit::textChanged,   this, &OptionsDialog::refreshPreviewSlot);
+   connect(mpTextTwo,   &QLineEdit::textChanged,   this, &OptionsDialog::refreshPreviewSlot);
+   connect(mpVText,     &QLineEdit::textChanged,   this, &OptionsDialog::refreshPreviewSlot);
+   connect(mpVTextTop,  &QAbstractButton::toggled, this, &OptionsDialog::refreshPreviewSlot);
 }
 
 

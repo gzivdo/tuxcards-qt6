@@ -72,21 +72,15 @@ CTree::CTree( QWidget* pParent, CTuxCardsConfiguration& refTuxConfiguration )
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   mAutoOpenTimer.setSingleShot(true);
-  connect( &mAutoOpenTimer, SIGNAL(timeout()), this, SLOT(timeoutEvent()) );
+  connect( &mAutoOpenTimer, &QTimer::timeout, this, &CTree::timeoutEvent );
 
-  connect( this, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
-           this, SLOT(currentItemChangedSlot(QTreeWidgetItem*, QTreeWidgetItem*)) );
-  connect( this, SIGNAL(customContextMenuRequested(const QPoint&)),
-           this, SLOT(showContextMenu(const QPoint&)) );
-  connect( this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
-           this, SLOT(elementOpenedEvent(QTreeWidgetItem*)) );
-  connect( this, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
-           this, SLOT(elementClosedEvent(QTreeWidgetItem*)) );
-  connect( this, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
-           this, SLOT(inPlaceRenaming(QTreeWidgetItem*, int)) );
+  connect( this, &QTreeWidget::currentItemChanged,         this, &CTree::currentItemChangedSlot );
+  connect( this, &QWidget::customContextMenuRequested,     this, &CTree::showContextMenu );
+  connect( this, &QTreeWidget::itemExpanded,               this, &CTree::elementOpenedEvent );
+  connect( this, &QTreeWidget::itemCollapsed,              this, &CTree::elementClosedEvent );
+  connect( this, &QTreeWidget::itemChanged,                this, &CTree::inPlaceRenaming );
 
-  connect( &mSearchDialog, SIGNAL(makeVisible(SearchPosition*)),
-           this,           SIGNAL(makeVisible(SearchPosition*)) );
+  connect( &mSearchDialog, &SearchDialog::makeVisible, this, &CTree::makeVisible );
 
   settingUpContextMenu();
 }
@@ -130,18 +124,18 @@ void CTree::setColumnText(QString text)
 
 void CTree::settingUpContextMenu( void )
 {
-  mContextMenu.addAction( getIcon("addTreeElement"), "&Add Entry...",        this, SLOT(addElement()) );
-  mContextMenu.addAction( "&Rename Entry",                                   this, SLOT(renameElement()) );
-  mContextMenu.addAction( getIcon("changeProperty"), "Change Properties...", this, SLOT(changeActiveElementProperties()) );
-  mContextMenu.addAction( getIcon("delete"),         "Delete Entry",         this, SLOT(askForDeletion()) );
+  mContextMenu.addAction( getIcon("addTreeElement"), "&Add Entry...",        this, &CTree::addElement );
+  mContextMenu.addAction( "&Rename Entry",                                   this, &CTree::renameElement );
+  mContextMenu.addAction( getIcon("changeProperty"), "Change Properties...", this, &CTree::changeActiveElementProperties );
+  mContextMenu.addAction( getIcon("delete"),         "Delete Entry",         this, &CTree::askForDeletion );
   mContextMenu.addSeparator();
-  mContextMenu.addAction( getIcon("editentrycolor"), "Set &Entry Color...",  this, SLOT(setEntryColor()) );
-  mContextMenu.addAction( getIcon("editentrysubtreecolor"), "Set Entry &Sub-Tree Color...", this, SLOT(setEntrySubTreeColor()) );
+  mContextMenu.addAction( getIcon("editentrycolor"), "Set &Entry Color...",  this, &CTree::setEntryColor );
+  mContextMenu.addAction( getIcon("editentrysubtreecolor"), "Set Entry &Sub-Tree Color...", this, &CTree::setEntrySubTreeColor );
   mContextMenu.addSeparator();
-  mContextMenu.addAction( getIcon("upArrow"),        "Move Entry Upwards",   this, SLOT(moveElementUp()) );
-  mContextMenu.addAction( getIcon("downArrow"),      "Move Entry Downwards", this, SLOT(moveElementDown()) );
+  mContextMenu.addAction( getIcon("upArrow"),        "Move Entry Upwards",   this, &CTree::moveElementUp );
+  mContextMenu.addAction( getIcon("downArrow"),      "Move Entry Downwards", this, &CTree::moveElementDown );
   mContextMenu.addSeparator();
-  mContextMenu.addAction( "Add to &Bookmarks",                                this, SLOT(addEntryToBookmarks()) );
+  mContextMenu.addAction( "Add to &Bookmarks",                                this, &CTree::addEntryToBookmarks );
 }
 
 void CTree::currentItemChangedSlot( QTreeWidgetItem* pItem, QTreeWidgetItem* /*previous*/ )
@@ -425,8 +419,8 @@ void CTree::createTreeFromCollection( CInformationCollection& collection )
    }
 
    mpCollection = &collection;
-   connect( mpCollection, SIGNAL(activeInformationElementChanged(CInformationElement*)),
-            this, SLOT(activeInformationElementChanged(CInformationElement*)) );
+   connect( mpCollection, &CInformationCollection::activeInformationElementChanged,
+            this, &CTree::activeInformationElementChanged );
 }
 
 void CTree::addInformationElementsToTreeItem( CTreeElement& parent, CTreeInformationElement& element )

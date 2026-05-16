@@ -98,8 +98,8 @@ void Editor::initialize( void )
   mpActiveElement = nullptr;
 
   SEMAPHORE_TEXT_WAS_SET = false;
-  connect( this, SIGNAL(textChanged()), this, SLOT(sendUndoAvailableSignal()));
-  connect( this, SIGNAL(textChanged()), this, SLOT(sendRedoAvailableSignal()));
+  connect( this, &QTextEdit::textChanged, this, &Editor::sendUndoAvailableSignal );
+  connect( this, &QTextEdit::textChanged, this, &Editor::sendRedoAvailableSignal );
 }
 
 
@@ -206,7 +206,7 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
 
    if ( mpActiveElement )
    {
-      disconnect( mpActiveElement, SIGNAL(informationHasChanged()), this, SLOT(rereadInformation()) );
+      disconnect( mpActiveElement, &CInformationElement::informationHasChanged, this, &Editor::rereadInformation );
 
       writeCurrentTextToActiveInformationElement();
       mpActiveElement->setInformationYPos( verticalScrollBar()->value() );
@@ -227,7 +227,7 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
    verticalScrollBar()->setValue( pElement->getInformationYPos() );
 
    mpActiveElement = pElement;
-   connect( mpActiveElement, SIGNAL(informationHasChanged()), this, SLOT(rereadInformation()) );
+   connect( mpActiveElement, &CInformationElement::informationHasChanged, this, &Editor::rereadInformation );
 }
 
 

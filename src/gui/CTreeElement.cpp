@@ -51,9 +51,9 @@ void CTreeElement::init( CTreeInformationElement& element )
   mpInformationElement = &element;
   setFlags(flags() | Qt::ItemIsEditable);
   copyPropertiesFromInformationElement();
-  connect( &element, SIGNAL(propertyChanged()), this, SLOT(propertyChangeEvent()) );
-  connect( &element, SIGNAL(childAdded(CInformationElement*)), this, SLOT(childAddEvent(CInformationElement*)) );
-  connect( &element, SIGNAL(childMoved(int, int)), this, SLOT(childMovedEvent(int, int)) );
+  connect( &element, &CInformationElement::propertyChanged, this, &CTreeElement::propertyChangeEvent );
+  connect( &element, &CInformationElement::childAdded,      this, &CTreeElement::childAddEvent );
+  connect( &element, &CInformationElement::childMoved,      this, &CTreeElement::childMovedEvent );
 }
 
 CTreeElement* CTreeElement::getLastChild( void )

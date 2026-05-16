@@ -248,8 +248,8 @@ void CInformationCollection::registerAsListenerOf( CInformationElement* pElem )
 
 	mNumElements++;
 
-   connect( pElem, SIGNAL(propertyChanged()), this, SIGNAL(modelHasChanged()) );
-   connect( pElem, SIGNAL(childAdded(CInformationElement*)), this, SLOT(slotChildAdded(CInformationElement*)) );
+   connect( pElem, &CInformationElement::propertyChanged, this, &CInformationCollection::modelHasChanged );
+   connect( pElem, &CInformationElement::childAdded,      this, &CInformationCollection::slotChildAdded );
 
 	emit numElementsChanged( mNumElements );
 }

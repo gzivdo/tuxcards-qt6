@@ -90,11 +90,11 @@ SearchDialog::SearchDialog( QWidget* pParent )
    root->addWidget(status);
 
    // Communication
-   connect( edit, SIGNAL(returnPressed()), this, SLOT(startSearching()) );
-   connect( go,   SIGNAL(clicked()),       this, SLOT(startSearching()) );
-   connect( list, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
-            this, SLOT(selectionChange(QTreeWidgetItem*)) );
-   connect( moreBtn, SIGNAL(toggled(bool)), this, SLOT(toggleMore(bool)) );
+   connect( edit, &QLineEdit::returnPressed,      this, &SearchDialog::startSearching );
+   connect( go,   &QAbstractButton::clicked,      this, &SearchDialog::startSearching );
+   connect( list, &QTreeWidget::currentItemChanged,
+            this, [this](QTreeWidgetItem* current, QTreeWidgetItem*) { selectionChange(current); } );
+   connect( moreBtn, &QAbstractButton::toggled,   this, &SearchDialog::toggleMore );
 }
 
 

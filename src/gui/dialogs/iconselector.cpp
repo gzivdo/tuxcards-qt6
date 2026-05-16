@@ -24,8 +24,8 @@ IconSelector::IconSelector( const QString &dir, QWidget *parent )
     setUniformItemSizes( true );
     setWordWrap( true );
 
-    connect( this, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-             this, SLOT(itemDoubleClickedSlot(QListWidgetItem*)) );
+    connect( this, &QListWidget::itemDoubleClicked,
+             this, &IconSelector::itemDoubleClickedSlot );
 
     setDirectory( dir );
 }

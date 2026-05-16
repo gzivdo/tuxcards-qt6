@@ -38,7 +38,7 @@ void RecentFileList::createActions( QWidget* pParent )
    {
       QAction* pAction = new QAction( pParent );
       pAction->setVisible( false );
-      connect( pAction, SIGNAL(triggered()), this, SLOT(slotOpenRecentFile()) );
+      connect( pAction, &QAction::triggered, this, &RecentFileList::slotOpenRecentFile );
 
       mpRecentlyFilesMenu->addAction( pAction );
       mRecentFileActs.append( pAction );
@@ -132,8 +132,8 @@ void RecentFileList::createComboBox( QWidget& parentWidget )
       DELETE( mpComboBox );
 
    mpComboBox = new QComboBox( &parentWidget );
-   connect( mpComboBox, SIGNAL( activated( int ) ),
-            this, SLOT( slotComboActivated( int ) ) );
+   connect( mpComboBox, &QComboBox::activated,
+            this, &RecentFileList::slotComboActivated );
 
    updateComboBox();
 }

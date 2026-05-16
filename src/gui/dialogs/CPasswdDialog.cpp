@@ -34,7 +34,7 @@ CPasswdDialog::CPasswdDialog( QWidget* pParent )
    setObjectName("CPasswdDialog");
    setModal(true);
    setupUi(this);
-   connect( mpOkButton, SIGNAL(clicked()), this, SLOT(verifyAndAccept()) );
+   connect( mpOkButton, &QPushButton::clicked, this, &CPasswdDialog::verifyAndAccept );
 }
 
 // -------------------------------------------------------------------------------

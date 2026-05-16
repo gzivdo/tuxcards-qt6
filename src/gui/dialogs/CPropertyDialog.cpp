@@ -48,8 +48,8 @@ CPropertyDialog::CPropertyDialog( QWidget* pParent,
    setModal(true);
    setupUi(this);
 
-   connect( mpIconButton, SIGNAL(clicked()), this, SLOT(chooseIcon()) );
-   connect( mpButtonApply, SIGNAL(clicked()), this, SLOT(changeProperties()) );
+   connect( mpIconButton,  &QAbstractButton::clicked, this, &CPropertyDialog::chooseIcon );
+   connect( mpButtonApply, &QAbstractButton::clicked, this, &CPropertyDialog::changeProperties );
 }
 
 

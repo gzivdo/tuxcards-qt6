@@ -69,14 +69,14 @@ void IconSelectorDialog::setup()
     pathCombo = new QComboBox(upper);
     pathCombo->setEditable(true);
     upperLayout->addWidget(pathCombo);
-    connect(pathCombo, SIGNAL( textActivated( const QString & ) ),
-            this, SLOT( changePath( const QString & ) ) );
+    connect(pathCombo, &QComboBox::textActivated,
+            this, &IconSelectorDialog::changePath );
 
     QPixmap pix = QPixmap( cdtoparent_xpm );
     upButton = new QPushButton( pix, "", upper);
     upButton->setMaximumWidth(26);
     upperLayout->addWidget(upButton);
-    connect(upButton, SIGNAL(pressed()), this, SLOT(cdUp()));
+    connect(upButton, &QAbstractButton::pressed, this, &IconSelectorDialog::cdUp);
 
     layout->addWidget(upper);
 
@@ -94,31 +94,29 @@ void IconSelectorDialog::setup()
     QWidget* lower = new QWidget(this);
     QHBoxLayout* lowerLayout = new QHBoxLayout(lower);
     QPushButton* ok = new QPushButton(tr("Ok"), lower);
-    connect(ok, SIGNAL(released()), this, SLOT(slotOkPressed()));
+    connect(ok, &QAbstractButton::released, this, &IconSelectorDialog::slotOkPressed);
     lowerLayout->addWidget(ok);
     QPushButton* cancel = new QPushButton(tr("Cancel"), lower);
-    connect(cancel, SIGNAL(released()), this, SLOT(slotCancelPressed()));
+    connect(cancel, &QAbstractButton::released, this, &IconSelectorDialog::slotCancelPressed);
     lowerLayout->addWidget(cancel);
     layout->addWidget(lower);
 
-    connect( fileview, SIGNAL( directoryChanged( const QString & ) ),
-             this, SLOT( directoryChanged( const QString & ) ) );
-    connect( fileview, SIGNAL( startReadDir( int ) ),
-             this, SLOT( slotStartReadDir( int ) ) );
-    connect( fileview, SIGNAL( readNextDir() ),
-             this, SLOT( slotReadNextDir() ) );
-    connect( fileview, SIGNAL( readDirDone() ),
-             this, SLOT( slotReadDirDone() ) );
-    connect( fileview, SIGNAL(itemClicked(QListWidgetItem*)),
-             this, SLOT(slotFileSelected(QListWidgetItem*)) );
+    connect( fileview, &IconSelector::directoryChanged,
+             this, &IconSelectorDialog::directoryChanged );
+    connect( fileview, &IconSelector::startReadDir,
+             this, &IconSelectorDialog::slotStartReadDir );
+    connect( fileview, &IconSelector::readNextDir,
+             this, &IconSelectorDialog::slotReadNextDir );
+    connect( fileview, &IconSelector::readDirDone,
+             this, &IconSelectorDialog::slotReadDirDone );
+    connect( fileview, &QListWidget::itemClicked,
+             this, &IconSelectorDialog::slotFileSelected );
 
     progress = new QProgressBar(this);
     layout->addWidget(progress);
 
-    connect( fileview, SIGNAL( enableUp() ),
-             this, SLOT( enableUp() ) );
-    connect( fileview, SIGNAL( disableUp() ),
-             this, SLOT( disableUp() ) );
+    connect( fileview, &IconSelector::enableUp,  this, &IconSelectorDialog::enableUp );
+    connect( fileview, &IconSelector::disableUp, this, &IconSelectorDialog::disableUp );
 
     directoryChanged( QDir::current().absolutePath() );
 }

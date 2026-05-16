@@ -150,7 +150,7 @@ MainWindow::MainWindow(QString arg)
    mpOptionsDialog = new OptionsDialog( this, mConfiguration );
    if ( nullptr != mpOptionsDialog )
    {
-      connect( mpOptionsDialog, SIGNAL(configurationChanged()), this, SLOT(applyConfigurationMain()) );
+      connect( mpOptionsDialog, &OptionsDialog::configurationChanged, this, &MainWindow::applyConfigurationMain );
    }
 
    // create little "showing-"dialog
@@ -284,8 +284,8 @@ void MainWindow::settingUpEditor( QWidget* pParent )
 
    mpEditor = mpSingleEntryView->getEditor();
 
-   connect(mpEditor, SIGNAL(textChanged()), this, SLOT(recognizeChanges()));
-   connect(mpEditor, SIGNAL(formatRecognized(InformationFormat)), this, SLOT(showRecognizedFormat(InformationFormat)));
+   connect(mpEditor, &QTextEdit::textChanged,     this, &MainWindow::recognizeChanges);
+   connect(mpEditor, &Editor::formatRecognized,   this, &MainWindow::showRecognizedFormat);
    connect(mpEditor, &QTextEdit::cursorPositionChanged, this, [this](){
       textAlignmentChanged((int)mpEditor->alignment());
    });
@@ -299,12 +299,12 @@ void MainWindow::settingUpTree( QWidget* pParent )
    mpTree  = new CTree( pParent, mConfiguration );
    checkPointer( mpTree );
 
-   connect( mpTree, SIGNAL(showMessage(QString, int)),    this, SLOT(showMessage(QString, int)) );
-   connect( mpTree, SIGNAL(makeVisible(SearchPosition*)), this, SLOT(makeVisible(SearchPosition*)) );
-   connect( mpTree, SIGNAL(addEntryToBookmarksSignal()),  this, SLOT(addElementToBookmarksEvent()) );
+   connect( mpTree, &CTree::showMessage,             this, &MainWindow::showMessage );
+   connect( mpTree, &CTree::makeVisible,             this, &MainWindow::makeVisible );
+   connect( mpTree, &CTree::addEntryToBookmarksSignal, this, &MainWindow::addElementToBookmarksEvent );
 
 	// On a drag start, move editor contents to InformationElement.
-   connect(mpTree, SIGNAL(dragStarted()), mpEditor, SLOT(writeCurrentTextToActiveInformationElement()));
+   connect(mpTree, &CTree::dragStarted, mpEditor, &Editor::writeCurrentTextToActiveInformationElement);
 }
 
 
@@ -370,30 +370,30 @@ void MainWindow::settingUpActions( void )
    mfileEncryptFile = new QAction( getIcon("fileunlock"), tr("Toggle file &encryption"), this);
    mfileEncryptFile->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
    mfileEncryptFile->setCheckable(true);
-   connect( mfileEncryptFile, SIGNAL(triggered()), this, SLOT(toggleFileEncryption()) );
+   connect( mfileEncryptFile, &QAction::triggered, this, &MainWindow::toggleFileEncryption );
 
    editUndoAction = new QAction( getIcon("undo"), tr("&Undo"), this);
    editUndoAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Z));
-   connect( mpEditor, SIGNAL(undoAvailable(bool)), editUndoAction, SLOT(setEnabled(bool)) );
-   connect( editUndoAction, SIGNAL(triggered()), mpEditor, SLOT(undo()) );
+   connect( mpEditor,       &QTextEdit::undoAvailable, editUndoAction, &QAction::setEnabled );
+   connect( editUndoAction, &QAction::triggered,       mpEditor,       &QTextEdit::undo );
 
    editRedoAction = new QAction( getIcon("redo"), tr("&Redo"), this);
    editRedoAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Y));
-   connect( mpEditor, SIGNAL(redoAvailable(bool)), editRedoAction, SLOT(setEnabled(bool)) );
-   connect( editRedoAction, SIGNAL(triggered()), mpEditor, SLOT(redo()) );
+   connect( mpEditor,       &QTextEdit::redoAvailable, editRedoAction, &QAction::setEnabled );
+   connect( editRedoAction, &QAction::triggered,       mpEditor,       &QTextEdit::redo );
 
    editCopyAction = new QAction( getIcon("editcopy"), tr("&Copy"), this);
    editCopyAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_C));
-   connect( mpEditor, SIGNAL(copyAvailable(bool)), editCopyAction, SLOT(setEnabled(bool)) );
-   connect( editCopyAction, SIGNAL(triggered()), mpEditor, SLOT(copy()) );
+   connect( mpEditor,       &QTextEdit::copyAvailable, editCopyAction, &QAction::setEnabled );
+   connect( editCopyAction, &QAction::triggered,       mpEditor,       &QTextEdit::copy );
 
    editSetEntryColor = new QAction( getIcon("editentrycolor"), tr("Set &Entry Color..."), this);
    editSetEntryColor->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
-   connect( editSetEntryColor, SIGNAL(triggered()), mpTree, SLOT(setEntryColor()) );
+   connect( editSetEntryColor, &QAction::triggered, mpTree, &CTree::setEntryColor );
 
    editSetEntrySubTreeColor = new QAction( getIcon("editentrysubtreecolor"), tr("Set Entry &Sub-Tree Color..."), this);
    editSetEntrySubTreeColor->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_R));
-   connect( editSetEntrySubTreeColor, SIGNAL(triggered()), mpTree, SLOT(setEntrySubTreeColor()) );
+   connect( editSetEntrySubTreeColor, &QAction::triggered, mpTree, &CTree::setEntrySubTreeColor );
 }
 
 
@@ -401,12 +401,12 @@ void MainWindow::settingUpActions( void )
 void MainWindow::settingUpMenu( void )
 {
    QMenu* file = new QMenu( tr("&File"), this );
-   file->addAction( getIcon("filenew" ), tr("&New File"),       this, SLOT(newFile()),  QKeySequence(Qt::CTRL | Qt::Key_N));
-   file->addAction( getIcon("fileopen"), tr("&Open File..."),   this, SLOT(open()),     QKeySequence(Qt::CTRL | Qt::Key_O));
-   file->addAction( getIcon("filesave"), tr("&Save"),           this, SLOT(save()),     QKeySequence(Qt::CTRL | Qt::Key_S));
-   file->addAction(                      tr("Save &As..."),     this, SLOT(saveAs()) );
-   file->addAction( getIcon("fileprint"),tr("&Print current entry..."),  this, SLOT(print()), QKeySequence(Qt::CTRL | Qt::Key_P) );
-   file->addAction( getIcon("fileprint"),tr("Print pre&view..."),         this, SLOT(printPreview()), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P) );
+   file->addAction( getIcon("filenew" ), tr("&New File"),       this, &MainWindow::newFile, QKeySequence(Qt::CTRL | Qt::Key_N));
+   file->addAction( getIcon("fileopen"), tr("&Open File..."),   this, qOverload<>(&MainWindow::open),    QKeySequence(Qt::CTRL | Qt::Key_O));
+   file->addAction( getIcon("filesave"), tr("&Save"),           this, qOverload<>(&MainWindow::save),    QKeySequence(Qt::CTRL | Qt::Key_S));
+   file->addAction(                      tr("Save &As..."),     this, &MainWindow::saveAs );
+   file->addAction( getIcon("fileprint"),tr("&Print current entry..."),  this, &MainWindow::print,        QKeySequence(Qt::CTRL | Qt::Key_P) );
+   file->addAction( getIcon("fileprint"),tr("Print pre&view..."),         this, &MainWindow::printPreview, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P) );
 
    file->addSeparator();
    file->addAction(mfileEncryptFile);
@@ -415,14 +415,14 @@ void MainWindow::settingUpMenu( void )
    mpRecentFiles = new RecentFileList(this, file, mConfiguration.getStringValue( CTuxCardsConfiguration::S_RECENT_FILES ));
    checkPointer( mpRecentFiles );
 
-   connect( mpRecentFiles, SIGNAL(openFile(QString)), this, SLOT(slotSaveAndLoadNewFile(QString)) );
+   connect( mpRecentFiles, &RecentFileList::openFile, this, &MainWindow::slotSaveAndLoadNewFile );
 
    file->addSeparator();
-   file->addAction(                      tr("Export to &HTML..."),     this, SLOT(exportHTML()) );
-   file->addAction(                      tr("Export current entry to &Markdown..."), this, SLOT(exportEntryMarkdown()) );
-   file->addAction(                      tr("Import &Markdown into current entry..."), this, SLOT(importEntryMarkdown()) );
+   file->addAction(                      tr("Export to &HTML..."),                       this, &MainWindow::exportHTML );
+   file->addAction(                      tr("Export current entry to &Markdown..."),     this, &MainWindow::exportEntryMarkdown );
+   file->addAction(                      tr("Import &Markdown into current entry..."),   this, &MainWindow::importEntryMarkdown );
    file->addSeparator();
-   file->addAction( getIcon("exit"),     tr("&Exit"), this, SLOT(exit()), QKeySequence(Qt::CTRL | Qt::Key_Q) );
+   file->addAction( getIcon("exit"),     tr("&Exit"), this, &MainWindow::exit, QKeySequence(Qt::CTRL | Qt::Key_Q) );
 
 
    QMenu* edit = new QMenu( tr("&Edit"), this );
@@ -432,24 +432,24 @@ void MainWindow::settingUpMenu( void )
 
    if ( nullptr != mpEditor )
    {
-      edit->addAction( getIcon("editcut"),   tr("Cu&t"),   mpEditor, SLOT(cut()),   QKeySequence(Qt::CTRL | Qt::Key_X) );
+      edit->addAction( getIcon("editcut"),   tr("Cu&t"),   mpEditor, &QTextEdit::cut,   QKeySequence(Qt::CTRL | Qt::Key_X) );
       edit->addAction(editCopyAction);
-      edit->addAction( getIcon("editpaste"), tr("&Paste"), mpEditor, SLOT(paste()), QKeySequence(Qt::CTRL | Qt::Key_V) );
+      edit->addAction( getIcon("editpaste"), tr("&Paste"), mpEditor, &QTextEdit::paste, QKeySequence(Qt::CTRL | Qt::Key_V) );
       edit->addSeparator();
-      edit->addAction(                       tr("Select &All"), mpEditor, SLOT(selectAll()), QKeySequence(Qt::CTRL | Qt::Key_A) );
+      edit->addAction(                       tr("Select &All"), mpEditor, &QTextEdit::selectAll, QKeySequence(Qt::CTRL | Qt::Key_A) );
 
       edit->addSeparator();
       {
-         QAction* a = edit->addAction( tr("&Find..."), this, SLOT(editorFind()),
+         QAction* a = edit->addAction( tr("&Find..."), this, &MainWindow::editorFind,
                                        QKeySequence(Qt::CTRL | Qt::Key_F) );
          a->setShortcutContext( Qt::WindowShortcut );
 
-         a = edit->addAction( tr("R&eplace..."), this, SLOT(editorReplace()),
+         a = edit->addAction( tr("R&eplace..."), this, &MainWindow::editorReplace,
                               QKeySequence(Qt::CTRL | Qt::Key_H) );
          a->setShortcutContext( Qt::WindowShortcut );
 
          a = edit->addAction( getIcon("find"), tr("Search in &Tree..."),
-                              this, SLOT(search()) );
+                              this, &MainWindow::search );
          // Ctrl+Shift+F is the primary, F7 is the fallback for systems
          // where Ctrl+Shift is already a global hotkey (e.g. the Linux
          // keyboard-layout switcher) and the WM eats the combo before
@@ -460,21 +460,21 @@ void MainWindow::settingUpMenu( void )
       }
 
       edit->addSeparator();
-      edit->addAction( tr("&Bold"),      this, SLOT(textBold()),   QKeySequence(Qt::CTRL | Qt::Key_B) );
-      edit->addAction( tr("&Italic"),    this, SLOT(textItalic()), QKeySequence(Qt::CTRL | Qt::Key_I) );
-      edit->addAction( tr("&Underline"), this, SLOT(textUnder()),  QKeySequence(Qt::CTRL | Qt::Key_U) );
-      edit->addAction( tr("&Color..."),  this, SLOT(textColor()),  QKeySequence(Qt::CTRL | Qt::Key_M) );
+      edit->addAction( tr("&Bold"),      this, &MainWindow::textBold,   QKeySequence(Qt::CTRL | Qt::Key_B) );
+      edit->addAction( tr("&Italic"),    this, &MainWindow::textItalic, QKeySequence(Qt::CTRL | Qt::Key_I) );
+      edit->addAction( tr("&Underline"), this, &MainWindow::textUnder,  QKeySequence(Qt::CTRL | Qt::Key_U) );
+      edit->addAction( tr("&Color..."),  this, &MainWindow::textColor,  QKeySequence(Qt::CTRL | Qt::Key_M) );
 
       edit->addSeparator();
       edit->addAction(editSetEntryColor);
       edit->addAction(editSetEntrySubTreeColor);
 
       edit->addSeparator();
-      edit->addAction( tr("Insert &Image..."),      mpEditor, SLOT(insertImage()),       QKeySequence(Qt::CTRL | Qt::Key_P) );
-      edit->addAction( tr("Insert Current &Date"),  this,     SLOT(insertCurrentDate()), QKeySequence(Qt::CTRL | Qt::Key_D) );
-      edit->addAction( tr("Insert Current T&ime"),  this,     SLOT(insertCurrentTime()), QKeySequence(Qt::CTRL | Qt::Key_T) );
+      edit->addAction( tr("Insert &Image..."),      mpEditor, &Editor::insertImage,             QKeySequence(Qt::CTRL | Qt::Key_P) );
+      edit->addAction( tr("Insert Current &Date"),  this,     &MainWindow::insertCurrentDate,   QKeySequence(Qt::CTRL | Qt::Key_D) );
+      edit->addAction( tr("Insert Current T&ime"),  this,     &MainWindow::insertCurrentTime,   QKeySequence(Qt::CTRL | Qt::Key_T) );
       edit->addSeparator();
-      edit->addAction( tr("&Options..."), this, SLOT(editConfiguration()) );
+      edit->addAction( tr("&Options..."), this, &MainWindow::editConfiguration );
    }
 
    QMenu* toolbars = new QMenu( tr("Toolbars"), this );
@@ -493,12 +493,12 @@ void MainWindow::settingUpMenu( void )
 
    QMenu* view = new QMenu( tr("&View"), this );
    view->addMenu( toolbars );
-   view->addAction( tr("&Word Count"), this, SLOT(wordCount()) );
+   view->addAction( tr("&Word Count"), this, &MainWindow::wordCount );
 
    QMenu* about = new QMenu( tr("&About"), this );
-   about->addAction( tr("&Keyboard Shortcuts"), this, SLOT(showKBShortcuts()) );
+   about->addAction( tr("&Keyboard Shortcuts"), this, &MainWindow::showKBShortcuts );
    about->addSeparator();
-   about->addAction( QIcon(QPixmap(lo16_app_tuxcards_xpm)), tr("About TuxCards"), this, SLOT(showAbout()) );
+   about->addAction( QIcon(QPixmap(lo16_app_tuxcards_xpm)), tr("About TuxCards"), this, &MainWindow::showAbout );
 
    mpMenu = menuBar();
    if ( nullptr != mpMenu )
@@ -518,12 +518,12 @@ void MainWindow::settingUpToolBar( void )
   mpMainTools->setIconSize(QSize(18,18));
   mpMainTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-  QAction* clearTool = mpMainTools->addAction( getIcon("filenew"), tr("Create a new file"), this, SLOT(newFile()));
+  QAction* clearTool = mpMainTools->addAction( getIcon("filenew"), tr("Create a new file"), this, &MainWindow::newFile);
   mpMainTools->addSeparator();
-  QAction* openTool  = mpMainTools->addAction( getIcon("fileopen"), tr("Open a new file"), this, SLOT(open()));
-  QAction* saveTool  = mpMainTools->addAction( getIcon("filesave"), tr("Save current file (Ctrl+S)"), this, SLOT(save()));
-  QAction* printTool        = mpMainTools->addAction( getIcon("fileprint"), tr("Print current entry"), this, SLOT(print()));
-  QAction* printPreviewTool = mpMainTools->addAction( getIcon("fileprint"), tr("Print preview (Ctrl+Shift+P)"), this, SLOT(printPreview()));
+  QAction* openTool  = mpMainTools->addAction( getIcon("fileopen"), tr("Open a new file"), this, qOverload<>(&MainWindow::open));
+  QAction* saveTool  = mpMainTools->addAction( getIcon("filesave"), tr("Save current file (Ctrl+S)"), this, qOverload<>(&MainWindow::save));
+  QAction* printTool        = mpMainTools->addAction( getIcon("fileprint"), tr("Print current entry"), this, &MainWindow::print);
+  QAction* printPreviewTool = mpMainTools->addAction( getIcon("fileprint"), tr("Print preview (Ctrl+Shift+P)"), this, &MainWindow::printPreview);
 
   mpMainTools->addAction(mfileEncryptFile);
 
@@ -531,16 +531,16 @@ void MainWindow::settingUpToolBar( void )
   mpMainTools->addAction(editUndoAction);
   mpMainTools->addAction(editRedoAction);
 
-  QAction* editCutTool   = mpMainTools->addAction( getIcon("editcut"), tr("Cut (Ctrl+X)"), mpEditor, SLOT(cut()));
+  QAction* editCutTool   = mpMainTools->addAction( getIcon("editcut"), tr("Cut (Ctrl+X)"), mpEditor, &QTextEdit::cut);
   mpMainTools->addAction(editCopyAction);
-  QAction* editPasteTool = mpMainTools->addAction( getIcon("editpaste"), tr("Paste (Ctrl+V)"), mpEditor, SLOT(paste()));
+  QAction* editPasteTool = mpMainTools->addAction( getIcon("editpaste"), tr("Paste (Ctrl+V)"), mpEditor, &QTextEdit::paste);
 
   mpMainTools->addSeparator();
   mpMainTools->addAction(editSetEntryColor);
   mpMainTools->addAction(editSetEntrySubTreeColor);
 
   mpMainTools->addSeparator();
-  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search across tree (Ctrl+Shift+F)"), this, SLOT(search()));
+  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search across tree (Ctrl+Shift+F)"), this, &MainWindow::search);
   mpMainTools->addSeparator();
 
   clearTool->setWhatsThis(tr("<b>Clear whole Tree</b>"));
@@ -561,21 +561,21 @@ void MainWindow::settingUpToolBar( void )
   mpEntryTools->setIconSize(QSize(18,18));
   mpEntryTools->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
-  textFormatTool = mpEntryTools->addAction( getIcon("filenew"), tr("Converts the Text Format"), this, SLOT(changeInformationFormat()) );
+  textFormatTool = mpEntryTools->addAction( getIcon("filenew"), tr("Converts the Text Format"), this, &MainWindow::changeInformationFormat );
 
   mpEntryTools->addSeparator();
-  QAction* addTreeElementTool = mpEntryTools->addAction( getIcon("addTreeElement"), tr("Add Entry (INSERT)"), mpTree, SLOT(addElement()) );
-  QAction* changePropertyTool = mpEntryTools->addAction( getIcon("changeProperty"), tr("Change Properties"), mpTree, SLOT(changeActiveElementProperties()) );
-  QAction* removeEntryTool   = mpEntryTools->addAction( getIcon("delete"), tr("Remove active Entry (DELETE)"), mpTree, SLOT(askForDeletion()) );
+  QAction* addTreeElementTool = mpEntryTools->addAction( getIcon("addTreeElement"), tr("Add Entry (INSERT)"), mpTree, &CTree::addElement );
+  QAction* changePropertyTool = mpEntryTools->addAction( getIcon("changeProperty"), tr("Change Properties"), mpTree, &CTree::changeActiveElementProperties );
+  QAction* removeEntryTool   = mpEntryTools->addAction( getIcon("delete"), tr("Remove active Entry (DELETE)"), mpTree, &CTree::askForDeletion );
 
   mpEntryTools->addSeparator();
-  QAction* ieUpTool   = mpEntryTools->addAction( getIcon("upArrow"), tr("Move Current Entry Upwards"), this, SLOT(moveElementUp()) );
-  QAction* ieDownTool = mpEntryTools->addAction( getIcon("downArrow"), tr("Move Current Entry Downwards"), this, SLOT(moveElementDown()) );
+  QAction* ieUpTool   = mpEntryTools->addAction( getIcon("upArrow"), tr("Move Current Entry Upwards"), this, &MainWindow::moveElementUp );
+  QAction* ieDownTool = mpEntryTools->addAction( getIcon("downArrow"), tr("Move Current Entry Downwards"), this, &MainWindow::moveElementDown );
 
   mpEntryTools->addSeparator();
-  mpLeftButton  = mpEntryTools->addAction( getIcon("back"), tr("Last Entry accessed in History (Alt+Left)"), this, SLOT(activatePreviousHistoryElement()) );
+  mpLeftButton  = mpEntryTools->addAction( getIcon("back"), tr("Last Entry accessed in History (Alt+Left)"), this, &MainWindow::activatePreviousHistoryElement );
   mpLeftButton->setEnabled(false);
-  mpRightButton = mpEntryTools->addAction( getIcon("forward"), tr("Next Entry in History (Alt+Right)"), this, SLOT(activateNextHistoryElement()) );
+  mpRightButton = mpEntryTools->addAction( getIcon("forward"), tr("Next Entry in History (Alt+Right)"), this, &MainWindow::activateNextHistoryElement );
   mpRightButton->setEnabled(false);
 
   textFormatTool->setWhatsThis(tr("Text format toggle"));
@@ -602,15 +602,13 @@ void MainWindow::settingUpToolBar( void )
   pComboListStyle->addItem( tr("Ordered List (Alpha lower)") );
   pComboListStyle->addItem( tr("Ordered List (Alpha upper)") );
   mpEditorTools->addWidget(pComboListStyle);
-  connect( pComboListStyle, SIGNAL( activated( int ) ),
-           this, SLOT( textListStyle( int ) ) );
+  connect( pComboListStyle, &QComboBox::activated, this, &MainWindow::textListStyle );
 
   pComboFont = new QComboBox( mpEditorTools );
   pComboFont->setEditable(true);
   pComboFont->addItems( QFontDatabase::families() );
   mpEditorTools->addWidget(pComboFont);
-  connect( pComboFont, SIGNAL( textActivated( const QString & ) ),
-           this, SLOT( textFontFamily( const QString & ) ) );
+  connect( pComboFont, &QComboBox::textActivated, this, &MainWindow::textFontFamily );
   pComboFont->lineEdit()->setText( QApplication::font().family() );
 
   pComboSize = new QComboBox( mpEditorTools );
@@ -618,35 +616,34 @@ void MainWindow::settingUpToolBar( void )
   for ( int sz : QFontDatabase::standardSizes() )
      pComboSize->addItem( QString::number( sz ) );
   mpEditorTools->addWidget(pComboSize);
-  connect( pComboSize, SIGNAL( textActivated( const QString & ) ),
-           this, SLOT( textFontSize( const QString & ) ) );
+  connect( pComboSize, &QComboBox::textActivated, this, &MainWindow::textFontSize );
   pComboSize->lineEdit()->setText( QString::number( QApplication::font().pointSize() ) );
 
 
-  textBoldTool = mpEditorTools->addAction( getIcon("text_bold"), tr("Bold (Ctrl+B)"), this, SLOT(textBold()) );
+  textBoldTool = mpEditorTools->addAction( getIcon("text_bold"), tr("Bold (Ctrl+B)"), this, &MainWindow::textBold );
   textBoldTool->setCheckable(true);
 
-  textItalicTool = mpEditorTools->addAction( getIcon("text_italic"), tr("Italic (Ctrl+I)"), this, SLOT(textItalic()) );
+  textItalicTool = mpEditorTools->addAction( getIcon("text_italic"), tr("Italic (Ctrl+I)"), this, &MainWindow::textItalic );
   textItalicTool->setCheckable(true);
 
-  textUnderTool = mpEditorTools->addAction( getIcon("text_under"), tr("Underline (Ctrl+U)"), this, SLOT(textUnder()) );
+  textUnderTool = mpEditorTools->addAction( getIcon("text_under"), tr("Underline (Ctrl+U)"), this, &MainWindow::textUnder );
   textUnderTool->setCheckable(true);
 
   QPixmap dummy(1,1); dummy.fill(Qt::black);
-  textColorTool = mpEditorTools->addAction( QIcon(dummy), tr("Color"), this, SLOT(textColor()) );
+  textColorTool = mpEditorTools->addAction( QIcon(dummy), tr("Color"), this, &MainWindow::textColor );
   textColorChanged(Qt::black);
 
   mpEditorTools->addSeparator();
-  textLeftTool = mpEditorTools->addAction( getIcon("text_left"), tr("Align Left"), this, SLOT(textLeft()) );
+  textLeftTool = mpEditorTools->addAction( getIcon("text_left"), tr("Align Left"), this, &MainWindow::textLeft );
   textLeftTool->setCheckable(true);
 
-  textCenterTool = mpEditorTools->addAction( getIcon("text_center"), tr("Center"), this, SLOT(textHCenter()) );
+  textCenterTool = mpEditorTools->addAction( getIcon("text_center"), tr("Center"), this, &MainWindow::textHCenter );
   textCenterTool->setCheckable(true);
 
-  textRightTool = mpEditorTools->addAction( getIcon("text_right"), tr("Align Right"), this, SLOT(textRight()) );
+  textRightTool = mpEditorTools->addAction( getIcon("text_right"), tr("Align Right"), this, &MainWindow::textRight );
   textRightTool->setCheckable(true);
 
-  textBlockTool = mpEditorTools->addAction( getIcon("text_block"), tr("Text Block"), this, SLOT(textBlock()) );
+  textBlockTool = mpEditorTools->addAction( getIcon("text_block"), tr("Text Block"), this, &MainWindow::textBlock );
   textBlockTool->setCheckable(true);
 
   textBoldTool->setWhatsThis(tr("<b>Bold</b>"));
@@ -674,10 +671,10 @@ void MainWindow::settingUpToolBar( void )
   std::cout<<"!!! still having debug turned on"<<std::endl;
   QToolBar* debugTools = addToolBar("Debug");
   QPixmap debugShowRTFSource = QPixmap(showText_xpm);
-  debugTools->addAction(QIcon(debugShowRTFSource), "Debug: Shows the RTF-TextSource", this, SLOT(debugShowRTFTextSource()));
+  debugTools->addAction(QIcon(debugShowRTFSource), "Debug: Shows the RTF-TextSource", this, &MainWindow::debugShowRTFTextSource);
 
   QPixmap debugShowXMLCode = QPixmap(xml_xpm);
-  debugTools->addAction(QIcon(debugShowXMLCode), "Debug: Shows the XML-Representation", this, SLOT(debugShowXMLCode()));
+  debugTools->addAction(QIcon(debugShowXMLCode), "Debug: Shows the XML-Representation", this, &MainWindow::debugShowXMLCode);
 #endif
 }
 
@@ -701,7 +698,7 @@ void MainWindow::settingUpQuickLoader( void )
                   QPixmap(), label,
                   mpQuickLoader, p );
          mpQuickLoader->addWidget( b );
-         connect( b, SIGNAL(activatedSignal(Path*)), this, SLOT(quicklyLoad(Path*)) );
+         connect( b, &BookmarkButton::activatedSignal, this, &MainWindow::quicklyLoad );
       }
    }
 }
@@ -738,7 +735,7 @@ void MainWindow::addElementToBookmarksEvent( void )
             pElement->getDescription(), mpQuickLoader,
             Path( pElement ) );
    mpQuickLoader->addWidget( b );
-   connect( b, SIGNAL(activatedSignal(Path*)), this, SLOT(quicklyLoad(Path*)) );
+   connect( b, &BookmarkButton::activatedSignal, this, &MainWindow::quicklyLoad );
 
    mConfiguration.setStringValue( CTuxCardsConfiguration::S_BOOKMARKS,
                                   collectBookmarkPaths(mpQuickLoader) );
@@ -1247,12 +1244,12 @@ bool MainWindow::initializingCollection( QString collectionName )
 
    mpTree->createTreeFromCollection( *mpCollection );
 
-   connect( mpCollection,      SIGNAL(activeInformationElementChanged(CInformationElement*)),
-            mpSingleEntryView, SLOT(activeInformationElementChanged(CInformationElement*)) );
-   connect( mpCollection,      SIGNAL(activeInformationElementChanged(CInformationElement*)),
-            this,              SLOT(activeInformationElementChanged(CInformationElement*)) );
-   connect( mpCollection,      SIGNAL(modelHasChanged()), this, SLOT(recognizeChanges()) );
-   connect( mpCollection,      SIGNAL(numElementsChanged(int)), this, SLOT(updateStatusbarElements(int)) );
+   connect( mpCollection, &CInformationCollection::activeInformationElementChanged,
+            mpSingleEntryView, &CSingleEntryView::activeInformationElementChanged );
+   connect( mpCollection, &CInformationCollection::activeInformationElementChanged,
+            this,              &MainWindow::activeInformationElementChanged );
+   connect( mpCollection, &CInformationCollection::modelHasChanged,       this, &MainWindow::recognizeChanges );
+   connect( mpCollection, &CInformationCollection::numElementsChanged,    this, &MainWindow::updateStatusbarElements );
 
    if ( nullptr != mpEditor )
       mpEditor->clear();
@@ -1289,7 +1286,7 @@ void MainWindow::deleteCollection(CInformationCollection* collection)
 	if (!collection)
 		return;
 
-	disconnect( collection, SIGNAL(numElementsChanged(int)), this, SLOT(updateStatusbarElements(int)) );
+	disconnect( collection, &CInformationCollection::numElementsChanged, this, &MainWindow::updateStatusbarElements );
 	DELETE( collection );
 }
 

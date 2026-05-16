@@ -26,7 +26,7 @@ BookmarkButton::BookmarkButton(QPixmap pixmap, QString text, QWidget* parent,
 // -------------------------------------------------------------------------------
 {
   this->path = new Path(aPath.toString());
-  connect( this, SIGNAL(clicked()), this, SLOT(sendActivateSignal()) );
+  connect( this, &BookmarkButton::clicked, this, &BookmarkButton::sendActivateSignal );
 }
 
 
