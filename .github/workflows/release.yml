@@ -9,13 +9,12 @@ permissions:
   contents: write
 
 jobs:
-  linux:
-    name: Linux ${{ matrix.kind }}
+  # Portable bundle: built once on Ubuntu 24.04 with system Qt, with
+  # ldd-traced .so deps copied next to the binary. Runs anywhere with
+  # a modern enough glibc.
+  tarball:
+    name: Linux portable tarball
     runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        kind: [tarball, deb]
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +24,7 @@ jobs:
           sudo apt-get install -y qt6-base-dev qt6-base-dev-tools \
                                   libqt6core5compat6-dev qt6-tools-dev \
                                   build-essential libssl-dev libcups2-dev \
-                                  cmake devscripts debhelper wget file
+                                  cmake file
 
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -34,7 +33,6 @@ jobs:
         run: cmake --build build --parallel
 
       - name: Package — portable bundle (tarball)
-        if: matrix.kind == 'tarball'
         run: |
           VER=${GITHUB_REF#refs/tags/v}
           ROOT=tuxcards-qt6-${VER}-linux-x86_64
@@ -97,18 +95,59 @@ jobs:
 
           tar -cJf ${ROOT}.tar.xz $ROOT
 
-      - name: Package — .deb
-        if: matrix.kind == 'deb'
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: tuxcards-qt6-*-linux-x86_64.tar.xz
+          fail_on_unmatched_files: false
+
+
+  # One native .deb per supported Debian/Ubuntu release. dpkg-shlibdeps
+  # resolves Qt6 / OpenSSL / Cups deps against each distro's own
+  # packages — so the resulting .deb installs cleanly with the right
+  # `Depends:` lines for that distro, no version-skew surprises.
+  deb:
+    name: ${{ matrix.image }} .deb
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # codename is the short tag we paste into the .deb filename.
+        include:
+          - { image: 'ubuntu:24.04', codename: 'ubuntu24.04' }
+          - { image: 'ubuntu:26.04', codename: 'ubuntu26.04' }
+          - { image: 'debian:12',    codename: 'debian12'    }
+          - { image: 'debian:13',    codename: 'debian13'    }
+    steps:
+      - name: Install build deps
         run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+              git ca-certificates cmake build-essential libssl-dev libcups2-dev \
+              qt6-base-dev qt6-base-dev-tools \
+              libqt6core5compat6-dev qt6-tools-dev \
+              devscripts debhelper fakeroot file
+
+      - uses: actions/checkout@v4
+
+      - name: Build .deb
+        run: |
+          VER=${GITHUB_REF#refs/tags/v}
           cp -r packaging/debian ./debian
           dpkg-buildpackage -us -uc -b
-          mv ../tuxcards-qt6_*.deb .
+          # dpkg-buildpackage drops the .deb in the parent of the source
+          # tree. Rename so each distro gets a distinct filename.
+          mkdir out
+          for f in ../tuxcards-qt6_*.deb; do
+            base=$(basename "$f" .deb)
+            mv "$f" out/${base}_${{ matrix.codename }}.deb
+          done
+          ls -la out/
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: |
-            tuxcards-qt6-*-linux-x86_64.tar.xz
-            tuxcards-qt6_*.deb
+          files: out/*.deb
           fail_on_unmatched_files: false
 
   rpm:
