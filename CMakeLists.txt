@@ -35,6 +35,16 @@ if(NOT TUXCARDS_BACKEND_OPENSSL AND NOT TUXCARDS_BACKEND_MONOCYPHER)
       "At least one of TUXCARDS_BACKEND_OPENSSL or TUXCARDS_BACKEND_MONOCYPHER\
  must be ON.")
 endif()
+# If OpenSSL was disabled (often via legacy TUXCARDS_WITH_OPENSSL=OFF) but the
+# write backend is still at the default 'openssl', silently fall back to
+# monocypher instead of failing — it's the only remaining backend.
+if(NOT TUXCARDS_BACKEND_OPENSSL AND TUXCARDS_WRITE_BACKEND STREQUAL "openssl"
+   AND TUXCARDS_BACKEND_MONOCYPHER)
+   message(STATUS
+      "TUXCARDS_BACKEND_OPENSSL=OFF → switching TUXCARDS_WRITE_BACKEND to monocypher.")
+   set(TUXCARDS_WRITE_BACKEND "monocypher" CACHE STRING
+       "Default crypto backend for writing new encrypted blobs." FORCE)
+endif()
 if(TUXCARDS_WRITE_BACKEND STREQUAL "openssl" AND NOT TUXCARDS_BACKEND_OPENSSL)
    message(FATAL_ERROR
       "TUXCARDS_WRITE_BACKEND=openssl requires TUXCARDS_BACKEND_OPENSSL=ON.")
