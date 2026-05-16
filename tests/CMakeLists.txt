@@ -57,6 +57,8 @@ if(TUXCARDS_WRITE_BACKEND STREQUAL "openssl")
 elseif(TUXCARDS_WRITE_BACKEND STREQUAL "monocypher")
    target_compile_definitions(tst_stringcrypter PRIVATE TUXCARDS_WRITE_BACKEND_XCHACHA)
 endif()
+target_compile_definitions(tst_stringcrypter PRIVATE
+   TUXCARDS_TEST_FILES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/test-files")
 add_test(NAME stringcrypter COMMAND tst_stringcrypter)
 
 # ---------- tst_configparser ----------

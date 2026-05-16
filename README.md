@@ -36,8 +36,13 @@ License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
 * Tree of notes with per-entry icons, font and color (also per sub-tree).
 * Rich-text editor: bold/italic/underline, alignment, bullet / ordered
   lists, font family / size combo, image insertion.
-* Search across the whole tree or the current sub-tree, with the
+* In-entry **find & replace** bar (Ctrl+F, Ctrl+H; F3 / Shift+F3 for
+  next / previous; case-sensitive and whole-word toggles).
+* Search across the whole tree or the current sub-tree
+  (Ctrl+Shift+F, or F7 if your WM eats the Ctrl+Shift combo), with the
   matched substring highlighted in bold in the results.
+* **Print** the current entry, with a separate **Print preview**
+  action (Ctrl+Shift+P).
 * HTML and Markdown export of entries; Markdown import.
 * Configurable left-side `CColorBar` (gradient + horizontal/vertical
   captions) — back-ported from 2.2.1.

@@ -179,7 +179,6 @@ set(TUXCARDS_FORMS
 
 set(TUXCARDS_RESOURCES
    src/icons/icons.qrc
-   translations/translations.qrc
 )
 
 # Compile .ts -> .qm at configure time using Qt's lrelease.
@@ -187,30 +186,48 @@ set(TUXCARDS_RESOURCES
 # creates its own target (`qt_add_lrelease(name TS_FILES ...)`) only
 # appeared in Qt 6.7. On older distro Qt (Ubuntu 24.04 ships 6.4,
 # Debian 12 ships 6.2) the older signature expects a pre-existing
-# target and would fail. We skip the wiring on those — the .qm files
-# are already checked into the tree and bundled via translations.qrc,
-# so end users still get translations. Refreshing .ts files just has
-# to happen with a newer Qt.
+# target and would fail. On those older versions we fall back to the
+# pre-built .qm files checked into translations/ via the static
+# translations.qrc — same end-user experience, just no automated refresh.
+set(TS_FILES
+   translations/tuxcards_en.ts
+   translations/tuxcards_ru.ts
+   translations/tuxcards_de.ts
+   translations/tuxcards_zh_CN.ts
+   translations/tuxcards_zh_TW.ts
+   translations/tuxcards_es.ts
+   translations/tuxcards_fr.ts
+   translations/tuxcards_pt_BR.ts
+   translations/tuxcards_ja.ts
+   translations/tuxcards_ko.ts
+)
 find_package(Qt6 COMPONENTS LinguistTools QUIET)
 if(Qt6LinguistTools_FOUND AND Qt6_VERSION VERSION_GREATER_EQUAL "6.7")
-   set(TS_FILES
-      translations/tuxcards_en.ts
-      translations/tuxcards_ru.ts
-      translations/tuxcards_de.ts
-      translations/tuxcards_zh_CN.ts
-      translations/tuxcards_zh_TW.ts
-      translations/tuxcards_es.ts
-      translations/tuxcards_fr.ts
-      translations/tuxcards_pt_BR.ts
-      translations/tuxcards_ja.ts
-      translations/tuxcards_ko.ts
-   )
+   # Qt 6.7+ — generate .qm into the build dir and synthesize a .qrc
+   # that points at *those* build-dir .qm files. This makes the
+   # translations refresh fully automatic: `lupdate` + rebuild is
+   # enough, no manual copy of build/*.qm back into the source tree
+   # and no `touch translations.qrc` afterwards.
    qt_add_lrelease(tuxcards_translations TS_FILES ${TS_FILES}
                    QM_FILES_OUTPUT_VARIABLE qm_files)
    qt_add_lupdate(tuxcards_lupdate
                   SOURCES ${TUXCARDS_SOURCES} ${TUXCARDS_HEADERS} ${TUXCARDS_FORMS}
                   TS_FILES ${TS_FILES}
                   NO_GLOBAL_TARGET)
+   set(_generated_qrc_body
+       "<!DOCTYPE RCC><RCC version=\"1.0\">\n  <qresource prefix=\"/translations\">\n")
+   foreach(_qm ${qm_files})
+      get_filename_component(_qm_name "${_qm}" NAME)
+      string(APPEND _generated_qrc_body
+             "    <file alias=\"${_qm_name}\">${_qm}</file>\n")
+   endforeach()
+   string(APPEND _generated_qrc_body "  </qresource>\n</RCC>\n")
+   set(_generated_qrc "${CMAKE_CURRENT_BINARY_DIR}/translations_generated.qrc")
+   file(GENERATE OUTPUT "${_generated_qrc}" CONTENT "${_generated_qrc_body}")
+   list(APPEND TUXCARDS_RESOURCES "${_generated_qrc}")
+else()
+   # Pre-Qt-6.7 — use the .qm files committed under translations/.
+   list(APPEND TUXCARDS_RESOURCES translations/translations.qrc)
 endif()
 
 qt_add_executable(tuxcards

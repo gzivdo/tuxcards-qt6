@@ -1,6 +1,6 @@
 Changelog
 
-3.3.0  2026-05-16  In-editor find/replace + optional lazy-decrypt (gzivdo + Claude Opus 4.7)
+3.3.0  2026-05-16  In-editor find/replace, lazy-decrypt, print preview, refactors (gzivdo + Claude Opus 4.7)
 
 	Editor — in-entry find & replace
 	-New embedded find/replace bar at the bottom of the editor
@@ -12,6 +12,12 @@ Changelog
 	 unexpected match never gets quietly overwritten.
 	-Tree-wide Search dialog moved to Ctrl+Shift+F (was Ctrl+F).
 	 Standard IDE convention frees Ctrl+F for in-entry search.
+	-F7 fallback wired up for the tree search action — on Linux
+	 desktops where Ctrl+Shift is grabbed by the keyboard-layout
+	 switcher and never reaches Qt.
+	-Find / Replace / Tree search exposed as proper QAction entries
+	 in the Edit menu (with Qt::WindowShortcut), replacing the old
+	 keyPressEvent dispatch.
 
 	Encryption — optional lazy decrypt
 	-New Options → Encryption checkbox "Decrypt entries only when
@@ -24,6 +30,53 @@ Changelog
 	-The Search dialog notices entries that are still encrypted and
 	 reports them as "(N encrypted entry not scanned — open it once
 	 to include it)".
+
+	File — print preview
+	-New "Print pre&view..." entry in the File menu and a separate
+	 toolbar button bound to Ctrl+Shift+P. Renders the current entry
+	 via QPrintPreviewDialog; the direct-print action and its Ctrl+P
+	 shortcut are unchanged.
+
+	Window — persisted geometry
+	-Window X/Y position is now stored in ~/.tuxcards alongside the
+	 existing width/height (-1 sentinel = "let the window manager
+	 pick"), so reopening the app restores the prior placement on
+	 WMs that don't remember it themselves.
+	-Tree vertical-scrollbar restore is deferred to a queued event
+	 so the saved position survives even when the tree's row layout
+	 isn't ready yet at load time.
+
+	Build / packaging
+	-CMake auto-falls back TUXCARDS_WRITE_BACKEND to monocypher when
+	 the OpenSSL backend is disabled (e.g. legacy
+	 -DTUXCARDS_WITH_OPENSSL=OFF), instead of failing the configure.
+	-Translation pipeline now generates an in-build-dir translations
+	 .qrc that points at the .qm files lrelease just produced.
+	 Refreshing translations after lupdate no longer needs the manual
+	 copy of build/*.qm back into translations/ + touch of the .qrc.
+
+	Tests
+	-tst_stringcrypter gains a fixture test that verifies the legacy
+	 Blowfish+MD5 magic ("Fh_enc:BF10") is still detected by
+	 identifyBlobFormat() on a real 2010-era encrypted blob, locking
+	 in backward-compat reading of pre-2.0 tuxcards files.
+
+	Refactors (no behavior change)
+	-All 163 SIGNAL()/SLOT() macro-style connects converted to the
+	 Qt5+ pointer-to-member syntax, so signal/slot signature
+	 mismatches now surface as compile errors instead of runtime
+	 silent disconnects. MainWindow::open()/save() overloads are
+	 disambiguated with qOverload<>.
+	-CInformationElement::mpChildObjects (heap-allocated
+	 QList<T*>*) collapsed to mChildObjects (QList<T*> by value) —
+	 one fewer heap alloc per node, removes a class of double-free
+	 risk on tree teardown, getChildren() public signature unchanged.
+	-Dropped the redundant Ctrl+F / Ctrl+H / Ctrl+Shift+F dispatch
+	 in MainWindow::keyPressEvent — the new Edit-menu QActions fire
+	 them via Qt's shortcut system.
+	-Silenced -Wunused-result on the optional system() exec hook
+	 (callingExecutionStatement).
+	-Removed the obsolete docs/en/ tree (TuxCards 2010 HTML manual).
 
 3.2.0  2026-05-16  Multi-backend crypto, save-freeze fix, full Russian UI (gzivdo + Claude Opus 4.7)
 

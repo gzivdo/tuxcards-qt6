@@ -1,6 +1,7 @@
 #include <QtTest>
 #include <QString>
 #include <QByteArray>
+#include <QFile>
 
 #include "utilities/crypt/StringCrypter.h"
 
@@ -17,6 +18,7 @@ private slots:
    void tamperedCiphertextIsRejected();
    void emptyBufferGivesError();
    void magicHeaderMatchesWriteBackend();
+   void bf10FixtureRecognizedByMagic();
 #ifdef TUXCARDS_BACKEND_MONOCYPHER
    void xchachaRoundtripAscii();
    void xchachaRoundtripUtf8();
@@ -232,6 +234,27 @@ void TestStringCrypter::crossBackendDispatchByMagic()
    }
 }
 #endif
+
+
+// The fixture under tests/test-files/1-encrypted.txt is a base64-encoded
+// BF10 blob from the original TuxCards 2010 test driver. Its password
+// was lost long before this fork, so we can't decrypt it — but we can
+// still verify that identifyBlobFormat() correctly tags it as BF10
+// after base64 decode. That alone proves the legacy magic detection
+// still works on a real-world 2010-era blob, which is the part the
+// production read path depends on.
+void TestStringCrypter::bf10FixtureRecognizedByMagic()
+{
+   const QString path = QStringLiteral(TUXCARDS_TEST_FILES_DIR)
+                        + "/1-encrypted.txt";
+   QFile f(path);
+   QVERIFY2(f.open(QIODevice::ReadOnly),
+            qPrintable("can't open fixture: " + path));
+   const QByteArray enc = QByteArray::fromBase64(f.readAll());
+   QVERIFY(!enc.isEmpty());
+   QCOMPARE(StringCrypter::identifyBlobFormat(enc),
+            (int)StringCrypter::BLOB_LEGACY_BF);
+}
 
 
 QTEST_GUILESS_MAIN(TestStringCrypter)
