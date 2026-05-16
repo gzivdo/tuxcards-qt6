@@ -21,7 +21,6 @@
 #include "ui_IPropertyDialog.h"
 
 #include "iconselectordialog.h"
-//Added by qt3to4:
 #include <QPixmap>
 class CInformationElement;
 class CTuxCardsConfiguration;

@@ -20,7 +20,6 @@
 #include "format_none.xpm"
 #include "format_ascii.xpm"
 #include "format_rtf.xpm"
-//Added by qt3to4:
 #include <QPixmap>
 
 /*const*/ InformationFormat InformationFormat::NONE("NONE", QImage(format_none_xpm));

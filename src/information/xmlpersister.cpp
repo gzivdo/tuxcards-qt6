@@ -19,7 +19,6 @@
 #include "../global.h"
 #include <QList>
 #include <QTextEdit>
-//Added by qt3to4:
 #include <QTextStream>
 
 QString XMLPersister::mpathOfLastActiveElement("");

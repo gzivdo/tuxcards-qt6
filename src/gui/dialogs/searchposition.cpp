@@ -51,7 +51,7 @@ int SearchPosition::getLine(){ return line; }
 int SearchPosition::getPos(){ return pos; }
 int SearchPosition::getLen(){ return len; }
 
-// really dirty, calling x->text(0), althought we are using 'Knoten'
+// using QTreeWidgetItem::text(0) directly — the data model is already aligned with the view
 // -> da kreuzweise verschachtelung der Headerfiles 'knoten.h' & 'searchpos.h'
 QString SearchPosition::getName(){ return referenceElement->text(0); }
 QString SearchPosition::getString(){ return s; }

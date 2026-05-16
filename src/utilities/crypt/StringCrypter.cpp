@@ -42,6 +42,12 @@ void StringCrypter::encryptString( const QString& sInputString, const QString& s
                                    QByteArray& encryptedData )
 {
    // Always write the current (AES-GCM) format.
+   //
+   // Legacy "Fh_enc:BF10" (Blowfish + MD5(password)) is only kept on
+   // the read side. Re-writing it would offer no compatibility benefit
+   // for newly-encrypted data, and would lock users into the weaker
+   // primitive. On the first save after decrypting an old file the
+   // payload is silently upgraded to AES-256-GCM.
    encryptStringAESGCM( sInputString, sPassWd, encryptedData );
 }
 

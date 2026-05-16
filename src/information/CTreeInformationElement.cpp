@@ -82,7 +82,7 @@ QString CTreeInformationElement::toStringObsoleted( void )
   h = mInformation;
   result += QString::number(h.length()) + "*" + h;
 
-  //state whether this Knoten is open or not
+  // remember the expanded/collapsed state of the node
   h = ( isOpen() ? "-" : "+" );
   result += h;
 

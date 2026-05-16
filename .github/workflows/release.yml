@@ -18,7 +18,7 @@ jobs:
       - name: Install build deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y qt6-base-dev qt6-base-dev-tools qmake6 \
+          sudo apt-get install -y qt6-base-dev qt6-base-dev-tools \
                                   libqt6core5compat6-dev qt6-tools-dev \
                                   build-essential libssl-dev cmake \
                                   devscripts debhelper

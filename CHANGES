@@ -1,5 +1,72 @@
 Changelog
 
+3.1.0  2026-05-16  Feature drop after 3.0.0 (gzivdo + Claude Opus 4.7)
+
+	Functional
+	-Bookmarks bar pinned at the bottom of the window; entries
+	 added via the tree's context menu, persisted across sessions in
+	 the new "Bookmarks" config key.
+	-RecentFileList rewritten on top of the cleaner CRecentFileList
+	 design from TuxCards 2.2.1 (pre-created hidden QActions, paths in
+	 QAction::data).
+	-Toolbar visibility (View -> Toolbars) is now persisted between
+	 sessions, with init-time writes guarded by mbStartupDone.
+	-Search dialog: matched substring is highlighted in bold both in
+	 the "Entry Name" and "Entry Content" columns via a new
+	 SearchHighlightDelegate.
+
+	Encryption
+	-File encryption upgraded to AES-256-GCM with PBKDF2-HMAC-SHA256
+	 (200000 iterations) via OpenSSL. Header magic "Fh_enc:AES256GCM-
+	 PBKDF2", random 16-byte salt and 12-byte IV per file, 16-byte
+	 GCM authentication tag.
+	-Legacy "Fh_enc:BF10" (Blowfish + MD5(password)) is still
+	 readable; the first save after decrypting an old file silently
+	 upgrades the payload to the new format.
+
+	Architecture & tooling
+	-Build system switched to CMake. The legacy `tuxcards.pro`,
+	 hand-written Makefile, qt-env-*.sh helpers and tests.pro are
+	 removed. `qt_add_lupdate`/`qt_add_lrelease` integrate Qt
+	 Linguist directly into the CMake build.
+	-NULLPTR/NULL macros from src/global.h removed in favour of the
+	 C++11 nullptr keyword (214 sites updated).
+	-All Q3-era stamps ("//Added by qt3to4:") cleaned out.
+	-Remaining German comments and identifiers ("Knoten",
+	 "removeKnotenTool") translated/renamed; explanatory comments
+	 added in three non-obvious places: CTreeElement::copyProperties
+	 (why blockSignals), CInformationElement::~ (why qDeleteAll),
+	 StringCrypter::encryptString (why we don't re-write legacy).
+	-Packaging: debian/rules and rpm spec switched to CMake build.
+
+	UX
+	-Status bar shows "Saved Xs ago" / "Unsaved changes" /
+	 "Saved just now", updated every second.
+	-File menu: "Export current entry to Markdown..." and
+	 "Import Markdown into current entry..." using
+	 QTextDocument::toMarkdown()/setMarkdown() (Qt >=5.14).
+	-Insert Image... (Ctrl+P) in Edit menu, back-ported from 2.2.1.
+	-Bold/Italic/Underline/Color now also available as Edit menu
+	 entries with Ctrl+B/I/U/M shortcuts; the toggle slots are
+	 driven by the editor's current font state, so the same slots
+	 work both from the toolbar and the menu.
+
+	Tests & CI
+	-QTest-based unit suites for StringCrypter (legacy + AES-GCM
+	 round-trip, wrong-password, tampered-ciphertext, magic check),
+	 ConfigParser and Path. Run via `ctest`.
+	-GitHub Actions: build matrix Ubuntu 24.04 / Windows-latest /
+	 macOS-latest on every push and PR, plus release workflow that
+	 attaches .deb, .rpm, portable tar.xz, Windows .zip and
+	 macOS .dmg to every `v*` tag.
+
+	i18n
+	-Translations for ten languages: en, ru, de, zh_CN, zh_TW, es,
+	 fr, pt_BR, ja, ko. All 90 source strings translated where
+	 meaningful (three are pure numbers/identifiers).
+	-QTranslator loaded from the embedded ":/translations" resource
+	 in main.cpp, locale-driven.
+
 3.0.0  2026-05-16  Qt6 port (gzivdo + Claude Opus 4.7)
 	-Full migration of the 2010.06.1 codebase from Qt 3 (Qt3Support) to Qt 6.
 	-Back-ported CColorBar (left-side gradient sidebar) and the related

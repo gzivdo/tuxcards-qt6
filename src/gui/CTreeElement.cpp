@@ -79,6 +79,12 @@ void CTreeElement::copyPropertiesFromInformationElement( void )
    if ( nullptr == mpInformationElement )
       return;
 
+   // We are mirroring the model into the widget. Each setText/setIcon/
+   // setExpanded would normally emit itemChanged/itemExpanded, which
+   // CTree turns back into setDescription/setOpen on the model — i.e.
+   // a recursive round-trip through the same property change that
+   // triggered us. Block the tree's signals for the duration of the
+   // copy so a refresh stays a one-shot operation.
    QTreeWidget* tw = treeWidget();
    bool oldBlock = tw ? tw->blockSignals(true) : false;
 

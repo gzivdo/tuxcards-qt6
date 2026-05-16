@@ -1,32 +1,38 @@
 # Building TuxCards (Qt6 port)
 
+The project is built with **CMake** (Qt6 + OpenSSL). The legacy
+`tuxcards.pro` qmake project, the hand-written `Makefile` and the
+`qt-env-*.sh` scripts from the 2010 tree have been removed.
+
 ## Requirements
 
-* Qt **6.2+** (recommended 6.5+) with the `Widgets`, `Xml`, `PrintSupport`,
-  and `Core5Compat` modules.
+* Qt **6.2+** (recommended 6.5+) with the `Widgets`, `Xml`,
+  `PrintSupport`, `Core5Compat`, and `LinguistTools` modules.
+* OpenSSL (`libcrypto`) — used for AES-256-GCM file encryption.
+* CMake 3.20 or newer.
 * A C++17 compiler (g++ ≥ 9, clang ≥ 10, MSVC 2019+).
-* GNU make / nmake / Xcode Build Tools (depending on platform).
 
 ## Linux
 
 ### Debian / Ubuntu
 
 ```bash
-sudo apt install qt6-base-dev qt6-base-dev-tools qmake6 \
-                 libqt6core5compat6-dev qt6-tools-dev build-essential
+sudo apt install cmake build-essential libssl-dev \
+                 qt6-base-dev qt6-base-dev-tools \
+                 libqt6core5compat6-dev qt6-tools-dev
 ```
 
 ### Fedora / RHEL
 
 ```bash
-sudo dnf install qt6-qtbase-devel qt6-qt5compat-devel qt6-qttools-devel \
-                 gcc-c++ make
+sudo dnf install cmake gcc-c++ make openssl-devel \
+                 qt6-qtbase-devel qt6-qt5compat-devel qt6-qttools-devel
 ```
 
 ### Arch
 
 ```bash
-sudo pacman -S qt6-base qt6-5compat qt6-tools base-devel
+sudo pacman -S cmake base-devel openssl qt6-base qt6-5compat qt6-tools
 ```
 
 ### Build
@@ -34,112 +40,103 @@ sudo pacman -S qt6-base qt6-5compat qt6-tools base-devel
 ```bash
 git clone https://github.com/gzivdo/tuxcards-qt6.git
 cd tuxcards-qt6
-mkdir build && cd build
-qmake6 ../tuxcards.pro
-make -j$(nproc)
-./tuxcards
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+./build/tuxcards
 ```
 
 Install system-wide (optional):
 
 ```bash
-sudo install -m 755 tuxcards /usr/local/bin/
-sudo cp -r ../src/icons /usr/local/share/tuxcards/icons
+sudo cmake --install build
 ```
 
 ## Windows
 
-1. Install the official Qt 6 SDK from <https://www.qt.io/download-open-source>.
-   Pick the **MinGW 64-bit** or **MSVC 64-bit** kit during installation.
-2. Open the **"Qt 6.x.x (MinGW 64-bit)"** command prompt from the Start menu.
-3. Build:
+1. Install the official Qt 6 SDK from
+   <https://www.qt.io/download-open-source>. Pick the **MinGW 64-bit** or
+   **MSVC 64-bit** kit.
+2. Install OpenSSL: `choco install openssl`.
+3. Open the "Qt 6.x.x (MinGW 64-bit)" command prompt from the Start menu.
+4. Build:
 
    ```cmd
    cd tuxcards-qt6
-   mkdir build
-   cd build
-   qmake ..\tuxcards.pro
-   mingw32-make -j%NUMBER_OF_PROCESSORS%
-   release\tuxcards.exe
+   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+   cmake --build build --config Release --parallel
+   build\Release\tuxcards.exe
    ```
 
-   For MSVC use `nmake` (or `jom`) instead of `mingw32-make`.
-
-4. To produce a self-contained distribution use `windeployqt`:
+5. For a self-contained distribution:
 
    ```cmd
-   windeployqt release\tuxcards.exe
+   windeployqt build\Release\tuxcards.exe
    ```
 
 ## macOS
 
-1. Install Xcode Command Line Tools: `xcode-select --install`.
-2. Install Qt 6 via the Qt online installer **or** via Homebrew:
-
-   ```bash
-   brew install qt@6
+1. `xcode-select --install`
+2. ```bash
+   brew install cmake qt@6 openssl@3
    export PATH="$(brew --prefix qt@6)/bin:$PATH"
    ```
-
-3. Build:
-
-   ```bash
+3. ```bash
    git clone https://github.com/gzivdo/tuxcards-qt6.git
    cd tuxcards-qt6
-   mkdir build && cd build
-   qmake ../tuxcards.pro
-   make -j$(sysctl -n hw.ncpu)
-   open tuxcards.app
+   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+   cmake --build build --parallel
+   open build/tuxcards.app
    ```
-
-4. To produce a relocatable `.app` bundle:
+4. Relocatable `.app` bundle:
 
    ```bash
-   macdeployqt tuxcards.app -dmg
+   macdeployqt build/tuxcards.app -dmg
    ```
 
-   Drop the resulting `tuxcards.dmg` on another Mac and it should run.
+## Running the tests
+
+```bash
+cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
+cmake --build tests/build --parallel
+ctest --test-dir tests/build --output-on-failure
+```
 
 ## Packaging
 
+Both `.deb`, `.rpm` and a portable Linux tarball are produced
+automatically by GitHub Actions on every `v*` tag — see
+`.github/workflows/release.yml`. To build them locally:
+
 ### Debian / Ubuntu (`.deb`)
 
-Skeleton lives under `packaging/debian/`. From the project root:
-
 ```bash
-sudo apt install devscripts debhelper qt6-base-dev qt6-base-dev-tools \
+sudo apt install devscripts debhelper cmake libssl-dev \
+                 qt6-base-dev qt6-base-dev-tools \
                  libqt6core5compat6-dev qt6-tools-dev
 cp -r packaging/debian ./debian
 dpkg-buildpackage -us -uc -b
-ls ../tuxcards-qt6_*.deb
-sudo dpkg -i ../tuxcards-qt6_*.deb
 ```
-
-The resulting package installs `/usr/bin/tuxcards`, the icon directory and a
-basic `.desktop` entry.
 
 ### Fedora / RHEL (`.rpm`)
 
-Skeleton is `packaging/rpm/tuxcards-qt6.spec`.
-
 ```bash
-sudo dnf install rpmdevtools qt6-qtbase-devel qt6-qt5compat-devel \
-                 qt6-qttools-devel gcc-c++ make
+sudo dnf install rpmdevtools cmake openssl-devel \
+                 qt6-qtbase-devel qt6-qt5compat-devel qt6-qttools-devel
 rpmdev-setuptree
-tar czf ~/rpmbuild/SOURCES/tuxcards-qt6-3.0.0.tar.gz \
-        --transform 's,^,tuxcards-qt6-3.0.0/,' \
-        -C $(pwd) .
+VER=3.1.0
+tar czf ~/rpmbuild/SOURCES/tuxcards-qt6-${VER}.tar.gz \
+        --transform "s,^,tuxcards-qt6-${VER}/," \
+        --exclude='.git*' --exclude='build*' .
 cp packaging/rpm/tuxcards-qt6.spec ~/rpmbuild/SPECS/
 rpmbuild -ba ~/rpmbuild/SPECS/tuxcards-qt6.spec
-ls ~/rpmbuild/RPMS/x86_64/tuxcards-qt6-*.rpm
 ```
 
-### AppImage (optional, distro-agnostic)
-
-Build on the *oldest* glibc you want to support, then:
+### Portable Linux tarball
 
 ```bash
-wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-chmod +x linuxdeployqt-*.AppImage
-./linuxdeployqt-*.AppImage build/tuxcards -appimage -qmake=$(which qmake6)
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+mkdir tuxcards-qt6-portable
+cp build/tuxcards README.md INSTALL.md COPYING CHANGES tuxcards-qt6-portable/
+tar -cJf tuxcards-qt6-portable.tar.xz tuxcards-qt6-portable/
 ```

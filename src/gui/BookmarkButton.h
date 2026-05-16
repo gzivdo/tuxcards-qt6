@@ -18,7 +18,6 @@
 #define BOOKMARK_BUTTON_H
 
 #include <QPushButton>
-//Added by qt3to4:
 #include <QPixmap>
 #include <iostream>
 

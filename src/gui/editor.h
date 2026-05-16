@@ -21,7 +21,6 @@
 #include "./../information/IView.h"
 #include <QTextEdit>
 #include <qclipboard.h>
-//Added by qt3to4:
 #include <QKeyEvent>
 
 #include "./../information/CInformationElement.h"

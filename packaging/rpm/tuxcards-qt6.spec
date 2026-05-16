@@ -9,9 +9,11 @@ Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  gcc-c++
 BuildRequires:  make
+BuildRequires:  cmake
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qt5compat-devel
 BuildRequires:  qt6-qttools-devel
+BuildRequires:  openssl-devel
 
 Requires:       qt6-qtbase
 Requires:       qt6-qt5compat
@@ -28,19 +30,11 @@ with the SideBar and PNG icons back-ported from TuxCards 2.2.1.
 %setup -q
 
 %build
-mkdir -p build
-cd build
-qmake6 ../tuxcards.pro
-%make_build
+%cmake
+%cmake_build
 
 %install
-install -D -m 755 build/tuxcards %{buildroot}%{_bindir}/tuxcards
-install -D -m 644 packaging/desktop/tuxcards.desktop \
-        %{buildroot}%{_datadir}/applications/tuxcards.desktop
-install -D -m 644 src/icons/lo32-app-tuxcards.png \
-        %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/tuxcards.png
-install -D -m 644 src/icons/lo16-app-tuxcards.png \
-        %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/tuxcards.png
+%cmake_install
 
 %files
 %license COPYING

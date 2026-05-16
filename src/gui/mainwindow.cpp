@@ -21,7 +21,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <QFontDialog>
-//Added by qt3to4:
 #include <QTimerEvent>
 #include <QLabel>
 #include <QPixmap>
@@ -539,7 +538,7 @@ void MainWindow::settingUpToolBar( void )
   mpEntryTools->addSeparator();
   QAction* addTreeElementTool = mpEntryTools->addAction( getIcon("addTreeElement"), "Add Entry (INSERT)", mpTree, SLOT(addElement()) );
   QAction* changePropertyTool = mpEntryTools->addAction( getIcon("changeProperty"), "Change Properties", mpTree, SLOT(changeActiveElementProperties()) );
-  QAction* removeKnotenTool   = mpEntryTools->addAction( getIcon("delete"), "Remove active Entry (DELETE)", mpTree, SLOT(askForDeletion()) );
+  QAction* removeEntryTool   = mpEntryTools->addAction( getIcon("delete"), "Remove active Entry (DELETE)", mpTree, SLOT(askForDeletion()) );
 
   mpEntryTools->addSeparator();
   QAction* ieUpTool   = mpEntryTools->addAction( getIcon("upArrow"), "Move Current Entry Upwards", this, SLOT(moveElementUp()) );
@@ -554,7 +553,7 @@ void MainWindow::settingUpToolBar( void )
   textFormatTool->setWhatsThis("Text format toggle");
   addTreeElementTool->setWhatsThis("<b>Add Entry</b> (INSERT)");
   changePropertyTool->setWhatsThis("<b>Change Property</b>");
-  removeKnotenTool->setWhatsThis("<b>Remove active Entry</b> (DELETE)");
+  removeEntryTool->setWhatsThis("<b>Remove active Entry</b> (DELETE)");
   ieUpTool->setWhatsThis("<b>Move Up</b>");
   ieDownTool->setWhatsThis("<b>Move Down</b>");
   mpLeftButton->setWhatsThis("<b>History, Back</b> (Alt+Left)");

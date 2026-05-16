@@ -4,46 +4,53 @@
 [![Release](https://img.shields.io/github/v/release/gzivdo/tuxcards-qt6)](https://github.com/gzivdo/tuxcards-qt6/releases)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](COPYING)
 
-Hierarchical note-taking application for Linux, Windows and macOS.
-A tree-based journal / personal wiki with rich-text editing, optional
-Blowfish file encryption, HTML export and sub-tree color tags.
+Hierarchical note-taking application for Linux, Windows and macOS —
+a tree-based journal / personal wiki with rich-text editing, optional
+AES-256-GCM file encryption, HTML and Markdown export, and per-entry
+icons and colors.
 
 This is a **Qt6 fork** of TuxCards. It builds and runs on modern
 distributions where the original Qt3/Qt4 versions no longer compile.
 
 ```
 Original project:  http://www.tuxcards.de
-Source tarballs:   http://www.tuxcards.de/src/  (canonical upstream)
+Source tarballs:   http://www.tuxcards.de/src/
 This fork:         https://github.com/gzivdo/tuxcards-qt6
 ```
 
 ## Lineage
 
 - TuxCards 1.x / 2.0 (Alexander Theel, 2000–2004) — Qt3.
-- TuxCards 2.0 / 2010.06.1 (Amit Chaudhary, 2006–2010) — added encryption,
-  released against Qt 3 with Qt3Support shim.
-- TuxCards 2.2.1 (Theel, 2010s) — Qt 4 rewrite published at
+- TuxCards 2.0 / 2010.06.1 (Amit Chaudhary, 2006–2010) — added Blowfish
+  encryption, last release against Qt 3 with the Qt3Support shim.
+- TuxCards 2.2.1 (Theel, 2010s) — Qt 4 rewrite at
   <https://www.tuxcards.de/src/tuxcards-2.2.1/tuxcards-2.2.1.tar.gz>.
-- **TuxCards Qt6 port** (this repo, 2026) — Qt6 migration of the 2010.06.1
-  codebase, with the SideBar (`CColorBar`) and PNG icons back-ported from
-  2.2.1.
+- **TuxCards Qt6 port** (this repo, 2026) — Qt6 migration of the
+  2010.06.1 codebase, with the SideBar (`CColorBar`), PNG icons,
+  Bookmarks toolbar and reworked RecentFileList back-ported from 2.2.1.
 
 License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
 
-## Features preserved from upstream
+## Features
 
 * Tree of notes with per-entry icons, font and color (also per sub-tree).
-* Rich-text editor: bold/italic/underline, alignment, bullet / ordered lists,
-  font family / size combo.
-* Search across the whole tree or the current sub-tree (case-sensitive,
-  titles only), with "More" button revealing scope selection.
-* Blowfish encryption per entry and per file.
-* HTML export of the entire collection.
+* Rich-text editor: bold/italic/underline, alignment, bullet / ordered
+  lists, font family / size combo, image insertion.
+* Search across the whole tree or the current sub-tree, with the
+  matched substring highlighted in bold in the results.
+* AES-256-GCM file encryption with PBKDF2-SHA256 key derivation
+  (the legacy Blowfish format from TuxCards 2.0 is still readable).
+* HTML and Markdown export of entries; Markdown import.
 * Configurable left-side `CColorBar` (gradient + horizontal/vertical
-  captions) — re-introduced from 2.2.1.
-* Configuration dialog: General / SideBar / Tree font / Editor font.
+  captions) — back-ported from 2.2.1.
+* Bookmarks bar pinned at the bottom of the window, persisted between
+  sessions.
+* Auto-save indicator in the status bar.
+* UI translations: English, Russian, German, Chinese (Simplified and
+  Traditional), Spanish, French, Brazilian Portuguese, Japanese and
+  Korean. Contributions through PRs are welcome.
 
-## Building from source
+## Building
 
 See [INSTALL.md](INSTALL.md) for full per-platform instructions
 (Linux, Windows, macOS, plus `.deb` and `.rpm` packaging).
@@ -51,12 +58,12 @@ See [INSTALL.md](INSTALL.md) for full per-platform instructions
 Quick build on Debian/Ubuntu:
 
 ```bash
-sudo apt install qt6-base-dev qt6-base-dev-tools qmake6 \
-                 libqt6core5compat6-dev qt6-tools-dev build-essential
-mkdir build && cd build
-qmake6 ../tuxcards.pro
-make -j$(nproc)
-./tuxcards
+sudo apt install cmake build-essential libssl-dev \
+                 qt6-base-dev qt6-base-dev-tools \
+                 libqt6core5compat6-dev qt6-tools-dev
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+./build/tuxcards
 ```
 
 ## Credits

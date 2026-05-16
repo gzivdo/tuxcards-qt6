@@ -18,7 +18,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-//Added by qt3to4:
 #include <QCloseEvent>
 #include <QTimerEvent>
 #include <QList>
@@ -44,7 +43,6 @@
 #include <QComboBox>
 
 #include <QHBoxLayout>
-//#include "qwidgetstack.h"
 #include <QSplitter>
 #include "CSingleEntryView.h"
 #include "editor.h"

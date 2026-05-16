@@ -22,7 +22,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
-//Added by qt3to4:
 #include <QPixmap>
 
 #include "dot.xpm"

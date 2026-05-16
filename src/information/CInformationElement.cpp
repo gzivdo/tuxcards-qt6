@@ -21,7 +21,6 @@
 #include "../gui/dialogs/searchlistitem.h"
 
 #include <QRegExp>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QList>
 #include "../utilities/crypt/StringCrypter.h"
@@ -62,6 +61,10 @@ CInformationElement::~CInformationElement( void )
 
    if ( nullptr != mpChildObjects )
    {
+      // The legacy Q3PtrList used setAutoDelete(true) to own its
+      // elements; QList<T*> does not. We replicate the same ownership
+      // semantics with an explicit qDeleteAll here, plus removeAll()
+      // + delete in removeChild() — see below.
       qDeleteAll(*mpChildObjects);
       mpChildObjects->clear();
    }
