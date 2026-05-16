@@ -31,9 +31,13 @@ jobs:
           modules: 'qt5compat'
           cache: true
 
-      - name: Install OpenSSL (Linux)
+      - name: Install Linux system deps
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libssl-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev libcups2-dev \
+                                  libxkbcommon-x11-0 libegl1 libgl1 \
+                                  libxcb-cursor0
 
       - name: Install OpenSSL (macOS)
         if: runner.os == 'macOS'
@@ -62,6 +66,5 @@ jobs:
       - name: Smoke test (Linux only)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install -y libxkbcommon-x11-0 libegl1 libgl1 \
-                                   libxcb-cursor0 xvfb
+          sudo apt-get install -y xvfb
           xvfb-run -a timeout 5 ./build/tuxcards || true

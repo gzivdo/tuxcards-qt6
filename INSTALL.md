@@ -17,7 +17,7 @@ The project is built with **CMake** (Qt6 + OpenSSL). The legacy
 ### Debian / Ubuntu
 
 ```bash
-sudo apt install cmake build-essential libssl-dev \
+sudo apt install cmake build-essential libssl-dev libcups2-dev \
                  qt6-base-dev qt6-base-dev-tools \
                  libqt6core5compat6-dev qt6-tools-dev
 ```
@@ -25,7 +25,7 @@ sudo apt install cmake build-essential libssl-dev \
 ### Fedora / RHEL
 
 ```bash
-sudo dnf install cmake gcc-c++ make openssl-devel \
+sudo dnf install cmake gcc-c++ make openssl-devel cups-devel \
                  qt6-qtbase-devel qt6-qt5compat-devel qt6-qttools-devel
 ```
 
@@ -110,7 +110,7 @@ automatically by GitHub Actions on every `v*` tag — see
 ### Debian / Ubuntu (`.deb`)
 
 ```bash
-sudo apt install devscripts debhelper cmake libssl-dev \
+sudo apt install devscripts debhelper cmake libssl-dev libcups2-dev \
                  qt6-base-dev qt6-base-dev-tools \
                  libqt6core5compat6-dev qt6-tools-dev
 cp -r packaging/debian ./debian
@@ -120,7 +120,7 @@ dpkg-buildpackage -us -uc -b
 ### Fedora / RHEL (`.rpm`)
 
 ```bash
-sudo dnf install rpmdevtools cmake openssl-devel \
+sudo dnf install rpmdevtools cmake openssl-devel cups-devel \
                  qt6-qtbase-devel qt6-qt5compat-devel qt6-qttools-devel
 rpmdev-setuptree
 VER=3.1.0

@@ -14,6 +14,7 @@ BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qt5compat-devel
 BuildRequires:  qt6-qttools-devel
 BuildRequires:  openssl-devel
+BuildRequires:  cups-devel
 
 Requires:       qt6-qtbase
 Requires:       qt6-qt5compat

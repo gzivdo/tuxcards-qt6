@@ -20,8 +20,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y qt6-base-dev qt6-base-dev-tools \
                                   libqt6core5compat6-dev qt6-tools-dev \
-                                  build-essential libssl-dev cmake \
-                                  devscripts debhelper
+                                  build-essential libssl-dev libcups2-dev \
+                                  cmake devscripts debhelper
 
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -64,7 +64,7 @@ jobs:
         run: |
           dnf install -y rpmdevtools qt6-qtbase-devel qt6-qt5compat-devel \
                          qt6-qttools-devel gcc-c++ make cmake openssl-devel \
-                         git tar
+                         cups-devel git tar
       - name: Build RPM
         run: |
           VER=${GITHUB_REF#refs/tags/v}

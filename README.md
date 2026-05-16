@@ -58,7 +58,7 @@ See [INSTALL.md](INSTALL.md) for full per-platform instructions
 Quick build on Debian/Ubuntu:
 
 ```bash
-sudo apt install cmake build-essential libssl-dev \
+sudo apt install cmake build-essential libssl-dev libcups2-dev \
                  qt6-base-dev qt6-base-dev-tools \
                  libqt6core5compat6-dev qt6-tools-dev
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
