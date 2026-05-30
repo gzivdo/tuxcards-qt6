@@ -90,9 +90,86 @@ static QString embed( QTextDocument* doc, const QString& urlKey, const QImage& i
 
 
 #ifdef TUXCARDS_WITH_DIAGRAMS
-// (defined in commit 3)
-static QImage renderDot( const QString& src );
-static QString processDiagrams( QTextDocument* doc, QString md );
+
+// Lay out a DOT graph with Graphviz, render it to SVG, then rasterize
+// the SVG to a transparent QImage. Returns a null image on failure so
+// the caller can fall back to showing the source text.
+static QImage renderDot( const QString& src )
+{
+   QImage out;
+   GVC_t* gvc = gvContext();
+   if ( !gvc )
+      return out;
+
+   Agraph_t* g = agmemread( src.toUtf8().constData() );
+   if ( !g ) {
+      gvFreeContext( gvc );
+      return out;
+   }
+
+   if ( gvLayout( gvc, g, "dot" ) == 0 ) {
+      char*  svgData = nullptr;
+      size_t svgLen  = 0;
+      if ( gvRenderData( gvc, g, "svg", &svgData, &svgLen ) == 0 && svgData ) {
+         QByteArray svg( svgData, int(svgLen) );
+         QSvgRenderer renderer( svg );
+         if ( renderer.isValid() ) {
+            QSize sz = renderer.defaultSize();
+            if ( sz.isEmpty() )
+               sz = QSize( 320, 240 );
+            // 2x for a crisper raster on hidpi; preview scales it down.
+            out = QImage( sz * 2, QImage::Format_ARGB32_Premultiplied );
+            out.fill( Qt::transparent );
+            QPainter p( &out );
+            renderer.render( &p );
+         }
+      }
+      if ( svgData )
+         gvFreeRenderData( svgData );
+      gvFreeLayout( gvc, g );
+   }
+
+   agclose( g );
+   gvFreeContext( gvc );
+   return out;
+}
+
+// Replace fenced ```dot / ```graphviz blocks with an embedded image
+// reference. Anything that fails to render is left untouched (the raw
+// fence stays visible so the user can fix it).
+static QString processDiagrams( QTextDocument* doc, QString md )
+{
+   // ```dot|graphviz\n <body> \n``` — multiline, non-greedy body.
+   static const QRegularExpression re(
+      QStringLiteral("```[ \\t]*(dot|graphviz)[ \\t]*\\r?\\n(.*?)\\r?\\n```"),
+      QRegularExpression::DotMatchesEverythingOption );
+
+   QString result;
+   int last = 0;
+   auto it = re.globalMatch( md );
+   while ( it.hasNext() ) {
+      QRegularExpressionMatch m = it.next();
+      result += md.mid( last, m.capturedStart() - last );
+      last = m.capturedEnd();
+
+      const QString body = m.captured( 2 );
+      const QString key  = QStringLiteral("tuxdiag://") + hashKey( "D:", body );
+
+      QImage img = fragmentCache().value( key );
+      if ( img.isNull() ) {
+         img = renderDot( body );
+         if ( !img.isNull() )
+            fragmentCache().insert( key, img );
+      }
+
+      if ( img.isNull() )
+         result += m.captured( 0 );          // keep the original fence
+      else
+         result += QStringLiteral("\n\n") + embed( doc, key, img ) + QStringLiteral("\n\n");
+   }
+   result += md.mid( last );
+   return result;
+}
 #endif
 
 #ifdef TUXCARDS_WITH_MATH
