@@ -1697,7 +1697,18 @@ void MainWindow::exportEntryMarkdown()
    if ( fn.isEmpty() ) return;
 
    mpEditor->writeCurrentTextToActiveInformationElement();
-   QString md = mpEditor->document()->toMarkdown();
+
+   // MARKDOWN — pass through (mInformation is the raw .md source).
+   // HTML — let Qt down-convert via toMarkdown().
+   // TEXT — write the plain text as-is.
+   CInformationElement* elem = mpCollection->getActiveElement();
+   QString md;
+   if ( elem->getInformationFormat() == &InformationFormat::MARKDOWN )
+      md = elem->getInformation();
+   else if ( elem->getInformationFormat() == &InformationFormat::HTML )
+      md = mpEditor->document()->toMarkdown();
+   else
+      md = elem->getInformation();
 
    QFile f(fn);
    if ( !f.open(QIODevice::WriteOnly | QIODevice::Truncate) ) {
@@ -1727,9 +1738,16 @@ void MainWindow::importEntryMarkdown()
    QString md = QString::fromUtf8(f.readAll());
    f.close();
 
-   mpEditor->setAcceptRichText(true);
-   mpEditor->document()->setMarkdown(md);
-   mpEditor->writeCurrentTextToActiveInformationElement();
+   // Replace the active entry with the raw .md source, marked as
+   // MARKDOWN format so the editor stays in plain-text mode and we
+   // don't lose the source by round-tripping through QTextDocument.
+   CInformationElement* elem = mpCollection->getActiveElement();
+   elem->setInformationFormat( &InformationFormat::MARKDOWN );
+   elem->setInformation( md );
+   // Re-route the editor through activeInformationElementChanged so it
+   // re-reads the format-driven setAcceptRichText(false) and shows the
+   // raw markdown for editing.
+   mpEditor->activeInformationElementChanged( elem );
    recognizeChanges();
    showMessage(tr("Imported from '%1'.").arg(fn), 5);
 }
