@@ -1937,16 +1937,20 @@ void MainWindow::importEntryMarkdown()
    QString md = QString::fromUtf8(f.readAll());
    f.close();
 
-   // Replace the active entry with the raw .md source, marked as
-   // MARKDOWN format so the editor stays in plain-text mode and we
-   // don't lose the source by round-tripping through QTextDocument.
+   // Load the raw .md into the *currently active* entry. We must NOT
+   // route through Editor::activeInformationElementChanged here: that
+   // path first writes the editor's existing (pre-import) buffer back
+   // into the element, which would clobber the markdown we are about to
+   // store. Instead set the format, flip the editor into plain-text
+   // mode, push the md text in, then persist editor → element.
    CInformationElement* elem = mpCollection->getActiveElement();
    elem->setInformationFormat( &InformationFormat::MARKDOWN );
-   elem->setInformation( md );
-   // Re-route the editor through activeInformationElementChanged so it
-   // re-reads the format-driven setAcceptRichText(false) and shows the
-   // raw markdown for editing.
-   mpEditor->activeInformationElementChanged( elem );
+   mpEditor->setAcceptRichText( false );      // before setText, so it stores plain
+   mpEditor->setText( md );                   // editor now shows the raw markdown
+   mpEditor->writeCurrentTextToActiveInformationElement();  // md → element
+   // Refresh the format toolbar (disable rich-text tools, reveal the
+   // markdown helpers / preview toggle for the now-MARKDOWN entry).
+   showRecognizedFormat( InformationFormat::MARKDOWN );
    recognizeChanges();
    showMessage(tr("Imported from '%1'.").arg(fn), 5);
 }
