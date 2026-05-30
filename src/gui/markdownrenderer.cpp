@@ -17,11 +17,12 @@
 
 #if defined(TUXCARDS_WITH_MATH) || defined(TUXCARDS_WITH_DIAGRAMS)
 #  include <QImage>
-#  include <QUrl>
 #  include <QHash>
+#  include <QVector>
 #  include <QCryptographicHash>
 #  include <QRegularExpression>
 #  include <QPainter>
+#  include <QTextCursor>
 #endif
 
 #ifdef TUXCARDS_WITH_MATH
@@ -77,13 +78,26 @@ static QString hashKey( const QString& kind, const QString& src )
    return kind + QString::fromLatin1(h);
 }
 
-// Register img under a private url scheme on doc and return the markdown
-// image reference that points at it.
-static QString embed( QTextDocument* doc, const QString& urlKey, const QImage& img )
+// A pending image to splice into the rendered document. We can't embed
+// via Markdown `![](resource)` — QTextDocument::setMarkdown() ignores
+// image resources (unlike setHtml). Instead each math/diagram fragment
+// is replaced in the source with a unique plain-text token; after
+// setMarkdown we locate the token and replace it with the image via
+// QTextCursor::insertImage(), which works reliably.
+struct PendingImage { QString token; QImage img; };
+
+// Pure A–Z/0–9 so Markdown leaves it untouched as literal text; the
+// trailing/leading sentinels keep it from colliding with real prose.
+static QString makeToken( int i )
 {
-   const QUrl url( urlKey );
-   doc->addResource( QTextDocument::ImageResource, url, img );
-   return QStringLiteral("![](") + urlKey + QStringLiteral(")");
+   return QStringLiteral("TUXIMGEMBED%1ENDTUXIMG").arg(i);
+}
+
+static QString stashImage( QVector<PendingImage>& out, const QImage& img )
+{
+   const QString tok = makeToken( out.size() );
+   out.append( { tok, img } );
+   return tok;
 }
 
 #endif // any feature
@@ -134,10 +148,10 @@ static QImage renderDot( const QString& src )
    return out;
 }
 
-// Replace fenced ```dot / ```graphviz blocks with an embedded image
-// reference. Anything that fails to render is left untouched (the raw
-// fence stays visible so the user can fix it).
-static QString processDiagrams( QTextDocument* doc, QString md )
+// Replace fenced ```dot / ```graphviz blocks with a placeholder token
+// (and queue the rendered image). Anything that fails to render is left
+// untouched so the raw fence stays visible for the user to fix.
+static QString processDiagrams( QString md, QVector<PendingImage>& embeds )
 {
    // ```dot|graphviz\n <body> \n``` — multiline, non-greedy body.
    static const QRegularExpression re(
@@ -153,7 +167,7 @@ static QString processDiagrams( QTextDocument* doc, QString md )
       last = m.capturedEnd();
 
       const QString body = m.captured( 2 );
-      const QString key  = QStringLiteral("tuxdiag://") + hashKey( "D:", body );
+      const QString key  = hashKey( "D:", body );
 
       QImage img = fragmentCache().value( key );
       if ( img.isNull() ) {
@@ -165,7 +179,7 @@ static QString processDiagrams( QTextDocument* doc, QString md )
       if ( img.isNull() )
          result += m.captured( 0 );          // keep the original fence
       else
-         result += QStringLiteral("\n\n") + embed( doc, key, img ) + QStringLiteral("\n\n");
+         result += QStringLiteral("\n\n") + stashImage( embeds, img ) + QStringLiteral("\n\n");
    }
    result += md.mid( last );
    return result;
@@ -228,7 +242,7 @@ static QString unmaskCode( QString md, const QStringList& stash )
 // Replace $$display$$ and $inline$ math with embedded image references.
 // Known limitation: a literal '$' outside code can be misread as a math
 // delimiter — escape it as \$ or build without TUXCARDS_WITH_MATH.
-static QString processMath( QTextDocument* doc, QString md )
+static QString processMath( QString md, QVector<PendingImage>& embeds )
 {
    QStringList stash;
    md = maskCode( md, stash );
@@ -242,8 +256,7 @@ static QString processMath( QTextDocument* doc, QString md )
          last = m.capturedEnd();
 
          const QString tex = m.captured(1);
-         const QString key = QStringLiteral("tuxmath://")
-                           + hashKey( display ? "MD:" : "MI:", tex );
+         const QString key = hashKey( display ? "MD:" : "MI:", tex );
          QImage img = fragmentCache().value( key );
          if ( img.isNull() ) {
             img = renderMath( tex, display );
@@ -253,9 +266,9 @@ static QString processMath( QTextDocument* doc, QString md )
          if ( img.isNull() )
             out += m.captured(0);                 // keep raw on failure
          else if ( display )
-            out += QStringLiteral("\n\n") + embed(doc, key, img) + QStringLiteral("\n\n");
+            out += QStringLiteral("\n\n") + stashImage(embeds, img) + QStringLiteral("\n\n");
          else
-            out += embed( doc, key, img );
+            out += stashImage( embeds, img );
       }
       out += md.mid( last );
       md = out;
@@ -283,14 +296,28 @@ void renderInto( QTextDocument* doc, const QString& mdSource )
 
    QString md = mdSource;
 
-#ifdef TUXCARDS_WITH_DIAGRAMS
-   md = processDiagrams( doc, md );
-#endif
-#ifdef TUXCARDS_WITH_MATH
-   md = processMath( doc, md );
-#endif
+#if defined(TUXCARDS_WITH_MATH) || defined(TUXCARDS_WITH_DIAGRAMS)
+   QVector<PendingImage> embeds;
+#  ifdef TUXCARDS_WITH_DIAGRAMS
+   md = processDiagrams( md, embeds );
+#  endif
+#  ifdef TUXCARDS_WITH_MATH
+   md = processMath( md, embeds );
+#  endif
 
    doc->setMarkdown( md );
+
+   // setMarkdown ignores image resources, so splice the rendered
+   // fragments in now: find each placeholder token and replace it with
+   // the actual image via the cursor (which setHtml-style honors).
+   for ( const PendingImage& pi : embeds ) {
+      QTextCursor c = doc->find( pi.token );
+      if ( !c.isNull() )
+         c.insertImage( pi.img );      // replaces the selected token text
+   }
+#else
+   doc->setMarkdown( md );
+#endif
 }
 
 } // namespace MarkdownRenderer

@@ -289,7 +289,9 @@ elseif(TUXCARDS_WRITE_BACKEND STREQUAL "monocypher")
 endif()
 
 if(TUXCARDS_WITH_MATH)
-   target_link_libraries(tuxcards PRIVATE JKQTMathText6::JKQTMathText6)
+   # Upstream exports the versionless alias JKQTPlotter::JKQTMathText
+   # (-> JKQTPlotter6::JKQTMathText6).
+   target_link_libraries(tuxcards PRIVATE JKQTPlotter::JKQTMathText)
    target_compile_definitions(tuxcards PRIVATE TUXCARDS_WITH_MATH)
 endif()
 if(TUXCARDS_WITH_DIAGRAMS)
