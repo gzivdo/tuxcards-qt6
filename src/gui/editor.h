@@ -50,6 +50,14 @@ public:
 
 signals:
     void         formatRecognized( InformationFormat );
+    // Emitted when the user chooses "Reset formatting" from the editor's
+    // right-click menu. MainWindow drives the actual conversion (touches
+    // the active CInformationElement and the format toolbar wiring).
+    void         resetFormattingRequested();
+
+
+protected:
+    void         contextMenuEvent( QContextMenuEvent* ev ) override;
 
 
 public slots:

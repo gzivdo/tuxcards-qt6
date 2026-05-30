@@ -286,6 +286,8 @@ void MainWindow::settingUpEditor( QWidget* pParent )
 
    connect(mpEditor, &QTextEdit::textChanged,     this, &MainWindow::recognizeChanges);
    connect(mpEditor, &Editor::formatRecognized,   this, &MainWindow::showRecognizedFormat);
+   connect(mpEditor, &Editor::resetFormattingRequested,
+                                                  this, &MainWindow::resetFormattingToPlainText);
    connect(mpEditor, &QTextEdit::cursorPositionChanged, this, [this](){
       textAlignmentChanged((int)mpEditor->alignment());
    });
@@ -468,6 +470,9 @@ void MainWindow::settingUpMenu( void )
       edit->addAction( tr("Insert &Image..."),      mpEditor, &Editor::insertImage,             QKeySequence(Qt::CTRL | Qt::Key_P) );
       edit->addAction( tr("Insert Current &Date"),  this,     &MainWindow::insertCurrentDate,   QKeySequence(Qt::CTRL | Qt::Key_D) );
       edit->addAction( tr("Insert Current T&ime"),  this,     &MainWindow::insertCurrentTime,   QKeySequence(Qt::CTRL | Qt::Key_T) );
+      edit->addSeparator();
+      edit->addAction( tr("Reset &formatting (convert to plain text)"),
+                       this, &MainWindow::resetFormattingToPlainText );
       edit->addSeparator();
       edit->addAction( tr("&Options..."), this, &MainWindow::editConfiguration );
    }
@@ -828,7 +833,9 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
   textFormatTool->setIcon(QIcon(format.getPixmap()));
 
   // HTML-only formatting controls — Bold/Italic/Align/etc act on
-  // QTextCharFormat which only exists in rich-text mode.
+  // QTextCharFormat which only exists in rich-text mode. The font /
+  // size / list-style combos in the toolbar manipulate the same
+  // thing, so disable them together with the buttons.
   bool isHtml = format.equals(InformationFormat::HTML);
   textBoldTool->setEnabled(isHtml);
   textItalicTool->setEnabled(isHtml);
@@ -840,6 +847,10 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
   textRightTool->setEnabled(isHtml);
   textBlockTool->setEnabled(isHtml);
 
+  if (pComboListStyle) pComboListStyle->setEnabled(isHtml);
+  if (pComboFont)      pComboFont->setEnabled(isHtml);
+  if (pComboSize)      pComboSize->setEnabled(isHtml);
+
   // MARKDOWN-only controls (preview toggle + helper buttons).
   bool isMd = format.equals(InformationFormat::MARKDOWN);
   mdPreviewToggleAction->setVisible(isMd);
@@ -849,6 +860,31 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
   // strand the toggle in a wrong state — flip it off explicitly.
   if (!isMd && mdPreviewToggleAction->isChecked())
      mdPreviewToggleAction->setChecked(false);
+}
+
+
+// -------------------------------------------------------------------------------
+// "Reset formatting" — drop all rich-text markup from the active entry,
+// switch its format to TEXT, and load the result back into the editor.
+// Reachable from the Edit menu and the editor's context menu.
+void MainWindow::resetFormattingToPlainText()
+// -------------------------------------------------------------------------------
+{
+   if ( !mpEditor || !mpCollection ) return;
+   CInformationElement* elem = mpCollection->getActiveElement();
+   if ( !elem ) return;
+
+   // Use the editor's currently-visible plain text — it already
+   // collapses HTML tags / markdown markup to whatever the user sees.
+   mpEditor->writeCurrentTextToActiveInformationElement();
+   const QString plain = mpEditor->toPlainText();
+
+   elem->setInformationFormat( &InformationFormat::TEXT );
+   elem->setInformation( plain );
+   // Re-enter the editor so it picks up the new format (acceptRichText
+   // off, formatting toolbar disabled via showRecognizedFormat).
+   mpEditor->activeInformationElementChanged( elem );
+   recognizeChanges();
 }
 
 

@@ -209,6 +209,8 @@ private slots:
   void print();
   void printPreview();
 
+  void resetFormattingToPlainText();
+
   void toggleMarkdownPreview( bool on );
   void mdInsertBold();
   void mdInsertItalic();

@@ -20,6 +20,9 @@
 #include <QTextCursor>
 #include <QRegExp>
 #include <QKeyEvent>
+#include <QContextMenuEvent>
+#include <QMenu>
+#include <QAction>
 #include <QScrollBar>
 #include <QMimeData>
 #include <QApplication>
@@ -50,6 +53,20 @@ void Editor::aboutToRemoveElement( CInformationElement* pIE )
    {
       mpActiveElement = nullptr;
    }
+}
+
+
+// Append a "Reset formatting" entry to the editor's standard right-click
+// menu. We don't act on it here — MainWindow has the format-toolbar /
+// format-flag wiring and listens for resetFormattingRequested().
+void Editor::contextMenuEvent( QContextMenuEvent* ev )
+{
+   QMenu* menu = createStandardContextMenu();
+   menu->addSeparator();
+   QAction* a = menu->addAction(tr("Reset formatting (convert to plain text)"));
+   connect(a, &QAction::triggered, this, &Editor::resetFormattingRequested);
+   menu->exec(ev->globalPos());
+   delete menu;
 }
 
 
