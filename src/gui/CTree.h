@@ -133,11 +133,19 @@ public slots:
   void                    setEntryColor();
   void                    setEntrySubTreeColor();
 
+  // Right-click "Change format" submenu — convert the active entry's
+  // body to the requested target format. Emits formatChanged so the
+  // main editor can re-enter and the format toolbar can refresh.
+  void                    convertActiveToText();
+  void                    convertActiveToHtml();
+  void                    convertActiveToMarkdown();
+
 signals:
   void                    showMessage(QString, int time);
   void                    makeVisible( SearchPosition* );
   void                    addEntryToBookmarksSignal( void );
   void                    dragStarted( void );
+  void                    formatChanged( CInformationElement* );
 };
 
 #endif

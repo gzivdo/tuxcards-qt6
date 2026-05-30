@@ -304,6 +304,14 @@ void MainWindow::settingUpTree( QWidget* pParent )
    connect( mpTree, &CTree::showMessage,             this, &MainWindow::showMessage );
    connect( mpTree, &CTree::makeVisible,             this, &MainWindow::makeVisible );
    connect( mpTree, &CTree::addEntryToBookmarksSignal, this, &MainWindow::addElementToBookmarksEvent );
+   // When the tree's right-click "Change format" submenu rewrites an
+   // entry's body+format, walk the editor through the normal
+   // activeElementChanged path so it adopts the new mode.
+   connect( mpTree, &CTree::formatChanged, this, [this](CInformationElement* elem) {
+      if ( elem && mpEditor )
+         mpEditor->activeInformationElementChanged( elem );
+      recognizeChanges();
+   });
 
 	// On a drag start, move editor contents to InformationElement.
    connect(mpTree, &CTree::dragStarted, mpEditor, &Editor::writeCurrentTextToActiveInformationElement);
@@ -795,14 +803,6 @@ void MainWindow::changeInformationFormat()
       return;
    }
 
-   if ( pActiveElement->getInformationFormat() == &InformationFormat::HTML)
-   {
-      QMessageBox::information( 0, tr("Converter"), tr("Sorry, but converting HTML to plain text "
-                                "is not implemented yet."),
-                                QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
-      return;
-   }
-
    if (QMessageBox::Cancel == QMessageBox::warning(this, tr("Converting Information Format"),
                                                    tr("Are you sure to change the information "
                                                    "format.\nSome of the text layout will be lost."),
@@ -813,14 +813,14 @@ void MainWindow::changeInformationFormat()
       return;
    }
 
-
-   // converting
+   // converting (toolbar shortcut — flips TEXT<->HTML, full
+   // cross-conversion lives on the tree's right-click "Change format" submenu)
    mpEditor->writeCurrentTextToActiveInformationElement();
    Converter::convert( *pActiveElement );
 
-   mpEditor->setAcceptRichText(true);
-   mpEditor->setText( pActiveElement->getInformation() );
-
+   // Re-enter the editor through activeInformationElementChanged so it
+   // picks the right acceptRichText/readOnly for the new format.
+   mpEditor->activeInformationElementChanged( pActiveElement );
    mpCollection->setActiveElement( pActiveElement );
 }
 

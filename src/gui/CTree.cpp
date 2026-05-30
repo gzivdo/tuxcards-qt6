@@ -42,6 +42,7 @@
 #include <QScrollBar>
 
 #include "../information/xmlpersister.h"
+#include "../information/converter.h"
 
 #include "../utilities/CIconManager.h"
 #define  getIcon(x)  CIconManager::getInstance().getIcon(x)
@@ -131,6 +132,11 @@ void CTree::settingUpContextMenu( void )
   mContextMenu.addSeparator();
   mContextMenu.addAction( getIcon("editentrycolor"), "Set &Entry Color...",  this, &CTree::setEntryColor );
   mContextMenu.addAction( getIcon("editentrysubtreecolor"), "Set Entry &Sub-Tree Color...", this, &CTree::setEntrySubTreeColor );
+  mContextMenu.addSeparator();
+  QMenu* fmtMenu = mContextMenu.addMenu( tr("Change &format") );
+  fmtMenu->addAction( tr("To plain text (drops formatting)"), this, &CTree::convertActiveToText );
+  fmtMenu->addAction( tr("To HTML (rich text)"),              this, &CTree::convertActiveToHtml );
+  fmtMenu->addAction( tr("To Markdown"),                      this, &CTree::convertActiveToMarkdown );
   mContextMenu.addSeparator();
   mContextMenu.addAction( getIcon("upArrow"),        "Move Entry Upwards",   this, &CTree::moveElementUp );
   mContextMenu.addAction( getIcon("downArrow"),      "Move Entry Downwards", this, &CTree::moveElementDown );
@@ -678,4 +684,31 @@ void CTree::setEntrySubTreeColor()
    if(!c.isValid()) return;
 
    pElement->setSubTreeTextColor(c);
+}
+
+
+// ---- Change-format context-menu slots ---------------------------------------
+
+void CTree::convertActiveToText()
+{
+   CInformationElement* pElement = getCurrentActive();
+   if ( nullptr == pElement ) return;
+   Converter::convertTo( *pElement, &InformationFormat::TEXT );
+   emit formatChanged( pElement );
+}
+
+void CTree::convertActiveToHtml()
+{
+   CInformationElement* pElement = getCurrentActive();
+   if ( nullptr == pElement ) return;
+   Converter::convertTo( *pElement, &InformationFormat::HTML );
+   emit formatChanged( pElement );
+}
+
+void CTree::convertActiveToMarkdown()
+{
+   CInformationElement* pElement = getCurrentActive();
+   if ( nullptr == pElement ) return;
+   Converter::convertTo( *pElement, &InformationFormat::MARKDOWN );
+   emit formatChanged( pElement );
 }

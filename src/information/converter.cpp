@@ -30,18 +30,61 @@
 void Converter::convert( CInformationElement& informationElement )
 // -------------------------------------------------------------------------------
 {
-   QString resultingText;
    if (informationElement.getInformationFormat() == &InformationFormat::HTML)
-   {
-      resultingText = convertHTML2Text( informationElement.getInformation() );
-      informationElement.setInformationFormat( &InformationFormat::TEXT );
-   }
+      convertTo(informationElement, &InformationFormat::TEXT);
    else
-   {
-      resultingText = convertText2HTML( informationElement.getInformation() );
-      informationElement.setInformationFormat( &InformationFormat::HTML );
+      convertTo(informationElement, &InformationFormat::HTML);
+}
+
+
+// -------------------------------------------------------------------------------
+void Converter::convertTo( CInformationElement& elem, InformationFormat* target )
+// -------------------------------------------------------------------------------
+{
+   InformationFormat* src = elem.getInformationFormat();
+   if ( src == target || target == nullptr )
+      return;
+
+   const QString in = elem.getInformation();
+   QString out;
+
+   if (target == &InformationFormat::TEXT) {
+      // Strip whatever markup the source carried and keep visible text.
+      if (src == &InformationFormat::HTML) {
+         QTextDocument doc;
+         doc.setHtml(in);
+         out = doc.toPlainText();
+      } else if (src == &InformationFormat::MARKDOWN) {
+         QTextDocument doc;
+         doc.setMarkdown(in);
+         out = doc.toPlainText();
+      } else {
+         out = in;
+      }
+   } else if (target == &InformationFormat::HTML) {
+      if (src == &InformationFormat::TEXT) {
+         // Plain text → HTML: escape & preserve line breaks.
+         out = in.toHtmlEscaped().replace(QChar('\n'), QStringLiteral("<br/>"));
+      } else if (src == &InformationFormat::MARKDOWN) {
+         QTextDocument doc;
+         doc.setMarkdown(in);
+         out = doc.toHtml();
+      } else {
+         out = in;
+      }
+   } else if (target == &InformationFormat::MARKDOWN) {
+      if (src == &InformationFormat::HTML) {
+         QTextDocument doc;
+         doc.setHtml(in);
+         out = doc.toMarkdown();
+      } else {
+         // Plain text is already valid (degenerate) Markdown.
+         out = in;
+      }
    }
-   informationElement.setInformation(resultingText);
+
+   elem.setInformation(out);
+   elem.setInformationFormat(target);
 }
 
 

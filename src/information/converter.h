@@ -26,6 +26,13 @@ class Converter{
 public:
    static void convert( CInformationElement& );
 
+   // Re-encode the element's content for the requested target format
+   // and switch the format flag. No-op if the element is already in
+   // `target`. Covers every TEXT/HTML/MARKDOWN cross-conversion;
+   // TEXT→{HTML,MARKDOWN} is mechanical, the rich ones route through
+   // QTextDocument so we don't reinvent CommonMark/HTML.
+   static void convertTo( CInformationElement&, InformationFormat* target );
+
    static QString convertText2HTML( QString );
    static QString convertHTML2Text( QString );
 };
