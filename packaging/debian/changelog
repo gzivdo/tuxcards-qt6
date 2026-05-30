@@ -1,3 +1,21 @@
+tuxcards-qt6 (3.4.0-1) unstable; urgency=medium
+
+  * Markdown is now a first-class entry format. Storage formats renamed
+    to be honest (ASCII→TEXT, RTF→HTML; old files still load) and a new
+    MARKDOWN format added, with a Source/preview toggle, optional
+    split-view live preview (Options → Markdown), and a tree right-click
+    "Change format" submenu that converts an entry between TEXT/HTML/
+    MARKDOWN. Plain-text mode now disables the rich-text toolbar and a
+    "Reset formatting" action (Edit menu + editor context menu) drops
+    formatting to plain text.
+  * Optional, OFF-by-default build features for the Markdown preview:
+    -DTUXCARDS_WITH_MATH=ON renders $..$/$$..$$ LaTeX math via
+    JKQTMathText; -DTUXCARDS_WITH_DIAGRAMS=ON renders ```dot/```graphviz
+    fenced blocks via Graphviz. Both add no dependency unless enabled;
+    diagrams additionally need the Graphviz runtime on the user's machine.
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 18:40:00 +0000
+
 tuxcards-qt6 (3.3.3-1) unstable; urgency=medium
 
   * Shortcuts: Ctrl+F is restored to "search across the whole tree" (its

@@ -11,7 +11,7 @@
 %global __debug_install_post %{nil}
 
 Name:           tuxcards-qt6
-Version:        3.3.3
+Version:        3.4.0
 Release:        1%{?dist}
 Summary:        Hierarchical note-taking application (Qt6 port)
 

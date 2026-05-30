@@ -34,8 +34,15 @@ License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
 ## Features
 
 * Tree of notes with per-entry icons, font and color (also per sub-tree).
+* Three per-entry storage formats — **plain text**, **HTML** (rich text)
+  and **Markdown** — switchable from the tree's right-click *Change
+  format* submenu. Plain-text entries disable the rich-text toolbar and
+  paste as plain text; *Reset formatting* drops markup on demand.
 * Rich-text editor: bold/italic/underline, alignment, bullet / ordered
   lists, font family / size combo, image insertion.
+* **Markdown** entries: edit the raw source with insert helpers, toggle
+  a rendered preview, or enable a live split-view preview pane
+  (Options → Markdown).
 * Search across the whole tree or the current sub-tree (Ctrl+F),
   with the matched substring highlighted in bold in the results.
 * In-entry **find & replace** bar (F3 / Ctrl+H; Shift+F3 for previous;
@@ -43,6 +50,12 @@ License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
 * **Print** the current entry, with a separate **Print preview**
   action (Ctrl+Shift+P).
 * HTML and Markdown export of entries; Markdown import.
+* *Optional build-time* Markdown preview extras (both OFF by default,
+  no dependency unless enabled): `-DTUXCARDS_WITH_MATH=ON` renders
+  `$…$` / `$$…$$` LaTeX math via JKQTMathText; `-DTUXCARDS_WITH_DIAGRAMS=ON`
+  renders ` ```dot ` / ` ```graphviz ` fenced blocks via Graphviz
+  (the latter also needs the Graphviz runtime installed). No browser /
+  QtWebEngine is pulled in.
 * Configurable left-side `CColorBar` (gradient + horizontal/vertical
   captions) — back-ported from 2.2.1.
 * Bookmarks bar pinned at the bottom of the window, persisted between
