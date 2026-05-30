@@ -36,8 +36,8 @@ CSingleEntryView::CSingleEntryView( QWidget* pParent )
   , mpSplitter( nullptr )
   , mpMdPreview( nullptr )
   , mpMdPreviewDebounce( nullptr )
-  , mbSplitActive( false )
   , mbSplitEnabled( false )
+  , mbPreviewOnly( false )
 // -------------------------------------------------------------------------------
 {
    mpEditor = new Editor( this );
@@ -49,13 +49,38 @@ CSingleEntryView::CSingleEntryView( QWidget* pParent )
       return;
    }
 
+   // A read-only rendered-markdown view that lives next to the editor in
+   // a splitter. Its presence/visibility (not the editor's document)
+   // implements preview, so the editor's undo history is never disturbed.
+   mpMdPreview = new QTextBrowser( this );
+   mpMdPreview->setOpenExternalLinks( true );
+   mpMdPreview->hide();
+
+   mpSplitter = new QSplitter( Qt::Horizontal, this );
+   mpSplitter->addWidget( mpEditor );
+   mpSplitter->addWidget( mpMdPreview );
+   mpSplitter->setStretchFactor( 0, 1 );
+   mpSplitter->setStretchFactor( 1, 1 );
+
    mpFindBar = new EditorFindBar( mpEditor, this );
 
    QVBoxLayout* lay = new QVBoxLayout( this );
    lay->setContentsMargins( 0, 0, 0, 0 );
    lay->setSpacing( 0 );
-   lay->addWidget( mpEditor, 1 );
+   lay->addWidget( mpSplitter, 1 );
    lay->addWidget( mpFindBar );
+
+   // Live-update the preview (debounced) while it is visible. The editor
+   // is hidden in preview-only mode, so this mainly drives split-view.
+   mpMdPreviewDebounce = new QTimer( this );
+   mpMdPreviewDebounce->setSingleShot( true );
+   mpMdPreviewDebounce->setInterval( 250 );
+   connect( mpMdPreviewDebounce, &QTimer::timeout,
+            this, &CSingleEntryView::refreshMdPreview );
+   connect( mpEditor, &QTextEdit::textChanged, this, [this]() {
+      if ( mpMdPreview->isVisible() && mpMdPreviewDebounce )
+         mpMdPreviewDebounce->start();
+   });
 }
 
 
@@ -147,16 +172,18 @@ void CSingleEntryView::activeInformationElementChanged( CInformationElement* pIE
 
    mpActiveElement = pIE;
 
+   // mpEditor->activeInformationElementChanged() loads the content and
+   // emits formatRecognized(); MainWindow::showRecognizedFormat() reacts
+   // by setting the desired markdown view/edit mode via
+   // setSinglePanePreview(), so we must NOT force a mode here (doing so
+   // would clobber the default-view-on-navigate behavior).
    mpEditor->activeInformationElementChanged( mpActiveElement );
-   // Splitter visibility depends on (config flag) AND (entry is markdown).
-   applySplitVisibility();
-   if ( mbSplitActive )
-      refreshMdPreview();
+   updateView();
 //   signalEntryDecrypted();
 }
 
 
-// ---- Split-view (Markdown preview pane) --------------------------------------
+// ---- Markdown preview (split pane and single-pane toggle) --------------------
 
 bool CSingleEntryView::currentEntryIsMarkdown() const
 {
@@ -165,66 +192,28 @@ bool CSingleEntryView::currentEntryIsMarkdown() const
 }
 
 
-void CSingleEntryView::buildSplitterLazy()
+// Decide editor/preview visibility from the current mode flags and
+// refresh the rendered preview if it is shown.
+void CSingleEntryView::updateView()
 {
-   if ( mpSplitter ) return;
+   const bool md          = currentEntryIsMarkdown();
+   const bool previewOnly = mbPreviewOnly && md;
+   const bool split       = mbSplitEnabled && md && !previewOnly;
 
-   mpSplitter = new QSplitter( Qt::Horizontal, this );
-   mpMdPreview = new QTextBrowser( mpSplitter );
-   mpMdPreview->setOpenExternalLinks( true );
+   mpEditor->setVisible( !previewOnly );
+   mpMdPreview->setVisible( previewOnly || split );
 
-   // Debounce textChanged: re-rendering on every keystroke is wasteful
-   // for large entries. 250 ms is comfortably below "feels laggy".
-   mpMdPreviewDebounce = new QTimer( this );
-   mpMdPreviewDebounce->setSingleShot( true );
-   mpMdPreviewDebounce->setInterval( 250 );
-   connect( mpMdPreviewDebounce, &QTimer::timeout,
-            this, &CSingleEntryView::refreshMdPreview );
-   connect( mpEditor, &QTextEdit::textChanged, this, [this]() {
-      if ( mbSplitActive && mpMdPreviewDebounce )
-         mpMdPreviewDebounce->start();
-   });
-}
-
-
-void CSingleEntryView::applySplitVisibility()
-{
-   const bool wantSplit = mbSplitEnabled && currentEntryIsMarkdown();
-   if ( wantSplit == mbSplitActive )
-      return;
-
-   mbSplitActive = wantSplit;
-   QVBoxLayout* lay = qobject_cast<QVBoxLayout*>( layout() );
-   if ( !lay ) return;
-
-   if ( wantSplit ) {
-      buildSplitterLazy();
-      // Re-parent editor into the splitter; remove from outer layout first.
-      lay->removeWidget( mpEditor );
-      mpSplitter->addWidget( mpEditor );
-      mpSplitter->addWidget( mpMdPreview );
-      mpSplitter->setStretchFactor( 0, 1 );
-      mpSplitter->setStretchFactor( 1, 1 );
-      // Insert splitter where the editor used to be (index 0, above find bar).
-      lay->insertWidget( 0, mpSplitter, 1 );
-      mpSplitter->show();
-   } else if ( mpSplitter ) {
-      // Reverse the wrap: pull the editor back out, drop the splitter.
-      mpSplitter->setParent( nullptr );
-      mpEditor->setParent( this );
-      lay->insertWidget( 0, mpEditor, 1 );
-      mpSplitter->hide();
-   }
+   if ( mpMdPreview->isVisible() )
+      refreshMdPreview();
 }
 
 
 void CSingleEntryView::refreshMdPreview()
 {
-   if ( !mbSplitActive || !mpMdPreview ) return;
+   if ( !mpMdPreview->isVisible() ) return;
    // Render from the editor's current text (the authoritative .md
-   // source while we're in MARKDOWN+plain-edit mode). renderInto adds
-   // math/diagram rasterization when those features are compiled in;
-   // otherwise it's a plain setMarkdown().
+   // source — the editor stays in plain mode and is never mutated for
+   // preview). renderInto rasterizes math/diagrams when compiled in.
    MarkdownRenderer::renderInto( mpMdPreview->document(), mpEditor->toPlainText() );
 }
 
@@ -232,7 +221,18 @@ void CSingleEntryView::refreshMdPreview()
 void CSingleEntryView::setMarkdownSplitView( bool on )
 {
    mbSplitEnabled = on;
-   applySplitVisibility();
-   if ( mbSplitActive )
-      refreshMdPreview();
+   updateView();
+}
+
+
+void CSingleEntryView::setSinglePanePreview( bool on )
+{
+   mbPreviewOnly = on;
+   updateView();
+}
+
+
+bool CSingleEntryView::isPreviewActive() const
+{
+   return mbPreviewOnly && currentEntryIsMarkdown();
 }

@@ -131,11 +131,17 @@ static QImage renderDot( const QString& src )
             QSize sz = renderer.defaultSize();
             if ( sz.isEmpty() )
                sz = QSize( 320, 240 );
-            // 2x for a crisper raster on hidpi; preview scales it down.
-            out = QImage( sz * 2, QImage::Format_ARGB32_Premultiplied );
+            // Rasterize the SVG at 2x and tag the image with a 2.0
+            // device-pixel-ratio: the preview then shows it at logical
+            // size but with double the pixels, i.e. crisp rather than
+            // the blurry/upscaled look of a 1x raster.
+            const qreal scale = 2.0;
+            out = QImage( sz * scale, QImage::Format_ARGB32_Premultiplied );
             out.fill( Qt::transparent );
             QPainter p( &out );
             renderer.render( &p );
+            p.end();
+            out.setDevicePixelRatio( scale );
          }
       }
       if ( svgData )
@@ -198,8 +204,10 @@ static QImage renderMath( const QString& tex, bool display )
    mt.setFontSize( display ? 16.0 : 12.0 );
    if ( !mt.parse( QStringLiteral("$") + tex + QStringLiteral("$") ) )
       return QImage();
-   // transparent background so it blends into the preview pane
-   return mt.drawIntoImage( false, Qt::transparent );
+   // Render at 2x device-pixel-ratio / 192 dpi so the glyphs stay crisp
+   // in the preview instead of looking pixelated. Transparent background
+   // blends into the pane.
+   return mt.drawIntoImage( false, Qt::transparent, 0, 2.0, 192 );
 }
 
 // Mask fenced code blocks and inline code spans so we never treat a `$`

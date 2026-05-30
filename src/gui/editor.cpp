@@ -155,12 +155,6 @@ void Editor::writeCurrentTextToActiveInformationElement( void )
    if ( !mpActiveElement )
       return;
 
-   // While a markdown preview is showing, the document holds rendered
-   // output, not the source — saving it would corrupt the entry. The
-   // authoritative source was already persisted when preview turned on.
-   if ( mbPreviewMode )
-      return;
-
    mpActiveElement->setInformation(getText());
 }
 
@@ -238,16 +232,13 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
    {
       disconnect( mpActiveElement, &CInformationElement::informationHasChanged, this, &Editor::rereadInformation );
 
-      // If the outgoing element is in preview, writeCurrent() is a
-      // no-op (its source was persisted when preview turned on) — so
-      // the rendered HTML never overwrites the markdown source.
+      // Save the outgoing element. getText() serializes by the element's
+      // format (markdown/text → plain source, html → toHtml), and the
+      // editor is never mutated for preview, so this can't corrupt a
+      // markdown source into HTML.
       writeCurrentTextToActiveInformationElement();
       mpActiveElement->setInformationYPos( verticalScrollBar()->value() );
    }
-
-   // The incoming element always starts in plain edit mode; clear the
-   // preview flag now that the outgoing element has been handled.
-   mbPreviewMode = false;
 
    loadElementContent( pElement );
 }
@@ -261,7 +252,6 @@ void Editor::loadElementContent( CInformationElement* pElement )
 {
    if ( pElement->getInformationFormat() == &InformationFormat::HTML )
    {
-      emit formatRecognized( InformationFormat::HTML );
       setAcceptRichText( true );
    }
    else
@@ -270,7 +260,6 @@ void Editor::loadElementContent( CInformationElement* pElement )
       // char formatting inherited from a previously-viewed rich-text
       // entry so the raw text always shows in the default editor font at
       // one size, not e.g. bold/large left over from an HTML heading.
-      emit formatRecognized( *pElement->getInformationFormat() );
       setAcceptRichText( false );
       QTextCharFormat fmt;
       fmt.setFont( font() );        // the configured default editor font
@@ -289,6 +278,10 @@ void Editor::loadElementContent( CInformationElement* pElement )
       connect( mpActiveElement, &CInformationElement::informationHasChanged,
                this, &Editor::rereadInformation );
    }
+
+   // Notify listeners AFTER the content is in place, so a preview driven
+   // by showRecognizedFormat() renders the new text, not the old buffer.
+   emit formatRecognized( *pElement->getInformationFormat() );
 }
 
 
@@ -298,10 +291,7 @@ void Editor::loadElementContent( CInformationElement* pElement )
 void Editor::reloadActiveElement( void )
 {
    if ( mpActiveElement )
-   {
-      mbPreviewMode = false;
       loadElementContent( mpActiveElement );
-   }
 }
 
 

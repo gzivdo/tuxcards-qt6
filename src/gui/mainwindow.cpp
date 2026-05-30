@@ -664,12 +664,14 @@ void MainWindow::settingUpToolBar( void )
   // All hidden by default; showRecognizedFormat() flips visibility when
   // the active element's format is MARKDOWN.
   mpEditorTools->addSeparator();
-  mdPreviewToggleAction = mpEditorTools->addAction(
-        getIcon("find"), tr("Preview Markdown"), this,
-        [this](bool checked){ toggleMarkdownPreview(checked); });
-  mdPreviewToggleAction->setCheckable(true);
-  mdPreviewToggleAction->setToolTip(tr("Toggle rendered Markdown preview"));
-  mdPreviewToggleAction->setVisible(false);
+  // Markdown entries open in read-only rendered VIEW by default; this
+  // checkable action switches to editing the source (checked = edit).
+  mdEditToggleAction = mpEditorTools->addAction(
+        tr("✎ Edit"), this,
+        [this](bool checked){ toggleMarkdownEdit(checked); });
+  mdEditToggleAction->setCheckable(true);
+  mdEditToggleAction->setToolTip(tr("Edit the Markdown source (uncheck to view rendered)"));
+  mdEditToggleAction->setVisible(false);
 
   mdHelperActions.clear();
   auto addMdHelper = [&](const QString& label, void (MainWindow::*slot)()) {
@@ -864,19 +866,31 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
   if (pComboFontAction)      pComboFontAction->setVisible(isHtml);
   if (pComboSizeAction)      pComboSizeAction->setVisible(isHtml);
 
-  // MARKDOWN-only controls (preview toggle + helper buttons). Shown
-  // only for markdown entries so that mode has its own active toolbar.
+  // MARKDOWN-only controls (edit toggle + helper buttons). Shown only
+  // for markdown entries so that mode has its own toolbar.
   bool isMd = format.equals(InformationFormat::MARKDOWN);
-  mdPreviewToggleAction->setVisible(isMd);
+  mdEditToggleAction->setVisible(isMd);
   for (QAction* a : mdHelperActions)
      a->setVisible(isMd);
-  // showRecognizedFormat() fires on every element switch; the incoming
-  // entry always starts in edit (not preview) mode. Reset the toggle
-  // to unchecked WITHOUT firing toggleMarkdownPreview() (which would
-  // try to restore a stale source into the new entry).
-  {
-     QSignalBlocker block(mdPreviewToggleAction);
-     mdPreviewToggleAction->setChecked(false);
+
+  if ( isMd ) {
+     // Viewing/searching is the common case, so a markdown entry opens
+     // in read-only rendered VIEW by default. With split-view enabled
+     // the user explicitly wants the editor beside the preview, so go
+     // straight to edit mode there. Sync the toggle without firing it.
+     const bool splitOn =
+        mConfiguration.getBoolValue( CTuxCardsConfiguration::B_MARKDOWN_SPLIT_VIEW );
+     const bool editing = splitOn;          // edit when split, else view
+     {
+        QSignalBlocker block(mdEditToggleAction);
+        mdEditToggleAction->setChecked(editing);
+     }
+     if ( mpSingleEntryView )
+        mpSingleEntryView->setSinglePanePreview( !editing );
+     setMarkdownEditingEnabled( editing );
+  } else {
+     // Non-markdown entries are always directly editable.
+     setMarkdownEditingEnabled( true );
   }
 }
 
@@ -913,45 +927,46 @@ void MainWindow::resetFormattingToPlainText()
 // ---- Markdown preview + helper actions --------------------------------------
 
 // -------------------------------------------------------------------------------
-void MainWindow::toggleMarkdownPreview( bool on )
+void MainWindow::toggleMarkdownEdit( bool editing )
 // -------------------------------------------------------------------------------
 {
-   if ( !mpEditor || !mpCollection || !mpCollection->getActiveElement() )
+   if ( !mpEditor || !mpCollection || !mpCollection->getActiveElement() || !mpSingleEntryView )
       return;
    CInformationElement* elem = mpCollection->getActiveElement();
    if ( elem->getInformationFormat() != &InformationFormat::MARKDOWN )
       return;
 
-   if (on) {
-      // Capture the in-editor source as the authoritative .md and
-      // persist it into the element NOW, while still in plain mode, so
-      // edits made before toggling preview aren't lost. Then enter
-      // preview mode — from here writeCurrent() is a no-op so navigating
-      // away can't overwrite the source with the rendered HTML.
-      mdSourceStash = mpEditor->toPlainText();
-      mpEditor->writeCurrentTextToActiveInformationElement();
-      mpEditor->setPreviewMode(true);
-      mpEditor->setAcceptRichText(true);
-      mpEditor->setReadOnly(true);
-      MarkdownRenderer::renderInto(mpEditor->document(), mdSourceStash);
-   } else {
-      // Restore raw source for editing. setMarkdown left the document's
-      // char format carrying heading/bold styling; setPlainText alone
-      // can inherit it, so the raw markdown would show up bold/large.
-      // Reset the editor to the configured default editor font and a
-      // clean char format before reloading the plain source.
-      mpEditor->setReadOnly(false);
-      mpEditor->setAcceptRichText(false);
+   // editing == false → read-only rendered view (single-pane preview on)
+   // editing == true  → edit the source (preview off, editor shown)
+   // Non-destructive: only a separate rendered view is shown/hidden; the
+   // editor's document and undo/redo stack are never touched, so the
+   // full editing/undo state survives toggling.
+   mpSingleEntryView->setSinglePanePreview( !editing );
 
-      const QFont def = mConfiguration.getASCIIEditorFont().toFont();
-      mpEditor->document()->clear();
-      mpEditor->setFont(def);
-      QTextCharFormat fmt;
-      fmt.setFont(def);
-      mpEditor->setCurrentCharFormat(fmt);
-      mpEditor->setPlainText(mdSourceStash);
-      mpEditor->setPreviewMode(false);   // back to a normal editable source
-      mdSourceStash.clear();
+   // Editing controls (undo/redo + markdown insert helpers) live only
+   // while editing; in view mode selection + copy still work in the
+   // read-only rendered pane.
+   setMarkdownEditingEnabled( editing );
+}
+
+
+// -------------------------------------------------------------------------------
+// Enable/disable the actions that would edit the markdown source. Used
+// to lock editing while the single-pane preview is shown.
+void MainWindow::setMarkdownEditingEnabled( bool en )
+// -------------------------------------------------------------------------------
+{
+   for ( QAction* a : mdHelperActions )
+      a->setEnabled( en );
+
+   if ( !editUndoAction || !editRedoAction || !mpEditor )
+      return;
+   if ( en ) {
+      editUndoAction->setEnabled( mpEditor->document()->isUndoAvailable() );
+      editRedoAction->setEnabled( mpEditor->document()->isRedoAvailable() );
+   } else {
+      editUndoAction->setEnabled( false );
+      editRedoAction->setEnabled( false );
    }
 }
 

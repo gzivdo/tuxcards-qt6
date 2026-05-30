@@ -49,10 +49,15 @@ public:
    // methods added because of editor - end
 
    // Configure whether MARKDOWN entries should show the live preview
-   // pane next to the editor. Called by MainWindow when the user flips
-   // the Options → Markdown checkbox and when the active element
-   // changes (so non-markdown entries collapse back to single-pane).
+   // pane next to the editor (Options → Markdown checkbox).
    void          setMarkdownSplitView( bool on );
+
+   // Single-pane preview toggle: when on (markdown entry), the editor
+   // is hidden and a read-only rendered view is shown in its place.
+   // The editor's document — and its undo/redo stack — is never touched,
+   // so toggling back restores the exact editing state.
+   void          setSinglePanePreview( bool on );
+   bool          isPreviewActive() const;
 
    // ************** IView *************************************
    virtual void aboutToRemoveElement( CInformationElement* pIE );
@@ -70,16 +75,18 @@ private:
    Editor*              mpEditor;
    EditorFindBar*       mpFindBar;
 
-   // Split-view widgets — created lazily on first showSplit(true).
+   // Editor + rendered-preview live side by side in a splitter that is
+   // always present; which children are visible gives the three modes
+   // (edit-only / split / preview-only). The editor document is never
+   // mutated for preview, so its undo stack survives toggling.
    QSplitter*           mpSplitter;
    QTextBrowser*        mpMdPreview;
    QTimer*              mpMdPreviewDebounce;
-   bool                 mbSplitActive;
    bool                 mbSplitEnabled;   // user preference from config
+   bool                 mbPreviewOnly;    // single-pane preview toggle
 
-   void                 buildSplitterLazy();
    bool                 currentEntryIsMarkdown() const;
-   void                 applySplitVisibility();
+   void                 updateView();
 
 private slots:
    void entryDecrypted( void );
