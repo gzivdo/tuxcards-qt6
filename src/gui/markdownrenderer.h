@@ -29,7 +29,10 @@ namespace MarkdownRenderer
 {
    // Render mdSource into doc. Equivalent to doc->setMarkdown(mdSource)
    // plus, when compiled in, inline rendering of math and diagrams.
-   void renderInto( QTextDocument* doc, const QString& mdSource );
+   // basePointSize ties the math glyph size to the configured editor
+   // font so formulas match the surrounding text instead of a fixed size.
+   void renderInto( QTextDocument* doc, const QString& mdSource,
+                    qreal basePointSize = 12.0 );
 
    // Reflect the compile-time feature flags so the UI can decide whether
    // to surface the math / diagram helper buttons.

@@ -84,6 +84,7 @@ private:
    QTimer*              mpMdPreviewDebounce;
    bool                 mbSplitEnabled;   // user preference from config
    bool                 mbPreviewOnly;    // single-pane preview toggle
+   bool                 mbPreviewShown = false;  // preview pane logically active
 
    bool                 currentEntryIsMarkdown() const;
    void                 updateView();

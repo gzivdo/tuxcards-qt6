@@ -23,6 +23,8 @@
 #  include <QRegularExpression>
 #  include <QPainter>
 #  include <QTextCursor>
+#  include <QTextImageFormat>
+#  include <QUrl>
 #endif
 
 #ifdef TUXCARDS_WITH_MATH
@@ -197,17 +199,19 @@ static QString processDiagrams( QString md, QVector<PendingImage>& embeds )
 // Rasterize a LaTeX fragment to a transparent QImage via JKQTMathText.
 // `tex` is the inner expression (without $ delimiters). Returns a null
 // image on parse failure so the caller keeps the source visible.
-static QImage renderMath( const QString& tex, bool display )
+static QImage renderMath( const QString& tex, bool display, qreal basePt )
 {
    JKQTMathText mt;
    mt.useXITS();                              // bundled math font, no system dep
-   mt.setFontSize( display ? 16.0 : 12.0 );
+   // Tie glyph size to the editor font; display math a touch larger.
+   if ( basePt <= 0 ) basePt = 12.0;
+   mt.setFontSize( display ? basePt * 1.15 : basePt );
    if ( !mt.parse( QStringLiteral("$") + tex + QStringLiteral("$") ) )
       return QImage();
-   // Render at 2x device-pixel-ratio / 192 dpi so the glyphs stay crisp
-   // in the preview instead of looking pixelated. Transparent background
-   // blends into the pane.
-   return mt.drawIntoImage( false, Qt::transparent, 0, 2.0, 192 );
+   // devicePixelRatio 2.0 → the image carries 2x pixels for crispness;
+   // the caller inserts it at its *logical* size, so it matches the
+   // surrounding text size rather than rendering twice as large.
+   return mt.drawIntoImage( false, Qt::transparent, 0, 2.0 );
 }
 
 // Mask fenced code blocks and inline code spans so we never treat a `$`
@@ -250,7 +254,7 @@ static QString unmaskCode( QString md, const QStringList& stash )
 // Replace $$display$$ and $inline$ math with embedded image references.
 // Known limitation: a literal '$' outside code can be misread as a math
 // delimiter — escape it as \$ or build without TUXCARDS_WITH_MATH.
-static QString processMath( QString md, QVector<PendingImage>& embeds )
+static QString processMath( QString md, QVector<PendingImage>& embeds, qreal basePt )
 {
    QStringList stash;
    md = maskCode( md, stash );
@@ -264,10 +268,13 @@ static QString processMath( QString md, QVector<PendingImage>& embeds )
          last = m.capturedEnd();
 
          const QString tex = m.captured(1);
-         const QString key = hashKey( display ? "MD:" : "MI:", tex );
+         // size is part of the cache key — same formula at a different
+         // editor font must re-render.
+         const QString key = hashKey( display ? "MD:" : "MI:",
+                                      QString::number(basePt,'f',1) + tex );
          QImage img = fragmentCache().value( key );
          if ( img.isNull() ) {
-            img = renderMath( tex, display );
+            img = renderMath( tex, display, basePt );
             if ( !img.isNull() )
                fragmentCache().insert( key, img );
          }
@@ -297,7 +304,7 @@ static QString processMath( QString md, QVector<PendingImage>& embeds )
 #endif
 
 
-void renderInto( QTextDocument* doc, const QString& mdSource )
+void renderInto( QTextDocument* doc, const QString& mdSource, qreal basePointSize )
 {
    if ( !doc )
       return;
@@ -310,20 +317,34 @@ void renderInto( QTextDocument* doc, const QString& mdSource )
    md = processDiagrams( md, embeds );
 #  endif
 #  ifdef TUXCARDS_WITH_MATH
-   md = processMath( md, embeds );
+   md = processMath( md, embeds, basePointSize );
+#  else
+   Q_UNUSED( basePointSize );
 #  endif
 
    doc->setMarkdown( md );
 
    // setMarkdown ignores image resources, so splice the rendered
    // fragments in now: find each placeholder token and replace it with
-   // the actual image via the cursor (which setHtml-style honors).
+   // the rendered image. Insert at the image's *logical* size
+   // (pixels / devicePixelRatio) so a 2x-rendered bitmap shows crisp at
+   // normal size instead of twice as large.
+   int n = 0;
    for ( const PendingImage& pi : embeds ) {
       QTextCursor c = doc->find( pi.token );
-      if ( !c.isNull() )
-         c.insertImage( pi.img );      // replaces the selected token text
+      if ( c.isNull() )
+         continue;
+      const qreal dpr = pi.img.devicePixelRatio() > 0 ? pi.img.devicePixelRatio() : 1.0;
+      const QString name = QStringLiteral("tuximg://%1").arg( n++ );
+      doc->addResource( QTextDocument::ImageResource, QUrl(name), pi.img );
+      QTextImageFormat fmt;
+      fmt.setName( name );
+      fmt.setWidth ( pi.img.width()  / dpr );
+      fmt.setHeight( pi.img.height() / dpr );
+      c.insertImage( fmt );            // replaces the selected token text
    }
 #else
+   Q_UNUSED( basePointSize );
    doc->setMarkdown( md );
 #endif
 }

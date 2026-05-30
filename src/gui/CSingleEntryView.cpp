@@ -200,21 +200,31 @@ void CSingleEntryView::updateView()
    const bool previewOnly = mbPreviewOnly && md;
    const bool split       = mbSplitEnabled && md && !previewOnly;
 
+   mbPreviewShown = previewOnly || split;
    mpEditor->setVisible( !previewOnly );
-   mpMdPreview->setVisible( previewOnly || split );
+   mpMdPreview->setVisible( mbPreviewShown );
 
-   if ( mpMdPreview->isVisible() )
+   if ( mbPreviewShown )
       refreshMdPreview();
 }
 
 
 void CSingleEntryView::refreshMdPreview()
 {
-   if ( !mpMdPreview->isVisible() ) return;
+   // Guard on the logical mode, NOT mpMdPreview->isVisible(): at startup
+   // the last document auto-opens before the window is shown, so the
+   // widget is not yet "visible" and the initial render would be skipped
+   // (the entry then appeared blank until navigating away and back).
+   if ( !mbPreviewShown ) return;
    // Render from the editor's current text (the authoritative .md
    // source — the editor stays in plain mode and is never mutated for
    // preview). renderInto rasterizes math/diagrams when compiled in.
-   MarkdownRenderer::renderInto( mpMdPreview->document(), mpEditor->toPlainText() );
+   // Tie math size to the configured editor font (the editor's font is
+   // the default editor font set in applyConfiguration).
+   qreal pt = mpEditor->font().pointSizeF();
+   if ( pt <= 0 ) pt = 12.0;
+   MarkdownRenderer::renderInto( mpMdPreview->document(),
+                                 mpEditor->toPlainText(), pt );
 }
 
 
