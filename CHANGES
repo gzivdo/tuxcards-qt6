@@ -1,6 +1,6 @@
 Changelog
 
-3.4.0  2026-05-16  Markdown as a first-class format + opt-in math/diagrams (gzivdo + Claude Opus 4.8)
+3.4.0  2026-05-16  Markdown as a first-class entry format (gzivdo + Claude Opus 4.8)
 
 	Storage formats — honest names + new MARKDOWN
 	-The InformationFormat names finally match reality: ASCII→TEXT
@@ -9,41 +9,40 @@ Changelog
 	 bytes). The vestigial NONE was dropped. Old data files keep
 	 loading — the XML reader accepts both the new and the legacy
 	 format names; only the new names are written.
-	-New MARKDOWN format. Markdown entries are edited as raw .md
-	 source and rendered on demand (Qt's bundled md4c). Import/export
-	 of .md now round-trips through the MARKDOWN format instead of
+	-New MARKDOWN format. Markdown entries store the raw .md source
+	 and are rendered on demand via Qt's bundled md4c. Import/export
+	 of .md round-trips through the MARKDOWN format instead of
 	 silently turning into HTML.
 
 	Editor — Markdown UX
-	-Source/preview toggle on the editor toolbar (visible only for
-	 MARKDOWN entries) plus an optional live split-view preview pane
-	 (Options → Markdown, off by default).
+	-Markdown entries open in a read-only rendered VIEW by default
+	 (viewing/searching is the common case); a "✎ Edit" toolbar
+	 toggle switches to editing the source. The rendered view is a
+	 separate read-only widget — selection and copy work, the editor
+	 document is never mutated, so the source's full undo/redo history
+	 survives toggling view↔edit.
+	-Optional live split-view preview pane (Options → Markdown, off
+	 by default): source and rendered output side by side.
 	-Markdown insert helpers (bold/italic/code/heading/lists/link/
-	 fence/table) on the toolbar, shown only in MARKDOWN mode.
+	 fence/table) on the toolbar, shown only while editing a MARKDOWN
+	 entry.
 	-Tree right-click "Change format" submenu converts an entry
 	 between TEXT / HTML / MARKDOWN (full cross-conversion via
 	 QTextDocument). The legacy toolbar "Convert format" button now
 	 works HTML↔TEXT too.
 
 	Plain-text correctness
-	-In TEXT mode the rich-text toolbar (bold/italic/colors/fonts/
-	 lists) is disabled, paste drops formatting, and content is saved
-	 as plain text. New "Reset formatting (convert to plain text)"
-	 action in the Edit menu and the editor's right-click menu.
+	-In TEXT/MARKDOWN modes the rich-text toolbar (bold/italic/colors/
+	 fonts/lists) is hidden, paste drops formatting, and content is
+	 saved as plain text in the configured editor font. New "Reset
+	 formatting of selection" action (Edit menu + editor right-click)
+	 clears formatting on the selection only and is undoable.
+	-Options font pickers (editor / tree) now show the size, not just
+	 the family.
 
-	Optional build-time preview extras (both OFF by default)
-	-TUXCARDS_WITH_MATH: render $inline$ / $$display$$ LaTeX math to
-	 inline images via JKQTMathText (Qt-native, bundles the XITS math
-	 font — no browser, no JS).
-	-TUXCARDS_WITH_DIAGRAMS: render ```dot / ```graphviz fenced blocks
-	 to inline images via Graphviz (libgvc → SVG → QImage through
-	 Qt6Svg). Enabling this also requires the Graphviz runtime on the
-	 user's machine.
-	-Both go through a single MarkdownRenderer pipeline; with the
-	 flags off the default build is byte-for-byte the previous
-	 behavior and gains no dependency. Mermaid/PlantUML were
-	 deliberately not used (they need QtWebEngine/JVM — against the
-	 self-contained, "not an office suite" design).
+	(LaTeX math and Graphviz-diagram rendering in the preview were
+	prototyped on this branch but pulled out for a separate, redesigned
+	feature later — kept on branch archive/md-math-diagrams-JKQTMathText.)
 
 3.3.3  2026-05-16  Shortcut rebalance: Ctrl+F back to tree search, F3 for in-entry find (gzivdo + Claude Opus 4.7)
 

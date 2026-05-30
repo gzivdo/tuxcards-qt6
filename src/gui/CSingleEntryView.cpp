@@ -18,7 +18,6 @@
 
 #include "CSingleEntryView.h"
 #include "editorfindbar.h"
-#include "markdownrenderer.h"
 #include "../information/informationformat.h"
 #include "../information/CInformationElement.h"
 #include <QVBoxLayout>
@@ -216,15 +215,9 @@ void CSingleEntryView::refreshMdPreview()
    // widget is not yet "visible" and the initial render would be skipped
    // (the entry then appeared blank until navigating away and back).
    if ( !mbPreviewShown ) return;
-   // Render from the editor's current text (the authoritative .md
-   // source — the editor stays in plain mode and is never mutated for
-   // preview). renderInto rasterizes math/diagrams when compiled in.
-   // Tie math size to the configured editor font (the editor's font is
-   // the default editor font set in applyConfiguration).
-   qreal pt = mpEditor->font().pointSizeF();
-   if ( pt <= 0 ) pt = 12.0;
-   MarkdownRenderer::renderInto( mpMdPreview->document(),
-                                 mpEditor->toPlainText(), pt );
+   // Render the editor's current text (the authoritative .md source —
+   // the editor stays in plain mode and is never mutated for preview).
+   mpMdPreview->document()->setMarkdown( mpEditor->toPlainText() );
 }
 
 

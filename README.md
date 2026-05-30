@@ -50,12 +50,6 @@ License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
 * **Print** the current entry, with a separate **Print preview**
   action (Ctrl+Shift+P).
 * HTML and Markdown export of entries; Markdown import.
-* *Optional build-time* Markdown preview extras (both OFF by default,
-  no dependency unless enabled): `-DTUXCARDS_WITH_MATH=ON` renders
-  `$…$` / `$$…$$` LaTeX math via JKQTMathText; `-DTUXCARDS_WITH_DIAGRAMS=ON`
-  renders ` ```dot ` / ` ```graphviz ` fenced blocks via Graphviz
-  (the latter also needs the Graphviz runtime installed). No browser /
-  QtWebEngine is pulled in.
 * Configurable left-side `CColorBar` (gradient + horizontal/vertical
   captions) — back-ported from 2.2.1.
 * Bookmarks bar pinned at the bottom of the window, persisted between

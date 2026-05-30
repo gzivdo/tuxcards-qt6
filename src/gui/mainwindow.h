@@ -225,8 +225,6 @@ private slots:
   void mdInsertLink();
   void mdInsertCodeFence();
   void mdInsertTable();
-  void mdInsertMath();
-  void mdInsertDiagram();
 
   void moveElementUp();
   void moveElementDown();

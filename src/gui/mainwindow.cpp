@@ -16,7 +16,6 @@
  ***************************************************************************/
 #include "mainwindow.h"
 #include "editorfindbar.h"
-#include "markdownrenderer.h"
 
 //#define DEBUGGING
 
@@ -689,12 +688,6 @@ void MainWindow::settingUpToolBar( void )
   addMdHelper(tr("[ ]"),  &MainWindow::mdInsertLink)         ->setToolTip(tr("Link ([text](url))"));
   addMdHelper(tr("```"),  &MainWindow::mdInsertCodeFence)    ->setToolTip(tr("Code fence (```)"));
   addMdHelper(tr("⊞"),    &MainWindow::mdInsertTable)        ->setToolTip(tr("Table skeleton"));
-  // These two only do something useful when the matching optional
-  // feature was compiled in; hide them entirely otherwise.
-  if ( MarkdownRenderer::mathEnabled() )
-     addMdHelper(tr("∑"),  &MainWindow::mdInsertMath)        ->setToolTip(tr("Inline math ($...$)"));
-  if ( MarkdownRenderer::diagramsEnabled() )
-     addMdHelper(tr("◈"),  &MainWindow::mdInsertDiagram)     ->setToolTip(tr("Graphviz diagram (```dot)"));
 
   textBoldTool->setWhatsThis(tr("<b>Bold</b>"));
   textItalicTool->setWhatsThis(tr("<b>Italic</b>"));
@@ -1037,26 +1030,6 @@ void MainWindow::mdInsertTable()
       "\n| col1 | col2 |\n"
       "|------|------|\n"
       "|      |      |\n");
-}
-
-void MainWindow::mdInsertMath()
-{
-   if (!mpEditor) return;
-   QTextCursor c = mpEditor->textCursor();
-   QString sel = c.selectedText();
-   if (sel.isEmpty()) sel = tr("x^2");
-   c.insertText(QStringLiteral("$%1$").arg(sel));
-}
-
-void MainWindow::mdInsertDiagram()
-{
-   if (!mpEditor) return;
-   mpEditor->textCursor().insertText(
-      "\n```dot\n"
-      "digraph {\n"
-      "  A -> B;\n"
-      "}\n"
-      "```\n");
 }
 
 
