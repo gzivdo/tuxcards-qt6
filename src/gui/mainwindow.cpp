@@ -2226,6 +2226,11 @@ void MainWindow::applyConfiguration()
    const int wy = mConfiguration.getIntValue( CTuxCardsConfiguration::I_WINDOW_Y );
    if ( wx >= 0 && wy >= 0 )
       move( wx, wy );
+
+   // markdown editor: split-view on/off per user preference
+   if ( mpSingleEntryView )
+      mpSingleEntryView->setMarkdownSplitView(
+         mConfiguration.getBoolValue( CTuxCardsConfiguration::B_MARKDOWN_SPLIT_VIEW ) );
 }
 
 // -------------------------------------------------------------------------------

@@ -48,7 +48,9 @@ public:
 
     B_REENCRYPT_ON_FORMAT_CHANGE,
 
-    B_LAZY_DECRYPT
+    B_LAZY_DECRYPT,
+
+    B_MARKDOWN_SPLIT_VIEW
   };
   bool    getBoolValue( eBoolValue eKey ) const;
   void    setBoolValue( eBoolValue eKey, bool bValue );

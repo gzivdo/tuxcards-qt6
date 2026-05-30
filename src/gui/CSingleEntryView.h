@@ -22,6 +22,10 @@
 #include "editor.h"
 
 class EditorFindBar;
+class QSplitter;
+class QTextBrowser;
+class QTimer;
+class QVBoxLayout;
 
 
 class CSingleEntryView : public QWidget,
@@ -44,6 +48,12 @@ public:
    int           countBRs( void );
    // methods added because of editor - end
 
+   // Configure whether MARKDOWN entries should show the live preview
+   // pane next to the editor. Called by MainWindow when the user flips
+   // the Options → Markdown checkbox and when the active element
+   // changes (so non-markdown entries collapse back to single-pane).
+   void          setMarkdownSplitView( bool on );
+
    // ************** IView *************************************
    virtual void aboutToRemoveElement( CInformationElement* pIE );
    // ************** IView - End *******************************
@@ -60,8 +70,20 @@ private:
    Editor*              mpEditor;
    EditorFindBar*       mpFindBar;
 
+   // Split-view widgets — created lazily on first showSplit(true).
+   QSplitter*           mpSplitter;
+   QTextBrowser*        mpMdPreview;
+   QTimer*              mpMdPreviewDebounce;
+   bool                 mbSplitActive;
+   bool                 mbSplitEnabled;   // user preference from config
+
+   void                 buildSplitterLazy();
+   bool                 currentEntryIsMarkdown() const;
+   void                 applySplitVisibility();
+
 private slots:
    void entryDecrypted( void );
+   void refreshMdPreview();
 
 signals:
    void signalEntryDecrypted();

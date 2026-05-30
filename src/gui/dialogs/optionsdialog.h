@@ -104,6 +104,12 @@ private:
   void          buildEncryptionTab();
   void          loadEncryptionFromConfig();
   void          saveEncryptionToConfig();
+
+  // Markdown tab
+  QCheckBox*    mpMarkdownSplitView;
+  void          buildMarkdownTab();
+  void          loadMarkdownFromConfig();
+  void          saveMarkdownToConfig();
 };
 
 #endif

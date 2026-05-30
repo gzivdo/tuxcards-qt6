@@ -40,6 +40,44 @@ OptionsDialog::OptionsDialog( QWidget* parent, CTuxCardsConfiguration& config )
 
    buildSidebarTab();
    buildEncryptionTab();
+   buildMarkdownTab();
+}
+
+
+void OptionsDialog::buildMarkdownTab()
+{
+   QWidget* tab = new QWidget(TabWidget2);
+   QVBoxLayout* lay = new QVBoxLayout(tab);
+
+   mpMarkdownSplitView = new QCheckBox(
+      tr("Split-view for Markdown entries (source on the left, rendered preview on the right)"),
+      tab);
+   lay->addWidget(mpMarkdownSplitView);
+
+   QLabel* hint = new QLabel(
+      tr("If checked, opening a Markdown entry shows a live preview pane "
+         "next to the editor. The single-pane mode (default) keeps the "
+         "Preview Markdown toggle on the editor toolbar instead."),
+      tab);
+   hint->setWordWrap(true);
+   lay->addWidget(hint);
+
+   lay->addStretch(1);
+   TabWidget2->addTab(tab, tr("Markdown"));
+}
+
+
+void OptionsDialog::loadMarkdownFromConfig()
+{
+   mpMarkdownSplitView->setChecked(
+      mrefConfig.getBoolValue( CTuxCardsConfiguration::B_MARKDOWN_SPLIT_VIEW ) );
+}
+
+
+void OptionsDialog::saveMarkdownToConfig()
+{
+   mrefConfig.setBoolValue( CTuxCardsConfiguration::B_MARKDOWN_SPLIT_VIEW,
+                            mpMarkdownSplitView->isChecked() );
 }
 
 
@@ -333,6 +371,7 @@ int OptionsDialog::setUp( void )
 
    loadSidebarFromConfig();
    loadEncryptionFromConfig();
+   loadMarkdownFromConfig();
 
    show();
    return exec();
@@ -379,6 +418,7 @@ void OptionsDialog::changeProperties(){
 
    saveSidebarToConfig();
    saveEncryptionToConfig();
+   saveMarkdownToConfig();
 
    // done
    mrefConfig.saveToFile();
