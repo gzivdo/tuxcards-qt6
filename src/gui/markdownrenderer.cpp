@@ -173,9 +173,106 @@ static QString processDiagrams( QTextDocument* doc, QString md )
 #endif
 
 #ifdef TUXCARDS_WITH_MATH
-// (defined in commit 2)
-static QImage renderMath( const QString& tex, bool display );
-static QString processMath( QTextDocument* doc, QString md );
+
+// Rasterize a LaTeX fragment to a transparent QImage via JKQTMathText.
+// `tex` is the inner expression (without $ delimiters). Returns a null
+// image on parse failure so the caller keeps the source visible.
+static QImage renderMath( const QString& tex, bool display )
+{
+   JKQTMathText mt;
+   mt.useXITS();                              // bundled math font, no system dep
+   mt.setFontSize( display ? 16.0 : 12.0 );
+   if ( !mt.parse( QStringLiteral("$") + tex + QStringLiteral("$") ) )
+      return QImage();
+   // transparent background so it blends into the preview pane
+   return mt.drawIntoImage( false, Qt::transparent );
+}
+
+// Mask fenced code blocks and inline code spans so we never treat a `$`
+// inside code as math. Returns the masked text; originals are pushed
+// into `stash` and restored verbatim afterwards.
+static QString maskCode( QString md, QStringList& stash )
+{
+   static const QRegularExpression fence(
+      QStringLiteral("```.*?```"),
+      QRegularExpression::DotMatchesEverythingOption );
+   static const QRegularExpression inlineCode( QStringLiteral("`[^`\\n]*`") );
+
+   auto maskWith = [&]( const QRegularExpression& re, QString in ) -> QString {
+      QString out; int last = 0;
+      auto it = re.globalMatch( in );
+      while ( it.hasNext() ) {
+         auto m = it.next();
+         out += in.mid( last, m.capturedStart() - last );
+         out += QStringLiteral("\x01CODE") + QString::number(stash.size()) + QStringLiteral("\x01");
+         stash << m.captured(0);
+         last = m.capturedEnd();
+      }
+      out += in.mid( last );
+      return out;
+   };
+
+   md = maskWith( fence, md );
+   md = maskWith( inlineCode, md );
+   return md;
+}
+
+static QString unmaskCode( QString md, const QStringList& stash )
+{
+   for ( int i = 0; i < stash.size(); ++i )
+      md.replace( QStringLiteral("\x01CODE") + QString::number(i) + QStringLiteral("\x01"),
+                  stash.at(i) );
+   return md;
+}
+
+// Replace $$display$$ and $inline$ math with embedded image references.
+// Known limitation: a literal '$' outside code can be misread as a math
+// delimiter — escape it as \$ or build without TUXCARDS_WITH_MATH.
+static QString processMath( QTextDocument* doc, QString md )
+{
+   QStringList stash;
+   md = maskCode( md, stash );
+
+   auto replaceAll = [&]( const QRegularExpression& re, bool display ) {
+      QString out; int last = 0;
+      auto it = re.globalMatch( md );
+      while ( it.hasNext() ) {
+         auto m = it.next();
+         out += md.mid( last, m.capturedStart() - last );
+         last = m.capturedEnd();
+
+         const QString tex = m.captured(1);
+         const QString key = QStringLiteral("tuxmath://")
+                           + hashKey( display ? "MD:" : "MI:", tex );
+         QImage img = fragmentCache().value( key );
+         if ( img.isNull() ) {
+            img = renderMath( tex, display );
+            if ( !img.isNull() )
+               fragmentCache().insert( key, img );
+         }
+         if ( img.isNull() )
+            out += m.captured(0);                 // keep raw on failure
+         else if ( display )
+            out += QStringLiteral("\n\n") + embed(doc, key, img) + QStringLiteral("\n\n");
+         else
+            out += embed( doc, key, img );
+      }
+      out += md.mid( last );
+      md = out;
+   };
+
+   // $$ ... $$ first (display), then single $ ... $ (inline). Inline
+   // requires non-space just inside the delimiters to dodge prose dollars.
+   static const QRegularExpression display(
+      QStringLiteral("\\$\\$(.+?)\\$\\$"),
+      QRegularExpression::DotMatchesEverythingOption );
+   static const QRegularExpression inlineM(
+      QStringLiteral("\\$(\\S(?:[^$\\n]*\\S)?)\\$") );
+   replaceAll( display, true );
+   replaceAll( inlineM, false );
+
+   return unmaskCode( md, stash );
+}
 #endif
 
 
