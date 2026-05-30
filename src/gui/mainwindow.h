@@ -113,6 +113,11 @@ private:
   QComboBox* pComboListStyle;
   QComboBox* pComboFont;
   QComboBox* pComboSize;
+  // toolbar QActions wrapping the combos above — used to hide them
+  // (cleanly, leaving no gap) in TEXT/MARKDOWN mode.
+  QAction*   pComboListStyleAction = nullptr;
+  QAction*   pComboFontAction = nullptr;
+  QAction*   pComboSizeAction = nullptr;
 
   QAction* textFormatTool;
   QAction* textBoldTool;

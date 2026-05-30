@@ -611,13 +611,13 @@ void MainWindow::settingUpToolBar( void )
   pComboListStyle->addItem( tr("Ordered List (Decimal)") );
   pComboListStyle->addItem( tr("Ordered List (Alpha lower)") );
   pComboListStyle->addItem( tr("Ordered List (Alpha upper)") );
-  mpEditorTools->addWidget(pComboListStyle);
+  pComboListStyleAction = mpEditorTools->addWidget(pComboListStyle);
   connect( pComboListStyle, &QComboBox::activated, this, &MainWindow::textListStyle );
 
   pComboFont = new QComboBox( mpEditorTools );
   pComboFont->setEditable(true);
   pComboFont->addItems( QFontDatabase::families() );
-  mpEditorTools->addWidget(pComboFont);
+  pComboFontAction = mpEditorTools->addWidget(pComboFont);
   connect( pComboFont, &QComboBox::textActivated, this, &MainWindow::textFontFamily );
   pComboFont->lineEdit()->setText( QApplication::font().family() );
 
@@ -625,7 +625,7 @@ void MainWindow::settingUpToolBar( void )
   pComboSize->setEditable(true);
   for ( int sz : QFontDatabase::standardSizes() )
      pComboSize->addItem( QString::number( sz ) );
-  mpEditorTools->addWidget(pComboSize);
+  pComboSizeAction = mpEditorTools->addWidget(pComboSize);
   connect( pComboSize, &QComboBox::textActivated, this, &MainWindow::textFontSize );
   pComboSize->lineEdit()->setText( QString::number( QApplication::font().pointSize() ) );
 
@@ -842,24 +842,26 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
 
   // HTML-only formatting controls — Bold/Italic/Align/etc act on
   // QTextCharFormat which only exists in rich-text mode. The font /
-  // size / list-style combos in the toolbar manipulate the same
-  // thing, so disable them together with the buttons.
+  // size / list-style combos manipulate the same thing. Hide (not
+  // just disable) them outside HTML mode so TEXT/MARKDOWN entries
+  // don't show a wall of greyed-out buttons that looks broken.
   bool isHtml = format.equals(InformationFormat::HTML);
-  textBoldTool->setEnabled(isHtml);
-  textItalicTool->setEnabled(isHtml);
-  textUnderTool->setEnabled(isHtml);
-  textColorTool->setEnabled(isHtml);
+  textBoldTool->setVisible(isHtml);
+  textItalicTool->setVisible(isHtml);
+  textUnderTool->setVisible(isHtml);
+  textColorTool->setVisible(isHtml);
 
-  textLeftTool->setEnabled(isHtml);
-  textCenterTool->setEnabled(isHtml);
-  textRightTool->setEnabled(isHtml);
-  textBlockTool->setEnabled(isHtml);
+  textLeftTool->setVisible(isHtml);
+  textCenterTool->setVisible(isHtml);
+  textRightTool->setVisible(isHtml);
+  textBlockTool->setVisible(isHtml);
 
-  if (pComboListStyle) pComboListStyle->setEnabled(isHtml);
-  if (pComboFont)      pComboFont->setEnabled(isHtml);
-  if (pComboSize)      pComboSize->setEnabled(isHtml);
+  if (pComboListStyleAction) pComboListStyleAction->setVisible(isHtml);
+  if (pComboFontAction)      pComboFontAction->setVisible(isHtml);
+  if (pComboSizeAction)      pComboSizeAction->setVisible(isHtml);
 
-  // MARKDOWN-only controls (preview toggle + helper buttons).
+  // MARKDOWN-only controls (preview toggle + helper buttons). Shown
+  // only for markdown entries so that mode has its own active toolbar.
   bool isMd = format.equals(InformationFormat::MARKDOWN);
   mdPreviewToggleAction->setVisible(isMd);
   for (QAction* a : mdHelperActions)
