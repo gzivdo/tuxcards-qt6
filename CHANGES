@@ -1,5 +1,26 @@
 Changelog
 
+3.3.3  2026-05-16  Shortcut rebalance: Ctrl+F back to tree search, F3 for in-entry find (gzivdo + Claude Opus 4.7)
+
+	The 3.3 series had moved Ctrl+F onto the in-editor find/replace
+	bar (with tree search shoved to Ctrl+Shift+F + an F7 fallback for
+	WMs that grab Ctrl+Shift). In practice Ctrl+F-in-editor turned
+	out uncomfortable for the muscle-memory crowd, so:
+
+	-Ctrl+F = "search across the whole tree" again (its meaning
+	 pre-3.3).
+	-F3 = "find in current entry". Smart open-or-next: first press
+	 opens the editor find bar, subsequent presses advance to the
+	 next match. Shift+F3 = previous match.
+	-Ctrl+H = in-entry find+replace, unchanged.
+	-Ctrl+Shift+F and the F7 fallback are removed.
+
+	The editor find bar's internal F3 QShortcut is dropped to avoid
+	"Ambiguous shortcut overload" with the new MainWindow QAction.
+	Shift+F3 inside the bar stays. EditorFindBar::findNext/findPrev
+	are promoted from private to public slots so MainWindow can drive
+	them directly. Russian UI updated for the new strings (307/307).
+
 3.3.2  2026-05-16  Build fix: switch translations pipeline to qt_add_translations() (gzivdo + Claude Opus 4.7)
 
 	Follow-up to 3.3.1. The earlier add_dependencies(tuxcards

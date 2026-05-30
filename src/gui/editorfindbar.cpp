@@ -104,13 +104,13 @@ EditorFindBar::EditorFindBar( QTextEdit* pEditor, QWidget* pParent )
    connect( mpReplaceEdit, &QLineEdit::returnPressed, this, &EditorFindBar::replaceCurrent );
    connect( mpFindEdit,    &QLineEdit::textChanged,   this, &EditorFindBar::onFindTextChanged );
 
-   // F3 / Shift+F3 work as long as the bar is visible
-   QShortcut* sc1 = new QShortcut( QKeySequence( Qt::Key_F3 ), this );
-   sc1->setContext( Qt::WindowShortcut );
-   connect( sc1, &QShortcut::activated, this, &EditorFindBar::findNext );
-   QShortcut* sc2 = new QShortcut( QKeySequence( Qt::SHIFT | Qt::Key_F3 ), this );
-   sc2->setContext( Qt::WindowShortcut );
-   connect( sc2, &QShortcut::activated, this, &EditorFindBar::findPrev );
+   // Shift+F3 = find previous (while the bar's host window has focus).
+   // F3 = find-next is handled by MainWindow::editorFind() as a smart
+   // open-or-next QAction; binding it here too would produce an
+   // "Ambiguous shortcut overload" warning at runtime.
+   QShortcut* sc = new QShortcut( QKeySequence( Qt::SHIFT | Qt::Key_F3 ), this );
+   sc->setContext( Qt::WindowShortcut );
+   connect( sc, &QShortcut::activated, this, &EditorFindBar::findPrev );
 }
 
 

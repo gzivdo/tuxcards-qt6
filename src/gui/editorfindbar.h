@@ -23,16 +23,18 @@ class EditorFindBar : public QWidget
 public:
    explicit EditorFindBar( QTextEdit* pEditor, QWidget* pParent = nullptr );
 
-   // showFind(false)         -> Find-only mode (replace row hidden, Ctrl+F)
+   // showFind(false)         -> Find-only mode (replace row hidden, F3)
    // showFind(true)          -> Find + Replace (replace row visible, Ctrl+H)
    void showFind( bool withReplace );
 
 protected:
    void keyPressEvent( QKeyEvent* ev ) override;
 
-private slots:
+public slots:
    void findNext();
    void findPrev();
+
+private slots:
    void replaceCurrent();
    void replaceAll();
    void onFindTextChanged();

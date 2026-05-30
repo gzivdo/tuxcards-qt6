@@ -36,11 +36,10 @@ License: **GPL v2 or later** — same as upstream (see [COPYING](COPYING)).
 * Tree of notes with per-entry icons, font and color (also per sub-tree).
 * Rich-text editor: bold/italic/underline, alignment, bullet / ordered
   lists, font family / size combo, image insertion.
-* In-entry **find & replace** bar (Ctrl+F, Ctrl+H; F3 / Shift+F3 for
-  next / previous; case-sensitive and whole-word toggles).
-* Search across the whole tree or the current sub-tree
-  (Ctrl+Shift+F, or F7 if your WM eats the Ctrl+Shift combo), with the
-  matched substring highlighted in bold in the results.
+* Search across the whole tree or the current sub-tree (Ctrl+F),
+  with the matched substring highlighted in bold in the results.
+* In-entry **find & replace** bar (F3 / Ctrl+H; Shift+F3 for previous;
+  case-sensitive and whole-word toggles).
 * **Print** the current entry, with a separate **Print preview**
   action (Ctrl+Shift+P).
 * HTML and Markdown export of entries; Markdown import.

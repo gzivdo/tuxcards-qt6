@@ -440,8 +440,8 @@ void MainWindow::settingUpMenu( void )
 
       edit->addSeparator();
       {
-         QAction* a = edit->addAction( tr("&Find..."), this, &MainWindow::editorFind,
-                                       QKeySequence(Qt::CTRL | Qt::Key_F) );
+         QAction* a = edit->addAction( tr("&Find in entry..."), this, &MainWindow::editorFind,
+                                       QKeySequence(Qt::Key_F3) );
          a->setShortcutContext( Qt::WindowShortcut );
 
          a = edit->addAction( tr("R&eplace..."), this, &MainWindow::editorReplace,
@@ -449,13 +449,8 @@ void MainWindow::settingUpMenu( void )
          a->setShortcutContext( Qt::WindowShortcut );
 
          a = edit->addAction( getIcon("find"), tr("Search in &Tree..."),
-                              this, &MainWindow::search );
-         // Ctrl+Shift+F is the primary, F7 is the fallback for systems
-         // where Ctrl+Shift is already a global hotkey (e.g. the Linux
-         // keyboard-layout switcher) and the WM eats the combo before
-         // it reaches Qt.
-         a->setShortcuts({ QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F),
-                           QKeySequence(Qt::Key_F7) });
+                              this, &MainWindow::search,
+                              QKeySequence(Qt::CTRL | Qt::Key_F) );
          a->setShortcutContext( Qt::WindowShortcut );
       }
 
@@ -540,7 +535,7 @@ void MainWindow::settingUpToolBar( void )
   mpMainTools->addAction(editSetEntrySubTreeColor);
 
   mpMainTools->addSeparator();
-  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search across tree (Ctrl+Shift+F)"), this, &MainWindow::search);
+  QAction* findTool = mpMainTools->addAction( getIcon("find"), tr("Search across tree (Ctrl+F)"), this, &MainWindow::search);
   mpMainTools->addSeparator();
 
   clearTool->setWhatsThis(tr("<b>Clear whole Tree</b>"));
@@ -553,8 +548,8 @@ void MainWindow::settingUpToolBar( void )
   editCutTool->setWhatsThis(tr("<b>Cut</b> (Ctrl+X)"));
   editCopyAction->setWhatsThis(tr("<b>Copy</b> (Ctrl+C)"));
   editPasteTool->setWhatsThis(tr("<b>Paste</b> (Ctrl+V)"));
-  findTool->setWhatsThis(tr("<b>Search across the entire tree</b> (Ctrl+Shift+F).<br/>"
-                            "For an in-entry find/replace use Ctrl+F / Ctrl+H."));
+  findTool->setWhatsThis(tr("<b>Search across the entire tree</b> (Ctrl+F).<br/>"
+                            "For an in-entry find/replace use F3 / Ctrl+H."));
 
 
   mpEntryTools = addToolBar(tr("Entry"));
@@ -1882,9 +1877,9 @@ void MainWindow::showKBShortcuts()
 					"Ctrl+O: Open File\n"
 					"Ctrl+S: Save current file\n"
 					"Ctrl+E: Encrypt current file\n"
-					"Ctrl+F: Find in current entry\n"
+					"Ctrl+F: Search across the whole tree\n"
+					"F3: Find in current entry (press again for next match, Shift+F3 for previous)\n"
 					"Ctrl+H: Find and replace in current entry\n"
-					"Ctrl+Shift+F: Search across the whole tree\n"
 					"F5: Switch between tree(left pane) and editor window(right pane)\n"
 					"Alt+Left or Right arrow: Navigate items accessed earlier(history)\n"
 					"MENU (Left of right Ctrl key): Show current context menu\n"
@@ -2120,7 +2115,12 @@ void MainWindow::editorFind()
 // -------------------------------------------------------------------------------
 {
    if ( !mpSingleEntryView ) return;
-   if ( EditorFindBar* bar = mpSingleEntryView->getFindBar() )
+   EditorFindBar* bar = mpSingleEntryView->getFindBar();
+   if ( !bar ) return;
+   // F3 = "open the bar" the first time, "find next" every subsequent press.
+   if ( bar->isVisible() )
+      bar->findNext();
+   else
       bar->showFind( false );
 }
 

@@ -1,3 +1,13 @@
+tuxcards-qt6 (3.3.3-1) unstable; urgency=medium
+
+  * Shortcuts: Ctrl+F is restored to "search across the whole tree" (its
+    pre-3.3 meaning). In-entry find moves to F3 (press again for next
+    match, Shift+F3 for previous). Ctrl+Shift+F and the F7 fallback are
+    removed — they were only needed because Ctrl+F had been repurposed
+    for the editor. Ctrl+H for in-entry find+replace is unchanged.
+
+ -- gzivdo <gzivdo@users.noreply.github.com>  Sat, 16 May 2026 17:50:00 +0000
+
 tuxcards-qt6 (3.3.2-1) unstable; urgency=medium
 
   * Build: switch the Qt 6.7+ translations pipeline from the hand-rolled
