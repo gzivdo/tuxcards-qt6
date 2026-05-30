@@ -43,6 +43,7 @@
 #include <QPrintPreviewDialog>
 #include <QTextBlock>
 #include <QTextCursor>
+#include <QTextCharFormat>
 
 #include "../icons/lo16-app-tuxcards.xpm"
 #include "../icons/lo32-app-tuxcards.xpm"
@@ -914,9 +915,20 @@ void MainWindow::toggleMarkdownPreview( bool on )
       mpEditor->setReadOnly(true);
       MarkdownRenderer::renderInto(mpEditor->document(), mdSourceStash);
    } else {
-      // Restore raw source for editing.
+      // Restore raw source for editing. setMarkdown left the document's
+      // char format carrying heading/bold styling; setPlainText alone
+      // can inherit it, so the raw markdown would show up bold/large.
+      // Reset the editor to the configured default editor font and a
+      // clean char format before reloading the plain source.
       mpEditor->setReadOnly(false);
       mpEditor->setAcceptRichText(false);
+
+      const QFont def = mConfiguration.getASCIIEditorFont().toFont();
+      mpEditor->document()->clear();
+      mpEditor->setFont(def);
+      QTextCharFormat fmt;
+      fmt.setFont(def);
+      mpEditor->setCurrentCharFormat(fmt);
       mpEditor->setPlainText(mdSourceStash);
       mdSourceStash.clear();
    }

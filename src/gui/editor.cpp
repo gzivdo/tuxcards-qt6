@@ -18,6 +18,7 @@
 
 #include <QTextDocument>
 #include <QTextCursor>
+#include <QTextCharFormat>
 #include <QRegExp>
 #include <QKeyEvent>
 #include <QContextMenuEvent>
@@ -236,9 +237,15 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
    }
    else
    {
-      // TEXT or MARKDOWN — plain-text editing of the raw bytes
+      // TEXT or MARKDOWN — plain-text editing of the raw bytes. Clear any
+      // char formatting inherited from a previously-viewed rich-text
+      // entry so the raw text always shows in the default editor font at
+      // one size, not e.g. bold/large left over from an HTML heading.
       emit formatRecognized( *pElement->getInformationFormat() );
       setAcceptRichText( false );
+      QTextCharFormat fmt;
+      fmt.setFont( font() );        // the configured default editor font
+      setCurrentCharFormat( fmt );
    }
 
    setText( pElement->getInformation() );

@@ -27,6 +27,20 @@
 #include <QComboBox>
 #include <iostream>
 
+// Human-readable one-liner for a font picker field: "Family, Npt" plus
+// any active style flags. The size was always stored, just never shown.
+static QString fontLabel( const QFont& f )
+{
+   QString s = QStringLiteral("%1, %2pt").arg(f.family()).arg(f.pointSize());
+   QStringList styles;
+   if (f.bold())      styles << QObject::tr("Bold");
+   if (f.italic())    styles << QObject::tr("Italic");
+   if (f.underline()) styles << QObject::tr("Underline");
+   if (!styles.isEmpty())
+      s += QStringLiteral(" (") + styles.join(QStringLiteral(", ")) + QStringLiteral(")");
+   return s;
+}
+
 OptionsDialog::OptionsDialog( QWidget* parent, CTuxCardsConfiguration& config )
  : QDialog( parent )
  , mrefConfig( config )
@@ -344,9 +358,9 @@ int OptionsDialog::setUp( void )
    mpIconDirecory ->setText( mrefConfig.getStringValue( CTuxCardsConfiguration::S_ICON_DIR ));
 
    treeFontText  ->setFont(mrefConfig.getTreeFont().toFont());
-   treeFontText  ->setText(mrefConfig.getTreeFont().toFont().family());
+   treeFontText  ->setText(fontLabel(mrefConfig.getTreeFont().toFont()));
    editorFontText->setFont(mrefConfig.getASCIIEditorFont().toFont());
-   editorFontText->setText(mrefConfig.getASCIIEditorFont().toFont().family());
+   editorFontText->setText(fontLabel(mrefConfig.getASCIIEditorFont().toFont()));
 
    tabSize->setText(QString::number(mrefConfig.getIntValue( CTuxCardsConfiguration::I_TAB_SIZE )));
 
@@ -472,7 +486,7 @@ void OptionsDialog::changeTreeFont(){
 	// a valid font was selected
 	if(ok){
 		treeFontText->setFont(f);
-		treeFontText->setText(f.family());
+		treeFontText->setText(fontLabel(f));
 	}
 }
 
@@ -488,7 +502,7 @@ void OptionsDialog::changeEditFont(){
 	// a valid font was selected
 	if(ok){
 		editorFontText->setFont(f);
-		editorFontText->setText(f.family());
+		editorFontText->setText(fontLabel(f));
 	}
 }
 
