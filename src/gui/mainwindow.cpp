@@ -641,6 +641,34 @@ void MainWindow::settingUpToolBar( void )
   textBlockTool = mpEditorTools->addAction( getIcon("text_block"), tr("Text Block"), this, &MainWindow::textBlock );
   textBlockTool->setCheckable(true);
 
+  // ---- Markdown-mode toolbar additions ------------------------------
+  // All hidden by default; showRecognizedFormat() flips visibility when
+  // the active element's format is MARKDOWN.
+  mpEditorTools->addSeparator();
+  mdPreviewToggleAction = mpEditorTools->addAction(
+        getIcon("find"), tr("Preview Markdown"), this,
+        [this](bool checked){ toggleMarkdownPreview(checked); });
+  mdPreviewToggleAction->setCheckable(true);
+  mdPreviewToggleAction->setToolTip(tr("Toggle rendered Markdown preview"));
+  mdPreviewToggleAction->setVisible(false);
+
+  mdHelperActions.clear();
+  auto addMdHelper = [&](const QString& label, void (MainWindow::*slot)()) {
+     QAction* a = mpEditorTools->addAction(label, this, slot);
+     a->setVisible(false);
+     mdHelperActions.append(a);
+     return a;
+  };
+  addMdHelper(tr("B"),    &MainWindow::mdInsertBold)         ->setToolTip(tr("Bold (**...**)"));
+  addMdHelper(tr("I"),    &MainWindow::mdInsertItalic)       ->setToolTip(tr("Italic (_..._)"));
+  addMdHelper(tr("<>"),   &MainWindow::mdInsertCode)         ->setToolTip(tr("Inline code (`...`)"));
+  addMdHelper(tr("H"),    &MainWindow::mdInsertHeading)      ->setToolTip(tr("Heading (#)"));
+  addMdHelper(tr("•"),    &MainWindow::mdInsertBulletList)   ->setToolTip(tr("Bullet list (-)"));
+  addMdHelper(tr("1."),   &MainWindow::mdInsertNumberedList) ->setToolTip(tr("Numbered list (1.)"));
+  addMdHelper(tr("[ ]"),  &MainWindow::mdInsertLink)         ->setToolTip(tr("Link ([text](url))"));
+  addMdHelper(tr("```"),  &MainWindow::mdInsertCodeFence)    ->setToolTip(tr("Code fence (```)"));
+  addMdHelper(tr("⊞"),    &MainWindow::mdInsertTable)        ->setToolTip(tr("Table skeleton"));
+
   textBoldTool->setWhatsThis(tr("<b>Bold</b>"));
   textItalicTool->setWhatsThis(tr("<b>Italic</b>"));
   textUnderTool->setWhatsThis(tr("<b>Underline</b>"));
@@ -799,17 +827,125 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
 {
   textFormatTool->setIcon(QIcon(format.getPixmap()));
 
-  // enabeling rtf-formatting stuff for rtf-information-items only
-  bool b = format.equals(InformationFormat::HTML);
-  textBoldTool->setEnabled(b);
-  textItalicTool->setEnabled(b);
-  textUnderTool->setEnabled(b);
-  textColorTool->setEnabled(b);
+  // HTML-only formatting controls — Bold/Italic/Align/etc act on
+  // QTextCharFormat which only exists in rich-text mode.
+  bool isHtml = format.equals(InformationFormat::HTML);
+  textBoldTool->setEnabled(isHtml);
+  textItalicTool->setEnabled(isHtml);
+  textUnderTool->setEnabled(isHtml);
+  textColorTool->setEnabled(isHtml);
 
-  textLeftTool->setEnabled(b);
-  textCenterTool->setEnabled(b);
-  textRightTool->setEnabled(b);
-  textBlockTool->setEnabled(b);
+  textLeftTool->setEnabled(isHtml);
+  textCenterTool->setEnabled(isHtml);
+  textRightTool->setEnabled(isHtml);
+  textBlockTool->setEnabled(isHtml);
+
+  // MARKDOWN-only controls (preview toggle + helper buttons).
+  bool isMd = format.equals(InformationFormat::MARKDOWN);
+  mdPreviewToggleAction->setVisible(isMd);
+  for (QAction* a : mdHelperActions)
+     a->setVisible(isMd);
+  // Switching away from a markdown entry while preview is on would
+  // strand the toggle in a wrong state — flip it off explicitly.
+  if (!isMd && mdPreviewToggleAction->isChecked())
+     mdPreviewToggleAction->setChecked(false);
+}
+
+
+// ---- Markdown preview + helper actions --------------------------------------
+
+// -------------------------------------------------------------------------------
+void MainWindow::toggleMarkdownPreview( bool on )
+// -------------------------------------------------------------------------------
+{
+   if ( !mpEditor || !mpCollection || !mpCollection->getActiveElement() )
+      return;
+   CInformationElement* elem = mpCollection->getActiveElement();
+   if ( elem->getInformationFormat() != &InformationFormat::MARKDOWN )
+      return;
+
+   if (on) {
+      // Capture the in-editor source as the authoritative .md, render it.
+      mdSourceStash = mpEditor->toPlainText();
+      mpEditor->setAcceptRichText(true);
+      mpEditor->setReadOnly(true);
+      mpEditor->document()->setMarkdown(mdSourceStash);
+   } else {
+      // Restore raw source for editing.
+      mpEditor->setReadOnly(false);
+      mpEditor->setAcceptRichText(false);
+      mpEditor->setPlainText(mdSourceStash);
+      mdSourceStash.clear();
+   }
+}
+
+// Wrap the current selection (or insert a placeholder) between `lhs`
+// and `rhs`. Used by the markdown helper buttons.
+static void mdWrapSelection( QTextEdit* ed, const QString& lhs,
+                             const QString& rhs, const QString& placeholder )
+{
+   QTextCursor c = ed->textCursor();
+   QString sel = c.selectedText();
+   if (sel.isEmpty())
+      sel = placeholder;
+   c.insertText(lhs + sel + rhs);
+}
+
+void MainWindow::mdInsertBold()   { if (mpEditor) mdWrapSelection(mpEditor, "**", "**", tr("bold")); }
+void MainWindow::mdInsertItalic() { if (mpEditor) mdWrapSelection(mpEditor, "_",  "_",  tr("italic")); }
+void MainWindow::mdInsertCode()   { if (mpEditor) mdWrapSelection(mpEditor, "`",  "`",  tr("code")); }
+
+void MainWindow::mdInsertHeading()
+{
+   if (!mpEditor) return;
+   QTextCursor c = mpEditor->textCursor();
+   c.movePosition(QTextCursor::StartOfLine);
+   c.insertText("# ");
+}
+
+void MainWindow::mdInsertBulletList()
+{
+   if (!mpEditor) return;
+   QTextCursor c = mpEditor->textCursor();
+   c.movePosition(QTextCursor::StartOfLine);
+   c.insertText("- ");
+}
+
+void MainWindow::mdInsertNumberedList()
+{
+   if (!mpEditor) return;
+   QTextCursor c = mpEditor->textCursor();
+   c.movePosition(QTextCursor::StartOfLine);
+   c.insertText("1. ");
+}
+
+void MainWindow::mdInsertLink()
+{
+   if (!mpEditor) return;
+   QTextCursor c = mpEditor->textCursor();
+   QString sel = c.selectedText();
+   if (sel.isEmpty()) sel = tr("text");
+   c.insertText(QStringLiteral("[%1](https://)").arg(sel));
+}
+
+void MainWindow::mdInsertCodeFence()
+{
+   if (!mpEditor) return;
+   QTextCursor c = mpEditor->textCursor();
+   QString sel = c.selectedText();
+   // QTextCursor::selectedText uses U+2029 for paragraph breaks — convert.
+   sel.replace(QChar::ParagraphSeparator, QChar('\n'));
+   if (sel.isEmpty()) sel = tr("code");
+   c.insertText(QStringLiteral("\n```\n%1\n```\n").arg(sel));
+}
+
+void MainWindow::mdInsertTable()
+{
+   if (!mpEditor) return;
+   mpEditor->textCursor().insertText(
+      "\n| col1 | col2 |\n"
+      "|------|------|\n"
+      "|      |      |\n");
 }
 
 

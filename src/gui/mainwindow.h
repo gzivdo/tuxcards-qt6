@@ -125,6 +125,15 @@ private:
   QAction* textRightTool;
   QAction* textBlockTool;
 
+  // Markdown-mode actions on the editor toolbar. Visible only when the
+  // active entry's format is MARKDOWN — toggled in showRecognizedFormat.
+  QAction* mdPreviewToggleAction;
+  QList<QAction*> mdHelperActions;
+  // While the preview is on, the editor displays rendered HTML built
+  // from mInformation; we stash the original .md source here so we can
+  // restore it on toggle-off without round-tripping through toMarkdown.
+  QString mdSourceStash;
+
   QAction* mpLeftButton;
   QAction* mpRightButton;
 
@@ -199,6 +208,17 @@ private slots:
   void editorReplace();
   void print();
   void printPreview();
+
+  void toggleMarkdownPreview( bool on );
+  void mdInsertBold();
+  void mdInsertItalic();
+  void mdInsertCode();
+  void mdInsertHeading();
+  void mdInsertBulletList();
+  void mdInsertNumberedList();
+  void mdInsertLink();
+  void mdInsertCodeFence();
+  void mdInsertTable();
 
   void moveElementUp();
   void moveElementDown();
