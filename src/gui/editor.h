@@ -40,6 +40,14 @@ public:
    virtual void  setText( QString text );
    void          clear( void );
 
+   // Preview mode: while a MARKDOWN entry is shown as rendered output
+   // (rich text + images) the editor's document no longer holds the
+   // authoritative .md source, so writeCurrentTextToActiveInformationElement()
+   // must NOT save it — that would overwrite the markdown source with
+   // rendered HTML. MainWindow drives this around the preview toggle.
+   void          setPreviewMode( bool on ) { mbPreviewMode = on; }
+   bool          previewMode() const       { return mbPreviewMode; }
+
    void          setWordWrap( int wordWrap );
 
    int           countBRs( void );
@@ -63,6 +71,10 @@ protected:
 public slots:
    //void        setBold(bool);
    void          activeInformationElementChanged( CInformationElement* );
+   // Re-show the current element after its content/format changed in
+   // place (format conversion / markdown import) without saving the
+   // stale editor buffer over it.
+   void          reloadActiveElement( void );
    virtual void  paste();
    void          insertImage();
 
@@ -85,8 +97,10 @@ protected:
 private:
    void                  printBRs( void );
    void                  adaptClipboardText( QClipboard::Mode mode );
+   void                  loadElementContent( CInformationElement* pElement );
 
    bool                  SEMAPHORE_TEXT_WAS_SET;
+   bool                  mbPreviewMode = false;
 };
 
 #endif

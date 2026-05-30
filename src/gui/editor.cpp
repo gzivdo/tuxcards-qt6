@@ -64,7 +64,8 @@ void Editor::contextMenuEvent( QContextMenuEvent* ev )
 {
    QMenu* menu = createStandardContextMenu();
    menu->addSeparator();
-   QAction* a = menu->addAction(tr("Reset formatting (convert to plain text)"));
+   QAction* a = menu->addAction(tr("Reset formatting of selection"));
+   a->setEnabled( textCursor().hasSelection() );
    connect(a, &QAction::triggered, this, &Editor::resetFormattingRequested);
    menu->exec(ev->globalPos());
    delete menu;
@@ -73,7 +74,12 @@ void Editor::contextMenuEvent( QContextMenuEvent* ev )
 
 QString Editor::getText( void )
 {
-  if ( acceptRichText() )
+  // Drive the serialization by the element's FORMAT, not the widget's
+  // acceptRichText() state: the latter is flipped to true during a
+  // markdown preview, but a MARKDOWN (or TEXT) entry must always be
+  // stored as its plain source, never as toHtml().
+  if ( mpActiveElement &&
+       mpActiveElement->getInformationFormat() == &InformationFormat::HTML )
      return toHtml();
   return toPlainText();
 }
@@ -147,6 +153,12 @@ void Editor::sendRedoAvailableSignal( void )
 void Editor::writeCurrentTextToActiveInformationElement( void )
 {
    if ( !mpActiveElement )
+      return;
+
+   // While a markdown preview is showing, the document holds rendered
+   // output, not the source — saving it would corrupt the entry. The
+   // authoritative source was already persisted when preview turned on.
+   if ( mbPreviewMode )
       return;
 
    mpActiveElement->setInformation(getText());
@@ -226,10 +238,27 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
    {
       disconnect( mpActiveElement, &CInformationElement::informationHasChanged, this, &Editor::rereadInformation );
 
+      // If the outgoing element is in preview, writeCurrent() is a
+      // no-op (its source was persisted when preview turned on) — so
+      // the rendered HTML never overwrites the markdown source.
       writeCurrentTextToActiveInformationElement();
       mpActiveElement->setInformationYPos( verticalScrollBar()->value() );
    }
 
+   // The incoming element always starts in plain edit mode; clear the
+   // preview flag now that the outgoing element has been handled.
+   mbPreviewMode = false;
+
+   loadElementContent( pElement );
+}
+
+
+// Configure the editor for pElement's format and load its content. Does
+// NOT save the previously-shown content — callers that switch elements
+// use activeInformationElementChanged(); callers that changed the
+// current element's content/format in place use reloadActiveElement().
+void Editor::loadElementContent( CInformationElement* pElement )
+{
    if ( pElement->getInformationFormat() == &InformationFormat::HTML )
    {
       emit formatRecognized( InformationFormat::HTML );
@@ -251,8 +280,28 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
    setText( pElement->getInformation() );
    verticalScrollBar()->setValue( pElement->getInformationYPos() );
 
-   mpActiveElement = pElement;
-   connect( mpActiveElement, &CInformationElement::informationHasChanged, this, &Editor::rereadInformation );
+   if ( mpActiveElement != pElement )
+   {
+      if ( mpActiveElement )
+         disconnect( mpActiveElement, &CInformationElement::informationHasChanged,
+                     this, &Editor::rereadInformation );
+      mpActiveElement = pElement;
+      connect( mpActiveElement, &CInformationElement::informationHasChanged,
+               this, &Editor::rereadInformation );
+   }
+}
+
+
+// Re-display the current element after its content/format was changed
+// programmatically (format conversion, markdown import), WITHOUT first
+// writing the stale editor buffer back over the new content.
+void Editor::reloadActiveElement( void )
+{
+   if ( mpActiveElement )
+   {
+      mbPreviewMode = false;
+      loadElementContent( mpActiveElement );
+   }
 }
 
 

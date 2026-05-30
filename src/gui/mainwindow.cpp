@@ -44,6 +44,7 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextCharFormat>
+#include <QSignalBlocker>
 
 #include "../icons/lo16-app-tuxcards.xpm"
 #include "../icons/lo32-app-tuxcards.xpm"
@@ -310,8 +311,11 @@ void MainWindow::settingUpTree( QWidget* pParent )
    // entry's body+format, walk the editor through the normal
    // activeElementChanged path so it adopts the new mode.
    connect( mpTree, &CTree::formatChanged, this, [this](CInformationElement* elem) {
-      if ( elem && mpEditor )
-         mpEditor->activeInformationElementChanged( elem );
+      // The element's content+format were just rewritten in place by the
+      // converter; reload (don't switch) so the editor doesn't save its
+      // stale buffer back over the conversion.
+      if ( elem && mpEditor && elem == mpCollection->getActiveElement() )
+         mpEditor->reloadActiveElement();
       recognizeChanges();
    });
 
@@ -481,7 +485,7 @@ void MainWindow::settingUpMenu( void )
       edit->addAction( tr("Insert Current &Date"),  this,     &MainWindow::insertCurrentDate,   QKeySequence(Qt::CTRL | Qt::Key_D) );
       edit->addAction( tr("Insert Current T&ime"),  this,     &MainWindow::insertCurrentTime,   QKeySequence(Qt::CTRL | Qt::Key_T) );
       edit->addSeparator();
-      edit->addAction( tr("Reset &formatting (convert to plain text)"),
+      edit->addAction( tr("Reset &formatting of selection"),
                        this, &MainWindow::resetFormattingToPlainText );
       edit->addSeparator();
       edit->addAction( tr("&Options..."), this, &MainWindow::editConfiguration );
@@ -866,35 +870,43 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
   mdPreviewToggleAction->setVisible(isMd);
   for (QAction* a : mdHelperActions)
      a->setVisible(isMd);
-  // Switching away from a markdown entry while preview is on would
-  // strand the toggle in a wrong state — flip it off explicitly.
-  if (!isMd && mdPreviewToggleAction->isChecked())
+  // showRecognizedFormat() fires on every element switch; the incoming
+  // entry always starts in edit (not preview) mode. Reset the toggle
+  // to unchecked WITHOUT firing toggleMarkdownPreview() (which would
+  // try to restore a stale source into the new entry).
+  {
+     QSignalBlocker block(mdPreviewToggleAction);
      mdPreviewToggleAction->setChecked(false);
+  }
 }
 
 
 // -------------------------------------------------------------------------------
-// "Reset formatting" — drop all rich-text markup from the active entry,
-// switch its format to TEXT, and load the result back into the editor.
-// Reachable from the Edit menu and the editor's context menu.
+// "Reset formatting" — clear the rich-text character formatting of the
+// *current selection* back to the default editor font, keeping the
+// entry's format. It edits through the editor's QTextCursor, so it is
+// part of the normal undo/redo stack. Reachable from the Edit menu and
+// the editor's right-click menu (not the toolbar). For converting a
+// whole entry to plain text use the tree's "Change format" submenu.
 void MainWindow::resetFormattingToPlainText()
 // -------------------------------------------------------------------------------
 {
-   if ( !mpEditor || !mpCollection ) return;
-   CInformationElement* elem = mpCollection->getActiveElement();
-   if ( !elem ) return;
+   if ( !mpEditor ) return;
 
-   // Use the editor's currently-visible plain text — it already
-   // collapses HTML tags / markdown markup to whatever the user sees.
-   mpEditor->writeCurrentTextToActiveInformationElement();
-   const QString plain = mpEditor->toPlainText();
+   QTextCursor c = mpEditor->textCursor();
+   if ( !c.hasSelection() ) {
+      showMessage( tr("Select some text first to reset its formatting."), 4 );
+      return;
+   }
 
-   elem->setInformationFormat( &InformationFormat::TEXT );
-   elem->setInformation( plain );
-   // Re-enter the editor so it picks up the new format (acceptRichText
-   // off, formatting toolbar disabled via showRecognizedFormat).
-   mpEditor->activeInformationElementChanged( elem );
-   recognizeChanges();
+   // A clean char format carrying only the configured default font —
+   // setCharFormat replaces the selection's formatting wholesale
+   // (drops bold/italic/underline/color/custom size). Recorded as a
+   // single undoable step by QTextDocument.
+   QTextCharFormat clean;
+   clean.setFont( mConfiguration.getASCIIEditorFont().toFont() );
+   c.setCharFormat( clean );
+   mpEditor->setFocus();
 }
 
 
@@ -911,8 +923,14 @@ void MainWindow::toggleMarkdownPreview( bool on )
       return;
 
    if (on) {
-      // Capture the in-editor source as the authoritative .md, render it.
+      // Capture the in-editor source as the authoritative .md and
+      // persist it into the element NOW, while still in plain mode, so
+      // edits made before toggling preview aren't lost. Then enter
+      // preview mode — from here writeCurrent() is a no-op so navigating
+      // away can't overwrite the source with the rendered HTML.
       mdSourceStash = mpEditor->toPlainText();
+      mpEditor->writeCurrentTextToActiveInformationElement();
+      mpEditor->setPreviewMode(true);
       mpEditor->setAcceptRichText(true);
       mpEditor->setReadOnly(true);
       MarkdownRenderer::renderInto(mpEditor->document(), mdSourceStash);
@@ -932,6 +950,7 @@ void MainWindow::toggleMarkdownPreview( bool on )
       fmt.setFont(def);
       mpEditor->setCurrentCharFormat(fmt);
       mpEditor->setPlainText(mdSourceStash);
+      mpEditor->setPreviewMode(false);   // back to a normal editable source
       mdSourceStash.clear();
    }
 }
@@ -1951,20 +1970,13 @@ void MainWindow::importEntryMarkdown()
    QString md = QString::fromUtf8(f.readAll());
    f.close();
 
-   // Load the raw .md into the *currently active* entry. We must NOT
-   // route through Editor::activeInformationElementChanged here: that
-   // path first writes the editor's existing (pre-import) buffer back
-   // into the element, which would clobber the markdown we are about to
-   // store. Instead set the format, flip the editor into plain-text
-   // mode, push the md text in, then persist editor → element.
+   // Store the raw .md into the currently active entry as MARKDOWN, then
+   // reload (not switch) the editor so it doesn't save its stale buffer
+   // back over the import.
    CInformationElement* elem = mpCollection->getActiveElement();
    elem->setInformationFormat( &InformationFormat::MARKDOWN );
-   mpEditor->setAcceptRichText( false );      // before setText, so it stores plain
-   mpEditor->setText( md );                   // editor now shows the raw markdown
-   mpEditor->writeCurrentTextToActiveInformationElement();  // md → element
-   // Refresh the format toolbar (disable rich-text tools, reveal the
-   // markdown helpers / preview toggle for the now-MARKDOWN entry).
-   showRecognizedFormat( InformationFormat::MARKDOWN );
+   elem->setInformation( md );
+   mpEditor->reloadActiveElement();
    recognizeChanges();
    showMessage(tr("Imported from '%1'.").arg(fn), 5);
 }
