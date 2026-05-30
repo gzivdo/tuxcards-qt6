@@ -18,6 +18,7 @@
 
 #include "CSingleEntryView.h"
 #include "editorfindbar.h"
+#include "markdownrenderer.h"
 #include "../information/informationformat.h"
 #include "../information/CInformationElement.h"
 #include <QVBoxLayout>
@@ -221,8 +222,10 @@ void CSingleEntryView::refreshMdPreview()
 {
    if ( !mbSplitActive || !mpMdPreview ) return;
    // Render from the editor's current text (the authoritative .md
-   // source while we're in MARKDOWN+plain-edit mode).
-   mpMdPreview->document()->setMarkdown( mpEditor->toPlainText() );
+   // source while we're in MARKDOWN+plain-edit mode). renderInto adds
+   // math/diagram rasterization when those features are compiled in;
+   // otherwise it's a plain setMarkdown().
+   MarkdownRenderer::renderInto( mpMdPreview->document(), mpEditor->toPlainText() );
 }
 
 

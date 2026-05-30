@@ -22,6 +22,14 @@ set(TUXCARDS_WRITE_BACKEND "openssl" CACHE STRING
  Allowed values: openssl, monocypher.")
 set_property(CACHE TUXCARDS_WRITE_BACKEND PROPERTY STRINGS openssl monocypher)
 
+# Optional Markdown-preview enrichments. Both OFF by default — the shipped
+# binaries stay self-contained; only a builder who explicitly opts in pulls
+# the extra dependencies (JKQTMathText / Graphviz + Qt6Svg).
+option(TUXCARDS_WITH_MATH
+       "Render $..$ / $$..$$ LaTeX math in the Markdown preview via JKQTMathText." OFF)
+option(TUXCARDS_WITH_DIAGRAMS
+       "Render ```dot / ```graphviz fenced blocks in the Markdown preview via Graphviz." OFF)
+
 # Backward-compat: the old TUXCARDS_WITH_OPENSSL knob still toggles the
 # OpenSSL backend the same way it used to.
 if(DEFINED TUXCARDS_WITH_OPENSSL AND NOT TUXCARDS_WITH_OPENSSL)
@@ -67,6 +75,15 @@ if(TUXCARDS_BACKEND_OPENSSL)
    find_package(OpenSSL REQUIRED)
 endif()
 
+if(TUXCARDS_WITH_MATH)
+   find_package(JKQTMathText6 REQUIRED)
+endif()
+if(TUXCARDS_WITH_DIAGRAMS)
+   find_package(Qt6 REQUIRED COMPONENTS Svg)
+   find_package(PkgConfig REQUIRED)
+   pkg_check_modules(GRAPHVIZ REQUIRED libgvc libcgraph)
+endif()
+
 set(TUXCARDS_SOURCES
    src/main.cpp
    src/persister.cpp
@@ -80,6 +97,7 @@ set(TUXCARDS_SOURCES
    src/gui/CSingleEntryView.cpp
    src/gui/editor.cpp
    src/gui/editorfindbar.cpp
+   src/gui/markdownrenderer.cpp
    src/gui/BookmarkButton.cpp
    src/gui/RecentFileList.cpp
    src/gui/colorbar/CColorBar.cpp
@@ -130,6 +148,7 @@ set(TUXCARDS_HEADERS
    src/gui/CSingleEntryView.h
    src/gui/editor.h
    src/gui/editorfindbar.h
+   src/gui/markdownrenderer.h
    src/gui/BookmarkButton.h
    src/gui/RecentFileList.h
    src/gui/colorbar/CColorBar.h
@@ -269,10 +288,23 @@ elseif(TUXCARDS_WRITE_BACKEND STREQUAL "monocypher")
    target_compile_definitions(tuxcards PRIVATE TUXCARDS_WRITE_BACKEND_XCHACHA)
 endif()
 
+if(TUXCARDS_WITH_MATH)
+   target_link_libraries(tuxcards PRIVATE JKQTMathText6::JKQTMathText6)
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_WITH_MATH)
+endif()
+if(TUXCARDS_WITH_DIAGRAMS)
+   target_link_libraries(tuxcards PRIVATE Qt6::Svg ${GRAPHVIZ_LIBRARIES})
+   target_include_directories(tuxcards PRIVATE ${GRAPHVIZ_INCLUDE_DIRS})
+   target_compile_definitions(tuxcards PRIVATE TUXCARDS_WITH_DIAGRAMS)
+endif()
+
 message(STATUS "TuxCards crypto backends: "
         "OpenSSL=${TUXCARDS_BACKEND_OPENSSL} "
         "monocypher=${TUXCARDS_BACKEND_MONOCYPHER} "
         "write=${TUXCARDS_WRITE_BACKEND}")
+message(STATUS "TuxCards Markdown extras: "
+        "math=${TUXCARDS_WITH_MATH} "
+        "diagrams=${TUXCARDS_WITH_DIAGRAMS}")
 
 # MSVC needs /utf-8 because the source files contain UTF-8 byte
 # sequences in strings (German umlauts in comments, fallback strings,

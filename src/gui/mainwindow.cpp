@@ -16,6 +16,7 @@
  ***************************************************************************/
 #include "mainwindow.h"
 #include "editorfindbar.h"
+#include "markdownrenderer.h"
 
 //#define DEBUGGING
 
@@ -905,7 +906,7 @@ void MainWindow::toggleMarkdownPreview( bool on )
       mdSourceStash = mpEditor->toPlainText();
       mpEditor->setAcceptRichText(true);
       mpEditor->setReadOnly(true);
-      mpEditor->document()->setMarkdown(mdSourceStash);
+      MarkdownRenderer::renderInto(mpEditor->document(), mdSourceStash);
    } else {
       // Restore raw source for editing.
       mpEditor->setReadOnly(false);
