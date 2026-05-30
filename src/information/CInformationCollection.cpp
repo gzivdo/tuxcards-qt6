@@ -49,7 +49,7 @@ CInformationCollection::~CInformationCollection( void )
 CInformationCollection* CInformationCollection::createDefaultCollection( void )
 // -------------------------------------------------------------------------------
 {
-  CTreeInformationElement* pE = new CTreeInformationElement(0, "root", "", &InformationFormat::RTF);
+  CTreeInformationElement* pE = new CTreeInformationElement(0, "root", "", &InformationFormat::HTML);
   CInformationCollection* pCollection = new CInformationCollection(pE);
   pCollection->registerAsListenerOf(pE);
   return pCollection;

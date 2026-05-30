@@ -67,8 +67,8 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 
 	// declares necessary variables
 	int i;
-	QString name; int l1;		// l1=länge von 'name'
-	QString text; int l2;		// l2=länge von 'text'
+	QString name; int l1;		// l1=lï¿½nge von 'name'
+	QString text; int l2;		// l2=lï¿½nge von 'text'
 	QString iconFile;
 	bool isOpen;						// whether this Knoten is open or not
 	int amountOfChilds;
@@ -76,7 +76,7 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 	//packe Paket aus
 	s=s.mid(3);							// remove "***" from front
 	i=s.indexOf("*");
-	int l=s.mid(0, i).toInt();		// l= verbleibende Länge d. gesamten
+	int l=s.mid(0, i).toInt();		// l= verbleibende Lï¿½nge d. gesamten
 													// Knotens (inkl. Kinder)
 
 	QString knoten=s.mid(i+1, l); s=s.mid(l+1);
@@ -115,12 +115,12 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 	if (root){
 	  parent->setDescription(name);
 		parent->setInformation(text);
-		parent->setInformationFormat(&InformationFormat::ASCII);
+		parent->setInformationFormat(&InformationFormat::TEXT);
 		parent->setIconFileName(iconFile);
   	parent->setOpen(isOpen);
 		self = parent;
 	}else{
-  	self=new CTreeInformationElement(parent, name, text, &InformationFormat::ASCII);
+  	self=new CTreeInformationElement(parent, name, text, &InformationFormat::TEXT);
 		self->setIconFileName(iconFile);
  	  self->setOpen(isOpen);
 		parent->addChild(self);
@@ -164,15 +164,15 @@ void Persister::unpackWithIcons(QString s, bool root, CTreeInformationElement* p
 //
 //	// declares necessary variables
 //	int i;
-//	QString name; int l1;		// l1=länge von 'name'
-//	QString text; int l2;		// l2=länge von 'text'
+//	QString name; int l1;		// l1=lï¿½nge von 'name'
+//	QString text; int l2;		// l2=lï¿½nge von 'text'
 //	bool isOpen;						// whether this Knoten is open or not
 //	int amountOfChilds;
 //
 //	//packe Paket aus
 //	s=s.mid(3);							// remove "***" from front
 //	i=s.indexOf("*");
-//	int l=s.mid(0, i).toInt();		// l= verbleibende Länge d. gesamten
+//	int l=s.mid(0, i).toInt();		// l= verbleibende Lï¿½nge d. gesamten
 //													// Knotens (inkl. Kinder)
 //
 //	QString knoten=s.mid(i+1, l); s=s.mid(l+1);

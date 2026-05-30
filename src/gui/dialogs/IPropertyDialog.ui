@@ -74,7 +74,7 @@
                       </property>
                       <item>
                         <property name="text">
-                          <string>ASCII</string>
+                          <string>TEXT</string>
                         </property>
                         <property name="pixmap">
                           <pixmap>image0</pixmap>
@@ -82,10 +82,18 @@
                       </item>
                       <item>
                         <property name="text">
-                          <string>RTF</string>
+                          <string>HTML</string>
                         </property>
                         <property name="pixmap">
                           <pixmap>image1</pixmap>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>MARKDOWN</string>
+                        </property>
+                        <property name="pixmap">
+                          <pixmap>image0</pixmap>
                         </property>
                       </item>
                     </widget>

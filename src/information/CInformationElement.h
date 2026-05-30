@@ -41,7 +41,7 @@ class CInformationElement : public QObject,
 public:
   CInformationElement( IParent* pParent,
                      QString sDescription="", QString sInformation="",
-                     InformationFormat* pFormat=&InformationFormat::NONE,
+                     InformationFormat* pFormat=&InformationFormat::TEXT,
                      QString sIconFileName = "none");
   ~CInformationElement( void );
 

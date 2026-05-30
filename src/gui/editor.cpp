@@ -212,14 +212,15 @@ void Editor::activeInformationElementChanged( CInformationElement* pElement )
       mpActiveElement->setInformationYPos( verticalScrollBar()->value() );
    }
 
-   if ( pElement->getInformationFormat() == &InformationFormat::RTF )
+   if ( pElement->getInformationFormat() == &InformationFormat::HTML )
    {
-      emit formatRecognized( InformationFormat::RTF );
+      emit formatRecognized( InformationFormat::HTML );
       setAcceptRichText( true );
    }
-   else if ( pElement->getInformationFormat() == &InformationFormat::ASCII )
+   else
    {
-      emit formatRecognized( InformationFormat::ASCII );
+      // TEXT or MARKDOWN — plain-text editing of the raw bytes
+      emit formatRecognized( *pElement->getInformationFormat() );
       setAcceptRichText( false );
    }
 

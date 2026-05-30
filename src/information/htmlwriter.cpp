@@ -181,16 +181,18 @@ void HTMLWriter::convertInformationElementToHTML( CInformationElement& element,
       QTextStream t( &f );                         // use a text stream
 //      t.setEncoding(QTextStream::Q_UNUSED(QTextStream::Locale));
 
-      if ( element.getInformationFormat() == &InformationFormat::ASCII )
+      if ( element.getInformationFormat() == &InformationFormat::HTML )
       {
+         // already HTML — write the body bytes as-is
+         t<<element.getInformation();
+      }
+      else
+      {
+         // TEXT or MARKDOWN — wrap as a minimal HTML doc, escape line breaks
          t<<"<html>\n<head> <title>"+element.getDescription()+"</title> </head>\n<body>";
          QString text = element.getInformation();
          t<< text.replace(QChar('\n'), QString("<br>\n"));
          t<<"\n</body></html>";
-      }
-      else
-      {
-         t<<element.getInformation();
       }
       f.close();
    }

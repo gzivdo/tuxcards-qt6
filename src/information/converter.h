@@ -26,8 +26,8 @@ class Converter{
 public:
    static void convert( CInformationElement& );
 
-   static QString convertASCII2RTF( QString );
-   static QString convertRTF2ASCII( QString );
+   static QString convertText2HTML( QString );
+   static QString convertHTML2Text( QString );
 };
 
 #endif

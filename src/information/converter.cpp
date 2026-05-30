@@ -31,15 +31,15 @@ void Converter::convert( CInformationElement& informationElement )
 // -------------------------------------------------------------------------------
 {
    QString resultingText;
-   if (informationElement.getInformationFormat() == &InformationFormat::RTF)
+   if (informationElement.getInformationFormat() == &InformationFormat::HTML)
    {
-      resultingText = convertRTF2ASCII( informationElement.getInformation() );
-      informationElement.setInformationFormat( &InformationFormat::ASCII );
+      resultingText = convertHTML2Text( informationElement.getInformation() );
+      informationElement.setInformationFormat( &InformationFormat::TEXT );
    }
    else
    {
-      resultingText = convertASCII2RTF( informationElement.getInformation() );
-      informationElement.setInformationFormat( &InformationFormat::RTF );
+      resultingText = convertText2HTML( informationElement.getInformation() );
+      informationElement.setInformationFormat( &InformationFormat::HTML );
    }
    informationElement.setInformation(resultingText);
 }
@@ -47,28 +47,27 @@ void Converter::convert( CInformationElement& informationElement )
 
 
 /**
- * Converts ASCII-Text to RichtText i.e. not to loos ascii formating.
- * (if not done; everything will be interpreted as rtf/html)
+ * Convert plain text to HTML — preserve line breaks via <br/>; nothing
+ * else (the editor will interpret the result as rich text).
  */
 // -------------------------------------------------------------------------------
-QString Converter::convertASCII2RTF(QString asciiText)
+QString Converter::convertText2HTML(QString text)
 // -------------------------------------------------------------------------------
 {
-   //QString result = QStyleSheet::convertFromPlainText(asciiText);
-   return asciiText.replace( QChar('\n'), QString("<br/>") );
+   return text.replace( QChar('\n'), QString("<br/>") );
 }
 
 
 
 /**
- * Converts RichText to Ascii-Text.
+ * Convert HTML body to plain text. Today this is a no-op pass-through;
+ * Strings::removeHTMLTags exists for the cases that actually need it.
  */
 // -------------------------------------------------------------------------------
-QString Converter::convertRTF2ASCII(QString rtfText)
+QString Converter::convertHTML2Text(QString htmlText)
 // -------------------------------------------------------------------------------
 {
-   //QString result = rtfText.replace( QRegExp( "<p>" ), "" );
-   return rtfText;
+   return htmlText;
 
    /*
       Idee:

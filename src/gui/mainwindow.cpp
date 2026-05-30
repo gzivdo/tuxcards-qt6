@@ -762,9 +762,9 @@ void MainWindow::changeInformationFormat()
       return;
    }
 
-   if ( pActiveElement->getInformationFormat() == &InformationFormat::RTF)
+   if ( pActiveElement->getInformationFormat() == &InformationFormat::HTML)
    {
-      QMessageBox::information( 0, tr("Converter"), tr("Sorry, but converting RTF to ASCII "
+      QMessageBox::information( 0, tr("Converter"), tr("Sorry, but converting HTML to plain text "
                                 "is not implemented yet."),
                                 QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
       return;
@@ -800,7 +800,7 @@ void MainWindow::showRecognizedFormat(InformationFormat format)
   textFormatTool->setIcon(QIcon(format.getPixmap()));
 
   // enabeling rtf-formatting stuff for rtf-information-items only
-  bool b = format.equals(InformationFormat::RTF);
+  bool b = format.equals(InformationFormat::HTML);
   textBoldTool->setEnabled(b);
   textItalicTool->setEnabled(b);
   textUnderTool->setEnabled(b);
@@ -2140,10 +2140,10 @@ void MainWindow::print()
    if ( (nullptr == mpCollection) || (nullptr == mpCollection->getActiveElement()) )
       return;
 
-   if ( mpCollection->getActiveElement()->getInformationFormat() == &InformationFormat::ASCII )
+   if ( mpCollection->getActiveElement()->getInformationFormat() != &InformationFormat::HTML )
    {
       QMessageBox::information( this, "Printing", "Please consider converting this note to "
-                               "rtf before printing." );
+                               "HTML before printing." );
    }
 
    if ( nullptr == mpEditor )
@@ -2174,11 +2174,11 @@ void MainWindow::printPreview()
    if ( nullptr == mpCollection || nullptr == mpCollection->getActiveElement() )
       return;
 
-   if ( mpCollection->getActiveElement()->getInformationFormat() == &InformationFormat::ASCII )
+   if ( mpCollection->getActiveElement()->getInformationFormat() != &InformationFormat::HTML )
    {
       QMessageBox::information( this, tr("Print preview"),
                                 tr("Please consider converting this note to "
-                                   "rtf before printing.") );
+                                   "HTML before printing.") );
    }
 
    if ( nullptr == mpEditor )

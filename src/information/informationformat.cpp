@@ -17,14 +17,16 @@
 
 #include "informationformat.h"
 
-#include "format_none.xpm"
 #include "format_ascii.xpm"
 #include "format_rtf.xpm"
 #include <QPixmap>
 
-/*const*/ InformationFormat InformationFormat::NONE("NONE", QImage(format_none_xpm));
-/*const*/ InformationFormat InformationFormat::ASCII("ASCII", QImage(format_ascii_xpm));
-/*const*/ InformationFormat InformationFormat::RTF("RTF", QImage(format_rtf_xpm));
+// We keep the legacy XPM files (format_ascii.xpm, format_rtf.xpm) — the
+// icon glyphs themselves still look right ("T" for plain, "H/R" for
+// rich), it's only the C++ identifier that was misleading.
+/*const*/ InformationFormat InformationFormat::TEXT("TEXT", QImage(format_ascii_xpm));
+/*const*/ InformationFormat InformationFormat::HTML("HTML", QImage(format_rtf_xpm));
+/*const*/ InformationFormat InformationFormat::MARKDOWN("MARKDOWN", QImage(format_ascii_xpm));
 
 
 // -------------------------------------------------------------------------------
@@ -76,17 +78,19 @@ QString InformationFormat::toString( void )
 
 
 /**
- * Returns a format that was parsed from the string 'format'; if
- * no informationFormat was recognized -> 'NONE' is returned.
+ * Returns a format that was parsed from the string 'format'. Accepts
+ * both the current names and the pre-3.3.4 legacy names so old XML
+ * files keep loading. Unknown strings fall back to TEXT (was NONE,
+ * which is now gone — TEXT is the safe minimum).
  */
 // -------------------------------------------------------------------------------
 InformationFormat* InformationFormat::getByString( QString format )
 // -------------------------------------------------------------------------------
 {
-  if (format == "RTF")
-    return &RTF;
-  else if (format == "ASCII")
-    return &ASCII;
-  else
-    return &NONE;
+  if (format == "HTML" || format == "RTF")
+    return &HTML;
+  if (format == "MARKDOWN")
+    return &MARKDOWN;
+  // "TEXT", "ASCII", "NONE", "", or anything else
+  return &TEXT;
 }

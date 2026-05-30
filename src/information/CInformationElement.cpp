@@ -406,14 +406,12 @@ QString CInformationElement::getInformationText( void ) const
 {
   QString text;
 
-  if ( getInformationFormat() == &InformationFormat::ASCII )
-  {
-    text = getInformation();
-  }
-  else
-  {
+  // TEXT and MARKDOWN are both plaintext-ish on disk — pass through.
+  // HTML strips its tags so callers get readable plain text.
+  if ( getInformationFormat() == &InformationFormat::HTML )
     text = Strings::removeHTMLTags(getInformation());
-  }
+  else
+    text = getInformation();
 
   return text;
 }
@@ -427,7 +425,7 @@ QString CInformationElement::getInformationText( void ) const
 void CInformationElement::appendInformation( QString text )
 // -------------------------------------------------------------------------------
 {
-  if ( mpInformationFormat == &InformationFormat::RTF )
+  if ( mpInformationFormat == &InformationFormat::HTML )
   {
     text.replace( QChar('\n'), QString("<br>\n") );
   }
